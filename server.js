@@ -22,6 +22,15 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// --- Test-Route für ENV-Variablen ---
+app.get("/test", (req, res) => {
+  res.json({
+    databaseUrl: process.env.DATABASE_URL ? "✅ vorhanden" : "❌ fehlt",
+    openAiKey: process.env.OPENAI_API_KEY ? "✅ vorhanden" : "❌ fehlt",
+    accessCode: process.env.ACCESS_CODE ? "✅ vorhanden" : "❌ fehlt"
+  });
+});
+
 // Auth-Middleware nur für API
 function requireAccessCode(req, res, next) {
   const headerCode = req.headers["x-access-code"];
