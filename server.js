@@ -2,27 +2,46 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// --- Sicherheit: Zugangscode aus ENV ---
+const ACCESS_CODE = process.env.ACCESS_CODE;
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// 1) Kleiner Health-Check für den Browser
+// Static Frontend (public/ Ordner)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Health-Check / Startseite
 app.get("/", (_req, res) => {
-  res.send("MeinePraxisKI Backend läuft ✅");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// 2) API-Endpoint für dein Frontend
-app.post("/api/abrechnen", async (req, res) => {
+// Auth-Middleware nur für API
+function requireAccessCode(req, res, next) {
+  const headerCode = req.headers["x-access-code"];
+  if (!ACCESS_CODE) {
+    return res.status(500).json({ error: "Serverkonfiguration fehlt: ACCESS_CODE" });
+  }
+  if (!headerCode || headerCode !== ACCESS_CODE) {
+    return res.status(401).json({ error: "Unauthorized: Zugangscode fehlt oder ist falsch." });
+  }
+  next();
+}
+
+// API-Endpoint (geschützt)
+app.post("/api/abrechnen", requireAccessCode, async (req, res) => {
   const userInput = req.body.prompt || req.body.input || "";
   if (!userInput) {
     return res.status(400).json({ error: "Fehlendes Feld: prompt" });
   }
 
   try {
-    // Node 18+ hat global fetch – kein 'node-fetch' nötig
     const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
