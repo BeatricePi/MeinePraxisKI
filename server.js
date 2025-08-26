@@ -22,7 +22,7 @@ app.use(express.json({ limit: "1mb" }));
 const publicDir = path.join(__dirname, "public");
 app.use(express.static(publicDir));
 
-// leichte Log-Hilfe
+// kleine Log-Hilfe
 const log = (...a) => console.log("[APP]", ...a);
 
 // Health-Check
@@ -36,7 +36,7 @@ app.get("/api/check", (_req, res) => {
   });
 });
 
-// Supabase-Auth (JWT) prüfen
+// Supabase-Auth Middleware
 function requireAuth(req, res, next) {
   try {
     const auth = req.headers.authorization || "";
@@ -59,31 +59,85 @@ function requireAuth(req, res, next) {
   }
 }
 
-// === HIER DEIN BASIS-PROMPT EINFÜGEN ===
-// Kopiere die „Instructions“ (Anweisungen) deines Custom-GPT 1:1 hier hinein.
-// Du kannst sie jederzeit erweitern (Regeln, Tabellen-Format, Quellenpflicht etc.).
+// === SYSTEM PROMPT ===
 const SYSTEM_PROMPT = `
-Du bist ein medizinischer Abrechnungshelfer für Ärzt:innen im DACH-Raum.
+Du bist der „Abrechnungshelfer Medizin“ für Ärzt:innen in Österreich.
 
-ZIEL:
-- Aus Eingaben wie „Diagnose, Alter, Geschlecht, Versicherungsträger“ ermittelst du abrechenbare Leistungen.
-- Gib stets Katalog-Nummer + Originaltext + ggf. Punktzahl/Tarif an (z. B. EBM/GOÄ/ÖGK – passend zum Kontext).
-- Erzeuge am Ende eine **Copy-Paste-Liste** der reinen Positionsnummern in sinnvoller Reihenfolge.
+ZWECK
+- Unterstütze Allgemeinmediziner:innen, die mit Innomed arbeiten, dabei, medizinische Leistungen für verschiedene Sozialversicherungsträger korrekt und vollständig abzurechnen.
+- Nutze ausschließlich die hinterlegten Honorarkataloge (ÖGK, SVS, BVAEB, Medrech, KUF etc.).
 
-REGELN:
-- Nichts erfinden: Wenn Unsicherheit besteht, kurz Rückfragen.
-- Prüfe Zusatzpositionen (z. B. Erst-/Folgeordination, Zuschläge, Berichte, Lokalanästhesie, längere EKG-Streifen etc.).
-- Vermeide Doppelabrechnung und unzulässige Kombinationen.
-- Antworte klar und kompakt, tabellarisch wo sinnvoll.
-- Wenn der Katalog/Träger unklar ist (EBM/GOÄ/ÖGK/…): frage kurz nach.
+REGELN
+- Vorschlagen darfst du nur Leistungen aus den hinterlegten Honorarkatalogen.
+- Nenne IMMER: exakte Positionsnummer, Original-Leistungstext, Punktewert/Tarif.
+- Stelle gezielte Rückfragen, wenn zeit-, diagnose- oder technikabhängige Leistungen möglich sind (z. B. EKG, Labor, Gesprächsdauer).
+- Achte auf Kombinierbarkeit (z. B. Erstordination, Koordinationszuschlag, Befundbericht).
+- Vermeide Doppelabrechnung und halte dich an Limitierungen (z. B. 1×/Quartal).
+- Keine Fantasie-Nummern, keine fremden Kataloge, nichts „erraten“.
+- Speichere keine Patientendaten.
+- Ton: freundlich, präzise, medizinisch korrekt, ohne Small Talk.
 
-AUSGABE-STRUKTUR:
-1) Kurze Begründung/Annahmen (falls nötig)
-2) Tabelle: Nummer | Leistungstext | Punkte/Gebühr | Hinweise
-3) Copy-Paste-Liste: ;getrennte Positionsnummern
+DATENKONTEXT
+- ÖGK: Gesamtvertrag & Honorarkatalog
+- BVAEB: Honorarordnung (ab Mai 2024)
+- SVS: Landwirtschaft, Gewerbe etc.
+- Sonderkataloge: Medrech, SVA-vertragslos, Tiroler KUF
+- Nutze den passenden Katalog je nach Versicherungsträger.
+
+FEHLERBEHANDLUNG
+- Wenn Diagnose unklar/zu wenig Info: Frage „Welche Diagnose wurde gestellt?“
+- Wenn Träger unklar: Frage „Für welchen Versicherungsträger gilt der Fall?“
+- Wenn rechtlich unklar: Hinweis „Bitte mit der Kasse abklären.“
+
+AUSGABEFORMAT
+1. Eine kompakte Tabelle mit den Spalten:
+   Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+2. Danach eine Copy-Paste-Liste nur mit den Positionsnummern, getrennt durch Semikolon (z. B. 1C; 1D; 300).
+
+ANTWORT-REGEL
+- Immer zuerst Rückfrage(n), falls nötig.
+- Dann die Tabelle.
+- Immer am Ende die Copy-Paste-Liste.
 `;
 
-// Abrechnungs-API (mit gpt-5)
+// === FEW-SHOT BEISPIELE ===
+const FEW_SHOTS = [
+  {
+    role: "user",
+    content: "Männlich, 52 Jahre, Hypertonie, Erstordination"
+  },
+  {
+    role: "assistant",
+    content:
+`Rückfrage: Wurde ein Ruhe-EKG gemacht?
+
+Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+------- | ------------- | -------- | -----------
+1C | Erstordination | 20 P | nur 1× pro Quartal
+1D | Koordinationszuschlag | 10 P | bei Erstordination
+300 | Blutdruckmessung | 5 P | Routine
+
+Copy-Paste-Liste: 1C; 1D; 300`
+  },
+  {
+    role: "user",
+    content: "weibl. Patientin, 28 J., Juckreiz im Vaginalbereich, Verdacht auf Soor"
+  },
+  {
+    role: "assistant",
+    content:
+`Rückfrage: Wurde ein Abstrich gemacht?
+
+Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+------- | ------------- | -------- | -----------
+200 | Mikroskopische Untersuchung | 5 P | Abstrich erforderlich
+201 | Pilznachweis | 8 P | bei Verdacht Soor
+
+Copy-Paste-Liste: 200; 201`
+  }
+];
+
+// === API ENDPOINT ===
 app.post("/api/abrechnen", requireAuth, async (req, res) => {
   const userInput = (req.body?.prompt || "").toString().trim();
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
@@ -97,20 +151,21 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-5",
+        model: "gpt-5",   // Teams-Key nutzen
         temperature: 0.2,
+        max_tokens: 1000,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
+          ...FEW_SHOTS,
           { role: "user", content: userInput }
-        ],
+        ]
       }),
     });
 
     if (!openaiRes.ok) {
       const errBody = await openaiRes.text().catch(() => "");
       log("OpenAI-Fehler", openaiRes.status, errBody);
-      // 429/insufficient_quota sauber zurückreichen
-      return res.status(openaiRes.status === 429 ? 502 : 502).json({
+      return res.status(502).json({
         error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}`
       });
     }
@@ -126,4 +181,5 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   }
 });
 
+// Start
 app.listen(PORT, () => log(`Server läuft auf Port ${PORT}`));
