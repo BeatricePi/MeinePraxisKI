@@ -60,12 +60,14 @@
       <textarea id="prompt" rows="4" placeholder="Eingabe hier..."></textarea>
       <button onclick="abrechnen()">Abrechnen</button>
       <div id="output"></div>
+      <button style="margin-top:12px; background:#555;" onclick="logout()">Logout</button>
     </div>
   </div>
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
+    // 🔑 Deine Supabase-Daten
     const SUPABASE_URL = "https://nrpegqpxqunvrwkepadd.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ycGVncXB4cXVudnJ3a2VwYWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTYyOTIsImV4cCI6MjA3MTY5MjI5Mn0.UfplpjbPoX96AwFWRkPI1Hi7bAwQVIZUn1XXMfXxgtc";
 
@@ -80,11 +82,21 @@
       else alert("Magic Link wurde verschickt. Bitte prüfen Sie Ihre Mail.");
     }
 
+    // Logout
+    async function logout() {
+      await supabase.auth.signOut();
+      document.getElementById("auth").style.display = "block";
+      document.getElementById("app").style.display = "none";
+    }
+
     // Benutzerstatus prüfen
     supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         document.getElementById("auth").style.display = "none";
         document.getElementById("app").style.display = "block";
+      } else {
+        document.getElementById("auth").style.display = "block";
+        document.getElementById("app").style.display = "none";
       }
     });
 
@@ -92,6 +104,11 @@
     async function abrechnen() {
       const prompt = document.getElementById("prompt").value;
       const token = (await supabase.auth.getSession()).data.session?.access_token;
+
+      if (!token) {
+        alert("Nicht eingeloggt. Bitte erst per Magic Link anmelden.");
+        return;
+      }
 
       const res = await fetch("/api/abrechnen", {
         method: "POST",
