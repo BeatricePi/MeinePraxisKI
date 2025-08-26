@@ -1,4 +1,4 @@
-// server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI gpt-5)
+// server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI gpt-5 + Debug)
 
 const express = require("express");
 const path = require("path");
@@ -27,9 +27,13 @@ const log = (...a) => console.log("[APP]", ...a);
 
 // Health-Check
 app.get("/api/check", (_req, res) => {
+  // Nur Key-Präfix/Suffix für Debug (nie ganzen Key zurückgeben!)
+  const keyPreview = OPENAI_API_KEY
+    ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4)
+    : "❌ kein Key";
   res.json({
     databaseUrl: process.env.DATABASE_URL ? "✅ vorhanden" : "❌ fehlt",
-    openAiKey: OPENAI_API_KEY ? "✅ vorhanden" : "❌ fehlt",
+    openAiKey: OPENAI_API_KEY ? `✅ ${keyPreview}` : "❌ fehlt",
     supabaseUrl: SUPABASE_URL ? "✅ vorhanden" : "❌ fehlt",
     supabaseJwtSecret: SUPABASE_JWT_SECRET ? "✅ vorhanden" : "❌ fehlt",
     allowedEmails: ALLOWED_EMAILS.length ? `✅ ${ALLOWED_EMAILS.length}` : "—",
@@ -144,6 +148,13 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
   try {
+    // Debug-Log (Modell + Key-Präfix)
+    log("Starte OpenAI-Request", {
+      model: "gpt-5",
+      key: OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4) : "❌ kein Key",
+      user: req.user?.email || "unbekannt"
+    });
+
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -151,7 +162,7 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-5",   // Teams-Key nutzen
+        model: "gpt-5",
         temperature: 0.2,
         max_tokens: 1000,
         messages: [
@@ -165,6 +176,12 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
     if (!openaiRes.ok) {
       const errBody = await openaiRes.text().catch(() => "");
       log("OpenAI-Fehler", openaiRes.status, errBody);
+      // Freundlichere Meldung bei Quota-Fehlern
+      if (openaiRes.status === 429 && /insufficient_quota/i.test(errBody)) {
+        return res.status(502).json({
+          error: "OpenAI-Kontingent erschöpft (Teams-Key/Billing prüfen)."
+        });
+      }
       return res.status(502).json({
         error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}`
       });
