@@ -5,123 +5,155 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Abrechnungshelfer Medizin</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-      margin: 0;
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
       background: linear-gradient(135deg,#e0f7fa,#e3f2fd);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .card {
-      background: #fff;
-      width: min(620px,92vw);
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    .card { width:min(900px,94vw); background:#fff; padding:28px; border-radius:18px;
+      box-shadow:0 10px 28px rgba(0,0,0,.08); }
+    h1 { margin:0 0 8px; color:#1565c0; font-weight:800; letter-spacing:.3px; }
+    p.hint{margin:.25rem 0 1rem; color:#555}
+    .row { display:flex; gap:16px; align-items:center; }
+    textarea, input[type="email"]{
+      width:100%; padding:12px 14px; border:1px solid #cfd8dc; border-radius:10px; resize:vertical; font-size:16px;
     }
-    h1 { margin: 0 0 8px; color: #1976d2; }
-    textarea {
-      width: 100%; padding: 12px; margin: 12px 0;
-      border-radius: 8px; border: 1px solid #ccc; resize: vertical;
-    }
-    input[type="email"] {
-      width: 100%; padding: 12px; margin: 12px 0;
-      border-radius: 8px; border: 1px solid #ccc;
-    }
-    button {
-      background: #1976d2; color: #fff; border: none;
-      padding: 12px 20px; border-radius: 8px;
-      cursor: pointer; font-size: 16px;
-    }
-    button:disabled { background: #ccc; cursor: not-allowed; }
-    #output {
-      margin-top: 16px; white-space: pre-wrap;
-      padding: 12px; background: #f1f1f1;
-      border-radius: 8px; font-family: monospace;
-    }
+    button{ background:#1976d2; color:#fff; border:none; padding:12px 18px; border-radius:10px;
+      font-size:16px; cursor:pointer; }
+    button.secondary{ background:#455a64 }
+    button:disabled{ opacity:.6; cursor:not-allowed }
+    #status{ margin-top:10px; height:16px; font-size:13px; color:#546e7a }
+    #output{ margin-top:14px; padding:12px; background:#f5f7f9; border-radius:10px; min-height:18px; white-space:pre-wrap; font-family:ui-monospace,Menlo,monospace }
+    .hidden{ display:none }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Abrechnungshelfer Medizin</h1>
     <p>Bitte geben Sie <b>Diagnose, Alter, Geschlecht</b> und <b>Versicherungsträger</b> ein.</p>
-    <p style="font-size: 0.9em; color: #555;">Beispiel: Bluthochdruck, männlich, 62 Jahre, ÖGK</p>
+    <p class="hint">Beispiel: Bluthochdruck, männlich, 62 Jahre, ÖGK</p>
 
-    <!-- Login -->
+    <!-- LOGIN -->
     <div id="auth">
-      <input type="email" id="email" placeholder="Ihre E-Mail für Magic Link" />
-      <button onclick="signIn()">Login per Magic Link</button>
+      <div class="row">
+        <input type="email" id="email" placeholder="Ihre E-Mail für Magic Link" autocomplete="email" />
+        <button id="btnSendLink">Login per Magic Link</button>
+      </div>
     </div>
 
-    <!-- Eingabe -->
-    <div id="app" style="display:none;">
-      <textarea id="prompt" rows="4" placeholder="Eingabe hier..."></textarea>
-      <button onclick="abrechnen()">Abrechnen</button>
+    <!-- APP -->
+    <div id="app" class="hidden">
+      <textarea id="prompt" rows="4" placeholder="Eingabe hier…"></textarea>
+      <div class="row">
+        <button id="btnGo">Abrechnen</button>
+        <button id="btnLogout" class="secondary" type="button">Logout</button>
+      </div>
+      <div id="status"></div>
       <div id="output"></div>
-      <button style="margin-top:12px; background:#555;" onclick="logout()">Logout</button>
     </div>
   </div>
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
-    // 🔑 Deine Supabase-Daten
+    // ==== KONFIG ====
     const SUPABASE_URL = "https://nrpegqpxqunvrwkepadd.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ycGVncXB4cXVudnJ3a2VwYWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTYyOTIsImV4cCI6MjA3MTY5MjI5Mn0.UfplpjbPoX96AwFWRkPI1Hi7bAwQVIZUn1XXMfXxgtc";
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Login per Magic Link
-    async function signIn() {
-      const email = document.getElementById("email").value;
-      if (!email) return alert("Bitte E-Mail eingeben.");
-      const { error } = await supabase.auth.signInWithOtp({ email });
-      if (error) alert("Fehler: " + error.message);
-      else alert("Magic Link wurde verschickt. Bitte prüfen Sie Ihre Mail.");
-    }
+    // ==== DOM ====
+    const elAuth   = document.getElementById("auth");
+    const elApp    = document.getElementById("app");
+    const elEmail  = document.getElementById("email");
+    const elGo     = document.getElementById("btnGo");
+    const elSend   = document.getElementById("btnSendLink");
+    const elLogout = document.getElementById("btnLogout");
+    const elPrompt = document.getElementById("prompt");
+    const elOut    = document.getElementById("output");
+    const elStatus = document.getElementById("status");
 
-    // Logout
-    async function logout() {
-      await supabase.auth.signOut();
-      document.getElementById("auth").style.display = "block";
-      document.getElementById("app").style.display = "none";
-    }
+    function showAuth(){ elAuth.classList.remove("hidden"); elApp.classList.add("hidden"); }
+    function showApp(){  elApp.classList.remove("hidden");  elAuth.classList.add("hidden"); }
 
-    // Benutzerstatus prüfen
-    supabase.auth.onAuthStateChange((event, session) => {
+    // ==== Auth State ====
+    async function refreshUI(){
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        document.getElementById("auth").style.display = "none";
-        document.getElementById("app").style.display = "block";
+        console.log("[AUTH] eingeloggt als", session.user?.email);
+        showApp();
       } else {
-        document.getElementById("auth").style.display = "block";
-        document.getElementById("app").style.display = "none";
+        console.log("[AUTH] nicht eingeloggt");
+        showAuth();
+      }
+    }
+
+    supabase.auth.onAuthStateChange((_event, _session) => { refreshUI(); });
+    refreshUI(); // initial
+
+    // ==== Login per Magic Link ====
+    elSend.addEventListener("click", async () => {
+      const email = elEmail.value.trim();
+      if (!email) { alert("Bitte E-Mail eingeben."); return; }
+      try {
+        const { error } = await supabase.auth.signInWithOtp({ email });
+        if (error) throw error;
+        alert("Magic Link wurde verschickt. Bitte im GLEICHEN Browser öffnen.");
+      } catch (e) {
+        console.error("signIn error:", e);
+        alert("Login-Fehler: " + (e?.message || e));
       }
     });
 
-    // API call
-    async function abrechnen() {
-      const prompt = document.getElementById("prompt").value;
-      const token = (await supabase.auth.getSession()).data.session?.access_token;
+    // ==== Logout ====
+    elLogout.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      showAuth();
+    });
 
-      if (!token) {
-        alert("Nicht eingeloggt. Bitte erst per Magic Link anmelden.");
-        return;
+    // ==== Abrechnen ====
+    elGo.addEventListener("click", async () => {
+      try {
+        elGo.disabled = true;
+        elStatus.textContent = "Sende Anfrage…";
+        elOut.textContent = "";
+
+        const text = elPrompt.value.trim();
+        if (!text) { elStatus.textContent = "Bitte Eingabe ausfüllen."; elGo.disabled = false; return; }
+
+        // Token holen
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        if (!token) { elStatus.textContent = "Nicht eingeloggt."; elGo.disabled = false; return; }
+
+        console.log("[CALL] /api/abrechnen mit Token", token.slice(0,16)+"…");
+        const res = await fetch("/api/abrechnen", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ prompt: text })
+        });
+
+        const bodyText = await res.text(); // auch im Fehlerfall sehen wir Details
+        let data;
+        try { data = JSON.parse(bodyText); } catch { data = { raw: bodyText }; }
+
+        if (!res.ok) {
+          console.error("API Fehler", res.status, data);
+          elStatus.textContent = `Fehler ${res.status}`;
+          elOut.textContent = (data?.error || JSON.stringify(data, null, 2) || "Unbekannter Fehler");
+        } else {
+          elStatus.textContent = "Antwort erhalten";
+          elOut.textContent = data?.output || JSON.stringify(data, null, 2);
+        }
+      } catch (err) {
+        console.error("Unhandled client error:", err);
+        elStatus.textContent = "Client-Fehler";
+        elOut.textContent = err?.message || String(err);
+      } finally {
+        elGo.disabled = false;
       }
-
-      const res = await fetch("/api/abrechnen", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({ prompt })
-      });
-
-      const data = await res.json();
-      document.getElementById("output").textContent = data.output || JSON.stringify(data, null, 2);
-    }
+    });
   </script>
 </body>
 </html>
