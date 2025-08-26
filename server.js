@@ -1,43 +1,31 @@
-// server.js  — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI)
-// CommonJS-Variante (kein "type":"module" nötig)
+// server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI gpt-5)
 
 const express = require("express");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 
-// --- Config / ENV ---
+// === ENV ===
 const PORT = process.env.PORT || 3000;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET;
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
-  .split(",")
-  .map((s) => s.trim().toLowerCase())
-  .filter(Boolean);
+  .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
 
-// --- App ---
 const app = express();
-app.set("trust proxy", 1); // wichtig für Secure-Cookies, Proxies etc. (Render)
-app.use(cors());           // für Same-Origin genügt das; bei getrennten Domains ggf. einschränken
+app.set("trust proxy", 1);
+app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
-// --- Static Frontend ausliefern ---
+// Static Frontend
 const publicDir = path.join(__dirname, "public");
 app.use(express.static(publicDir));
 
-// --- Logging-Helfer ---
-function log(...args) {
-  // einfache zentrale Log-Funktion
-  console.log("[APP]", ...args);
-}
+// leichte Log-Hilfe
+const log = (...a) => console.log("[APP]", ...a);
 
-// --- Health/Check-Routen ---
-app.get("/", (_req, res) => {
-  // Hinweis: Wird meist von index.html (static) überdeckt. Als Fallback ok.
-  res.type("text").send("Abrechnungshelfer Medizin Backend läuft.");
-});
-
+// Health-Check
 app.get("/api/check", (_req, res) => {
   res.json({
     databaseUrl: process.env.DATABASE_URL ? "✅ vorhanden" : "❌ fehlt",
@@ -48,47 +36,60 @@ app.get("/api/check", (_req, res) => {
   });
 });
 
-// --- Auth-Middleware (Supabase-JWT prüfen) ---
+// Supabase-Auth (JWT) prüfen
 function requireAuth(req, res, next) {
   try {
     const auth = req.headers.authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-    if (!token) {
-      return res.status(401).json({ error: "Kein Token (Authorization: Bearer <token> fehlt)" });
-    }
-    if (!SUPABASE_JWT_SECRET) {
-      return res.status(500).json({ error: "Serverfehler: SUPABASE_JWT_SECRET fehlt" });
-    }
+    if (!token) return res.status(401).json({ error: "Kein Token" });
+    if (!SUPABASE_JWT_SECRET) return res.status(500).json({ error: "Serverfehler: SUPABASE_JWT_SECRET fehlt" });
 
     const payload = jwt.verify(token, SUPABASE_JWT_SECRET);
-    // Übliche Felder: sub (user id), email, role
     req.user = { id: payload.sub, email: payload.email, role: payload.role };
 
-    // Optional: Allowlist – nur freigeschaltete E-Mails dürfen rein
     if (ALLOWED_EMAILS.length) {
       const email = (req.user.email || "").toLowerCase();
       if (!ALLOWED_EMAILS.includes(email)) {
         return res.status(403).json({ error: "Nicht freigeschaltet" });
       }
     }
-
-    return next();
+    next();
   } catch (err) {
-    return res.status(401).json({ error: "Ungültiges oder abgelaufenes Token" });
+    return res.status(401).json({ error: "Ungültiges/abgelaufenes Token" });
   }
 }
 
-// --- Abrechnungs-API (geschützt) ---
+// === HIER DEIN BASIS-PROMPT EINFÜGEN ===
+// Kopiere die „Instructions“ (Anweisungen) deines Custom-GPT 1:1 hier hinein.
+// Du kannst sie jederzeit erweitern (Regeln, Tabellen-Format, Quellenpflicht etc.).
+const SYSTEM_PROMPT = `
+Du bist ein medizinischer Abrechnungshelfer für Ärzt:innen im DACH-Raum.
+
+ZIEL:
+- Aus Eingaben wie „Diagnose, Alter, Geschlecht, Versicherungsträger“ ermittelst du abrechenbare Leistungen.
+- Gib stets Katalog-Nummer + Originaltext + ggf. Punktzahl/Tarif an (z. B. EBM/GOÄ/ÖGK – passend zum Kontext).
+- Erzeuge am Ende eine **Copy-Paste-Liste** der reinen Positionsnummern in sinnvoller Reihenfolge.
+
+REGELN:
+- Nichts erfinden: Wenn Unsicherheit besteht, kurz Rückfragen.
+- Prüfe Zusatzpositionen (z. B. Erst-/Folgeordination, Zuschläge, Berichte, Lokalanästhesie, längere EKG-Streifen etc.).
+- Vermeide Doppelabrechnung und unzulässige Kombinationen.
+- Antworte klar und kompakt, tabellarisch wo sinnvoll.
+- Wenn der Katalog/Träger unklar ist (EBM/GOÄ/ÖGK/…): frage kurz nach.
+
+AUSGABE-STRUKTUR:
+1) Kurze Begründung/Annahmen (falls nötig)
+2) Tabelle: Nummer | Leistungstext | Punkte/Gebühr | Hinweise
+3) Copy-Paste-Liste: ;getrennte Positionsnummern
+`;
+
+// Abrechnungs-API (mit gpt-5)
 app.post("/api/abrechnen", requireAuth, async (req, res) => {
   const userInput = (req.body?.prompt || "").toString().trim();
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
-
-  if (!OPENAI_API_KEY) {
-    return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
-  }
+  if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
   try {
-    // OpenAI Chat Completions API (gpt-4o-mini)
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -96,56 +97,33 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "Du bist ein medizinischer Abrechnungshelfer für Ärztinnen und Ärzte im DACH-Raum. " +
-              "Eingabe: Diagnose, Geschlecht, Alter, Versicherungsträger. " +
-              "Ausgabe: Abrechenbare Leistungen inkl. Honorarkatalog-Nummern (z. B. EBM/GOÄ/ÖGK je nach Kontext) " +
-              "und eine klare Copy-Paste-Liste. Antworte strukturiert, knapp, ohne Patientendaten zu speichern. " +
-              "Wenn Informationen fehlen, formuliere kurze Nachfragen.",
-          },
-          { role: "user", content: userInput },
-        ],
+        model: "gpt-5",
         temperature: 0.2,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: userInput }
+        ],
       }),
     });
 
     if (!openaiRes.ok) {
       const errBody = await openaiRes.text().catch(() => "");
       log("OpenAI-Fehler", openaiRes.status, errBody);
-      return res.status(502).json({
-        error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}`,
+      // 429/insufficient_quota sauber zurückreichen
+      return res.status(openaiRes.status === 429 ? 502 : 502).json({
+        error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}`
       });
     }
 
     const data = await openaiRes.json();
     const output = data?.choices?.[0]?.message?.content?.trim();
+    if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
 
-    if (!output) {
-      log("Leere Modellantwort", data);
-      return res.status(502).json({ error: "Leere Antwort vom Modell." });
-    }
-
-    // Optional: Usage-Infos zurückgeben, wenn vorhanden
-    const usage = data?.usage || null;
-
-    return res.json({ output, usage });
+    res.json({ output, usage: data?.usage || null });
   } catch (error) {
     log("Unhandled /api/abrechnen error:", error?.message || error);
-    return res.status(500).json({ error: error?.message || "Unbekannter Serverfehler" });
+    res.status(500).json({ error: error?.message || "Unbekannter Serverfehler" });
   }
 });
 
-// --- Fehler-Handler (Fallback) ---
-app.use((err, _req, res, _next) => {
-  log("Global Error:", err?.message || err);
-  res.status(500).json({ error: "Interner Serverfehler" });
-});
-
-// --- Start ---
-app.listen(PORT, () => {
-  log(`Server läuft auf Port ${PORT}`);
-});
+app.listen(PORT, () => log(`Server läuft auf Port ${PORT}`));
