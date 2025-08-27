@@ -1,4 +1,4 @@
-// server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI gpt-5 + Debug)
+// server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI chat.completions)
 
 const express = require("express");
 const path = require("path");
@@ -13,6 +13,9 @@ const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
   .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
 
+// Modell per ENV überschreibbar (sonst gpt-4o-mini)
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
 const app = express();
 app.set("trust proxy", 1);
 app.use(cors());
@@ -25,9 +28,13 @@ app.use(express.static(publicDir));
 // kleine Log-Hilfe
 const log = (...a) => console.log("[APP]", ...a);
 
-// Health-Check
+// Health-Check (einfach)
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
+});
+
+// Detail-Check (zeigt nur Vorhandensein, keine Secrets)
 app.get("/api/check", (_req, res) => {
-  // Nur Key-Präfix/Suffix für Debug (nie ganzen Key zurückgeben!)
   const keyPreview = OPENAI_API_KEY
     ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4)
     : "❌ kein Key";
@@ -37,6 +44,7 @@ app.get("/api/check", (_req, res) => {
     supabaseUrl: SUPABASE_URL ? "✅ vorhanden" : "❌ fehlt",
     supabaseJwtSecret: SUPABASE_JWT_SECRET ? "✅ vorhanden" : "❌ fehlt",
     allowedEmails: ALLOWED_EMAILS.length ? `✅ ${ALLOWED_EMAILS.length}` : "—",
+    model: OPENAI_MODEL,
   });
 });
 
@@ -148,13 +156,13 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
   try {
-    // Debug-Log (Modell + Key-Präfix)
     log("Starte OpenAI-Request", {
-      model: "gpt-5",
+      model: OPENAI_MODEL,
       key: OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4) : "❌ kein Key",
       user: req.user?.email || "unbekannt"
     });
 
+    // Node 18+ hat global fetch
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -162,9 +170,10 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-5",
+        model: OPENAI_MODEL,          // z. B. "gpt-4o-mini"
         temperature: 0.2,
-        max_tokens: 1000,
+        // WICHTIG: neuer Parametername
+        max_completion_tokens: 1000,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           ...FEW_SHOTS,
@@ -176,10 +185,10 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
     if (!openaiRes.ok) {
       const errBody = await openaiRes.text().catch(() => "");
       log("OpenAI-Fehler", openaiRes.status, errBody);
-      // Freundlichere Meldung bei Quota-Fehlern
+
       if (openaiRes.status === 429 && /insufficient_quota/i.test(errBody)) {
         return res.status(502).json({
-          error: "OpenAI-Kontingent erschöpft (Teams-Key/Billing prüfen)."
+          error: "OpenAI-Kontingent erschöpft (API-Billing prüfen)."
         });
       }
       return res.status(502).json({
