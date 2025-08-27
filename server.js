@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 // server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI chat.completions)
+=======
+const Fuse = require("fuse.js");
+const catalogIndex = require("./catalogs/index.json");
+// server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI gpt-5 + Debug)
+>>>>>>> d1e4dde (Save local changes)
 
 const express = require("express");
 const path = require("path");
@@ -154,6 +160,30 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   const userInput = (req.body?.prompt || "").toString().trim();
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
   if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
+  // --- Grounding: Träger erkennen & Kandidaten suchen ---
+  const payer = detectPayer(userInput);
+  const candidates = findCandidates(userInput, payer);
+
+  // Sicherheitsnetz: Ohne Kandidaten keine KI-Antwort
+  if (!candidates.length) {
+    return res.status(400).json({
+      error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. 'ÖGK, Blutentnahme aus der Vene')."
+    });
+  }
+
+  // Regeln für das Modell: Nur aus diesen Kandidaten wählen
+  const rules = `
+DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN:
+${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points}${c.notes ? " | " + c.notes : ""}`).join("\n")}
+Wenn nichts passt, frage nach!
+Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück.
+`;
+
+  const messages = [
+    { role: "system", content: SYSTEM_PROMPT + "\n" + rules },
+    ...FEW_SHOTS,
+    { role: "user", content: userInput }
+  ];
 
   try {
     log("Starte OpenAI-Request", {
@@ -197,6 +227,17 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
     }
 
     const data = await openaiRes.json();
+      const output = data?.choices?.[0]?.message?.content?.trim() || "";
+  const allowed = new Set(candidates.map(c => String(c.pos).toLowerCase()));
+  const used = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
+  const illegal = used.filter(x => !allowed.has(x));
+  if (illegal.length) {
+    return res.status(422).json({
+      error: `Antwort enthält nicht freigegebene Position(en): ${illegal.join(", ")}. Bitte Eingabe präzisieren.`,
+      debug: { allowed: Array.from(allowed).slice(0, 20) }
+    });
+  }
+
     const output = data?.choices?.[0]?.message?.content?.trim();
     if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
 
