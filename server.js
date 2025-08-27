@@ -176,16 +176,17 @@ function preferredByRules(userText, payer) {
 function findCandidates(userText, payer, limit = 12) {
   const allItems = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
-  // 1) deterministische Regeln (wenn getroffen, NUR diese zurückgeben)
+  // 1) deterministische Regeln
   const preferCodes = preferredByRules(userText, payer);
   if (preferCodes.length) {
     const preferred = allItems.filter(x => preferCodes.includes(String(x.pos)));
-    // HARTER GATE: keine Fuzzy-Extras mehr, um 400/401 zu verhindern
-    return preferred.slice(0, limit);
+    const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.35, keys: ["title"] });
+    const extras = fuse.search(userText).map(r => r.item).filter(x => !preferCodes.includes(String(x.pos)));
+    return [...preferred, ...extras].slice(0, limit);
   }
 
-  // 2) Fuzzy-Fallback (nur wenn es KEINE Regel gab)
-  const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.3, keys: ["title"] });
+  // 2) Fuzzy
+  const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.35, keys: ["title"] });
   return fuse.search(userText).slice(0, limit).map(r => r.item);
 }
 
@@ -282,4 +283,3 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück.
 
 // Start
 app.listen(PORT, () => log(`Server läuft auf Port ${PORT}`));
-
