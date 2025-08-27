@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-08-27T12:59:40.349Z",
+  "generatedAt": "2025-08-27T13:49:31.567Z",
   "items": [
     {
       "payer": "BVAEB",
@@ -20,8 +20,8 @@
     {
       "payer": "BVAEB",
       "pos": "10c",
-      "title": "Aderlass (mindestens",
-      "points": "250",
+      "title": "Aderlass (mindestens 250 ccm) ....................................................................................................................",
+      "points": "8",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -60,8 +60,8 @@
     {
       "payer": "BVAEB",
       "pos": "11d",
-      "title": "Intravenöse Injektion bei Kindern bis zum",
-      "points": "6",
+      "title": "Intravenöse Injektion bei Kindern bis zum 6. Lebensjahr ..............................................................................",
+      "points": "8",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -150,6 +150,14 @@
       "pos": "11p",
       "title": "Intrasinuöse Injektion ..................................................................................................................................",
       "points": "12",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "11q",
+      "title": "Krampfadernverödung: erste Injektion ..........................................................................................................",
+      "points": "6",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -323,6 +331,14 @@
     },
     {
       "payer": "BVAEB",
+      "pos": "15g",
+      "title": "Epicutantest Kontrollsitzung (Nach- und Ergänzungstestung zu Pos 15f) ...................................................",
+      "points": "10",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
       "pos": "15h",
       "title": "Allergologische Exploration ...........................................................................................................................",
       "points": "8",
@@ -381,6 +397,14 @@
       "payer": "BVAEB",
       "pos": "16h",
       "title": "Sternalpunktion ...........................................................................................................................................",
+      "points": "20",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "16i",
+      "title": "Punktion der Prostata (inkl. Punktionsnadeln); ............................................................................................",
       "points": "20",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
@@ -796,8 +820,8 @@
     {
       "payer": "BVAEB",
       "pos": "22b",
-      "title": "Skiaskopie (nach Lindner) bei Kindern bis zu",
-      "points": "14",
+      "title": "Skiaskopie (nach Lindner) bei Kindern bis zu 14 Jahren, darüber mit besonderer Begründung ...................",
+      "points": "6",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -854,6 +878,14 @@
       "pos": "22i",
       "title": "Tonometrie, Impressionstonometrie, beidseitig .............................................................................................",
       "points": "3",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "22j",
+      "title": "Applanationstonometrie beidseitig, nicht neben 22i verrechenbar ..............................................................",
+      "points": "10",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1012,8 +1044,8 @@
     {
       "payer": "BVAEB",
       "pos": "26h",
-      "title": "Entfernung eines Nagels am",
-      "points": "2",
+      "title": "Entfernung eines Nagels am 2. bis 5. Finger oder an der 2. bis 5. Zehe .......................................................",
+      "points": "4",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1062,6 +1094,14 @@
       "pos": "27i",
       "title": "Aufkeilung eines Gipsverbandes ...................................................................................................................",
       "points": "5",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "27m",
+      "title": "Korrektur des Kompressionsverbandes gem. 27l ..........................................................................................",
+      "points": "8",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1124,8 +1164,8 @@
     {
       "payer": "BVAEB",
       "pos": "30f",
-      "title": "Abstrichabnahme von Sekreten der Geschlechtsorgane,",
-      "points": "1",
+      "title": "Abstrichabnahme von Sekreten der Geschlechtsorgane, 1. Stelle................................................................",
+      "points": "2",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1283,6 +1323,14 @@
     },
     {
       "payer": "BVAEB",
+      "pos": "34a",
+      "title": "EKG in Ruhe (Ableitungen I, II, III; AVR, AVL, AVF; V1-6) .................................................................",
+      "points": "51,0548",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
       "pos": "34c",
       "title": "Drei zusätzliche Ableitungen mit Begründung ......................................................................................",
       "points": "9,7764",
@@ -1323,6 +1371,14 @@
     },
     {
       "payer": "BVAEB",
+      "pos": "34n",
+      "title": "Bronchospasmolysetest (wie 34m - incl. Inhalation eines Broncholyticums) ...............................................",
+      "points": "15",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
       "pos": "34p",
       "title": "Messung der Atemwegswiderstände .............................................................................................................",
       "points": "5",
@@ -1356,8 +1412,16 @@
     {
       "payer": "BVAEB",
       "pos": "34w",
-      "title": "Entwicklungstest bis zum vollendeten",
-      "points": "6",
+      "title": "Entwicklungstest bis zum vollendeten 6. Lebensjahr (inklusive Dokumentation) ........................................",
+      "points": "17",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "34x",
+      "title": "24-Stunden Blutdruckmonitoring ........................................................................................................",
+      "points": "50,0344",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1387,17 +1451,49 @@
     },
     {
       "payer": "BVAEB",
+      "pos": "35b",
+      "title": "Ausführliche psychiatrische Exploration; .....................................................................................................",
+      "points": "31",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "35f",
+      "title": "Komplette neurologische Statuserhebung mit Dokumentation; ...................................................................",
+      "points": "31",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "35h",
+      "title": "Psychiatrische Skala: HAM-D-Scale oder gleichwertige Skala....................................................................",
+      "points": "31",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "36b",
+      "title": "Psychiatrische Notfallbehandlung (Krisenintervention); ..............................................................................",
+      "points": "76",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
       "pos": "36d",
-      "title": "Psychotherapeutische Medizin, Einzeltherapie",
-      "points": "50",
+      "title": "Psychotherapeutische Medizin, Einzeltherapie 50 min.; .............................................................................",
+      "points": "77",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
       "payer": "BVAEB",
       "pos": "36e",
-      "title": "Psychotherapeutische Medizin, Einzeltherapie",
-      "points": "25",
+      "title": "Psychotherapeutische Medizin, Einzeltherapie 25 min.; .............................................................................",
+      "points": "39",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1430,6 +1526,14 @@
       "pos": "37c",
       "title": "EMG ............................................................................................................................................................",
       "points": "56",
+      "notes": "",
+      "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
+    },
+    {
+      "payer": "BVAEB",
+      "pos": "37d",
+      "title": "ENG + EMG ................................................................................................................................................",
+      "points": "91",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1580,16 +1684,16 @@
     {
       "payer": "BVAEB",
       "pos": "38v",
-      "title": "Phototherapie, je Behandlung",
-      "points": "1",
+      "title": "Phototherapie, je Behandlung 1.-16. Behandlung .........................................................................................",
+      "points": "9",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
       "payer": "BVAEB",
       "pos": "38w",
-      "title": "Photochemotherapie, je Behandlung",
-      "points": "1",
+      "title": "Photochemotherapie, je Behandlung 1.-16. Behandlung ............................................................................",
+      "points": "13",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1804,32 +1908,32 @@
     {
       "payer": "BVAEB",
       "pos": "45b",
-      "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen",
-      "points": "15",
+      "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen 15 Minuten ..............................................",
+      "points": "46,00",
       "notes": "Einmal pro Patient und Tag verrechenbar. Die Positionen 45a, 45c und 45d sind am selben Tag nicht verrechenbar.",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
       "payer": "BVAEB",
       "pos": "45c",
-      "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen",
-      "points": "25",
+      "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen 25 Minuten ..............................................",
+      "points": "76,65",
       "notes": "Einmal pro Patient und Tag verrechenbar. Die Positionen 45a, 45b und 45d sind am selben Tag nicht verrechenbar.",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
       "payer": "BVAEB",
       "pos": "45d",
-      "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen",
-      "points": "50",
+      "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen 50 Minuten ............................................",
+      "points": "153,33",
       "notes": "Einmal pro Patient und Tag verrechenbar. Die Positionen 45a, 45b und 45c sind am selben Tag nicht verrechenbar.",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
       "payer": "BVAEB",
       "pos": "45e",
-      "title": "Außenanamnese und/oder Sozialpsychiatrische Intervention, pro beendeten",
-      "points": "5",
+      "title": "Außenanamnese und/oder Sozialpsychiatrische Intervention, pro beendeten 5 Minuten .....................",
+      "points": "11,75",
       "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1844,8 +1948,8 @@
     {
       "payer": "BVAEB",
       "pos": "45j",
-      "title": "Psychiatrische Notfallbehandlung (Krisenintervention), Dauer im Allgemeinen",
-      "points": "70",
+      "title": "Psychiatrische Notfallbehandlung (Krisenintervention), Dauer im Allgemeinen 70 Minuten .................",
+      "points": "173,47",
       "notes": "Die Positionen 45a, 45b, 45c, 45d, 45e, 45f, 45g, 45h, 45i und 35f sind am selben Tag nicht verrechenbar.",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
@@ -1915,6 +2019,14 @@
     },
     {
       "payer": "ÖGK",
+      "pos": "11",
+      "title": "Uhr =",
+      "points": "3",
+      "notes": "Folgende Sonderleistungen sind zusätzlich verrechenbar Zusätzliche fakultative Schwangerschaftsuntersuchung: Zusätzliche fakultative Kindesuntersuchung: geuntersuchungsprogramm enthalten sind, können nicht zusätzlich in Rechnung gestellt wer- neuen bzw. zusätzlichen die krankenhausersetzende medizinische kenpflegefall nur einmal verrechenbar. Wenn der Vertreter in einem doch außerhalb dieser Limitierungsbestimmungen vergütet werden. Nähere Hinweise über die wenn diese Untersuchung zusätzlich notwendig ist; d) im Falle einer zusätzlichen Verrechnung der Pos. Nr. 108 (Blaubinden, Elastoplastverband Sonderleistungen die Ziffer II zugeordnet, wobei diese Bezeichnung zusätzlich nach der für die",
+      "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
+    },
+    {
+      "payer": "ÖGK",
       "pos": "114",
       "title": "Zuschlag für Gehgips",
       "points": "5/II",
@@ -1932,7 +2044,7 @@
     {
       "payer": "ÖGK",
       "pos": "12e",
-      "title": "Heilmittelgespräch AL",
+      "title": "Heilmittelgespräch",
       "points": "5/II",
       "notes": "zusätzlich nicht verrechenbar",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -1948,7 +2060,7 @@
     {
       "payer": "ÖGK",
       "pos": "137",
-      "title": "Vestibularisprüfung HO",
+      "title": "Vestibularisprüfung",
       "points": "8/I",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -1956,7 +2068,7 @@
     {
       "payer": "ÖGK",
       "pos": "143",
-      "title": "Tubenkatheter HO",
+      "title": "Tubenkatheter",
       "points": "2/I",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -1964,7 +2076,7 @@
     {
       "payer": "ÖGK",
       "pos": "147",
-      "title": "Attic-Spülung HO",
+      "title": "Attic-Spülung",
       "points": "5/I",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -1980,7 +2092,7 @@
     {
       "payer": "ÖGK",
       "pos": "157",
-      "title": "Adenotomie HO",
+      "title": "Adenotomie",
       "points": "30/II",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -2004,7 +2116,7 @@
     {
       "payer": "ÖGK",
       "pos": "168",
-      "title": "Urethroskopie UR",
+      "title": "Urethroskopie",
       "points": "11/II",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -2102,7 +2214,7 @@
       "pos": "180",
       "title": "mind.",
       "points": "3",
-      "notes": "Die Begründung muss ausreichend sein und durch Belege und Hinweise über bestimmte Krankheitsfälle *zusätzlich 0,5 Planstellen (gesamt 1,5) ab 01.01.2019 im Rahmen einer Gruppenpraxis für die Dauer deren Bestandes j) Formal richtiges Ausbildungszeugnis über zusätzlich absolvierte anrechenbare Ausbil- zusätzlich berücksichtigt. Die Punkte nach dem Kriterium C lit b) werden zusätzlich zu nicht zusätzlich berücksichtigt. 2. Zusätzliche fachliche Qualifikationen C) Zusätzlich zur allgemeinmedizinischen Ausbildung absol- Die Punkte nach diesem Kriterium werden zusätzlich zu",
+      "notes": "Die Begründung muss ausreichend sein und durch Belege und Hinweise über bestimmte Krankheitsfälle",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2187,6 +2299,14 @@
     },
     {
       "payer": "ÖGK",
+      "pos": "27",
+      "title": "2 1 1 2 1 3 1 1 1 1 0 1 1 0",
+      "points": "0",
+      "notes": "",
+      "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
+    },
+    {
+      "payer": "ÖGK",
       "pos": "3",
       "title": "Brustkrebsfälle vor dem",
       "points": "60",
@@ -2254,7 +2374,7 @@
       "pos": "5",
       "title": "Facharztzuschlag einfach",
       "points": "4/I",
-      "notes": "Facharztzuschlag wird nur einmal pro Überwei- Facharztzuschlag wird nur einmal pro Überwei- Folgende Sonderleistungen sind zusätzlich verrechenbar Zusätzliche fakultative Schwangerschaftsuntersuchung: Zusätzliche fakultative Kindesuntersuchung: geuntersuchungsprogramm enthalten sind, können nicht zusätzlich in Rechnung gestellt wer- neuen bzw. zusätzlichen die krankenhausersetzende medizinische kenpflegefall nur einmal verrechenbar. Wenn der Vertreter in einem doch außerhalb dieser Limitierungsbestimmungen vergütet werden. Nähere Hinweise über die wenn diese Untersuchung zusätzlich notwendig ist; d) im Falle einer zusätzlichen Verrechnung der Pos. Nr. 108 (Blaubinden, Elastoplastverband Sonderleistungen die Ziffer II zugeordnet, wobei diese Bezeichnung zusätzlich nach der für die",
+      "notes": "Facharztzuschlag wird nur einmal pro Überwei- Facharztzuschlag wird nur einmal pro Überwei-",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2268,24 +2388,24 @@
     {
       "payer": "ÖGK",
       "pos": "501",
-      "title": "Einfache Durchleuchtung",
-      "points": "10",
+      "title": "Einfache Durchleuchtung 10 Unkostenverrechnung nach Position",
+      "points": "518",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "504",
-      "title": "Ösophagus",
-      "points": "15",
+      "title": "Ösophagus 15 Unkostenverrechnung nach Position",
+      "points": "519",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "506",
-      "title": "Irrigoskopie",
-      "points": "16",
+      "title": "Irrigoskopie 16 Unkostenverrechnung nach Position",
+      "points": "521",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
@@ -2388,88 +2508,88 @@
     {
       "payer": "ÖGK",
       "pos": "518",
-      "title": "Einfache Durchleuchtung",
-      "points": "3,95",
+      "title": "Einfache Durchleuchtung 3,95 2,41 4,13 2,52 4,29",
+      "points": "2,62",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "519",
-      "title": "Ösophagus",
-      "points": "4,85",
+      "title": "Ösophagus 4,85 3,48 5,07 3,64 5,27",
+      "points": "3,78",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "521",
-      "title": "Colon per Kontrast-Klysma",
-      "points": "17,23",
+      "title": "Colon per Kontrast-Klysma 17,23 12,30 18,01 12,85 18,72",
+      "points": "13,36",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "522",
-      "title": "Aufnahme",
-      "points": "9",
+      "title": "Aufnahme 9/12 5,99 4,26 6,26 4,45 6,51",
+      "points": "4,63",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "523",
-      "title": "Aufnahme",
-      "points": "13",
+      "title": "Aufnahme 13/18 6,72 4,81 7,02 5,03 7,30",
+      "points": "5,23",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "524",
-      "title": "Aufnahme",
-      "points": "18",
+      "title": "Aufnahme 18/24 7,47 5,30 7,81 5,54 8,12",
+      "points": "5,76",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "525",
-      "title": "Aufnahme",
-      "points": "18",
+      "title": "Aufnahme 18/35 9,32 6,73 9,74 7,03 10,13",
+      "points": "7,31",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "526",
-      "title": "Aufnahme",
-      "points": "15",
+      "title": "Aufnahme 15/40 8,62 6,20 9,01 6,48 9,37",
+      "points": "6,74",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "527",
-      "title": "Aufnahme",
-      "points": "20",
+      "title": "Aufnahme 20/40 10,34 7,41 10,81 7,74 11,24",
+      "points": "8,05",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "528",
-      "title": "Aufnahme",
-      "points": "24",
+      "title": "Aufnahme 24/30 9,18 6,62 9,59 6,92 9,97",
+      "points": "7,19",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "529",
-      "title": "Aufnahme",
-      "points": "30",
+      "title": "Aufnahme 30/40 11,92 8,56 12,46 8,95 12,95",
+      "points": "9,31",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
@@ -2492,24 +2612,24 @@
     {
       "payer": "ÖGK",
       "pos": "530",
-      "title": "Aufnahme",
-      "points": "35",
+      "title": "Aufnahme 35/35 11,92 8,56 12,46 8,95 12,95",
+      "points": "9,31",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "531",
-      "title": "Aufnahme",
-      "points": "35",
+      "title": "Aufnahme 35/43 13,69 10,29 14,31 10,75 14,88",
+      "points": "11,18",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
       "payer": "ÖGK",
       "pos": "532",
-      "title": "Zahnfilm",
-      "points": "3,17",
+      "title": "Zahnfilm 3,17 2,23 3,31 2,33 3,44",
+      "points": "2,42",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
@@ -2524,8 +2644,8 @@
     {
       "payer": "ÖGK",
       "pos": "56",
-      "title": "Intramuskuläre Injektion",
-      "points": "2/I",
+      "title": "10 3 10 11 10 8 9 6 4 6 6 1 4 2",
+      "points": "6",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
@@ -2556,8 +2676,8 @@
     {
       "payer": "ÖGK",
       "pos": "601",
-      "title": "Einfache Durchleuchtung",
-      "points": "8",
+      "title": "Einfache Durchleuchtung 8 Unkostenverrechnung nach Position",
+      "points": "618",
       "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
@@ -2692,7 +2812,7 @@
     {
       "payer": "ÖGK",
       "pos": "67",
-      "title": "Skiaskopie AU",
+      "title": "Skiaskopie",
       "points": "6/I",
       "notes": "10/II mit Pos. 74 und Pos. 84 nicht verrechenbar tion nur einmal zur Verrechnung. Sollten zusätzlich verrechenbar. 10/II mit Pos. 74 und Pos. 84 nicht verrechenbar 4/I mit Pos. 74 und Pos. 84 nicht verrechenbar",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -2708,7 +2828,7 @@
     {
       "payer": "ÖGK",
       "pos": "83",
-      "title": "Wimpernepilation AL, AU",
+      "title": "Wimpernepilation AL,",
       "points": "4/I",
       "notes": "a) Betäubung (Oberflächenanästhesie ist nicht verrechenbar)",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -2724,7 +2844,7 @@
     {
       "payer": "ÖGK",
       "pos": "86a",
-      "title": "Perineurale Infiltration O, C",
+      "title": "Perineurale Infiltration O,",
       "points": "4/II",
       "notes": "nur einmal pro Unfallereignis möglich,",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
@@ -2748,8 +2868,8 @@
     {
       "payer": "SVS",
       "pos": "10b",
-      "title": "Blutabnahme aus der Vene bei Kindern bis zu",
-      "points": "6",
+      "title": "Blutabnahme aus der Vene bei Kindern bis zu 6 Jahren .........................................",
+      "points": "12",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -2796,8 +2916,8 @@
     {
       "payer": "SVS",
       "pos": "11d",
-      "title": "Intravenöse Injektion bei Kindern bis zu",
-      "points": "6",
+      "title": "Intravenöse Injektion bei Kindern bis zu 6 Jahren ....................................................",
+      "points": "12",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -2822,6 +2942,22 @@
       "pos": "11u",
       "title": "Periarticuläre Gelenksumspritzung (ein großes oder mehrere kleine Gelenke) .......",
       "points": "18",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "11v",
+      "title": "Intraarticuläre Injektion (große Gelenke)* .................................................................",
+      "points": "50",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "11w",
+      "title": "Intraarticuläre Injektion (kleine Gelenke)* ................................................................",
+      "points": "30",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -2915,6 +3051,14 @@
     },
     {
       "payer": "SVS",
+      "pos": "17",
+      "title": "0 1 1 1 1 1 1 1 1 1 1 0 1 0 1 0 0 0",
+      "points": "0",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "17a",
       "title": "Aus dem Schleimbeutel oder einem Abszeß oder Serom .................................",
       "points": "20",
@@ -2980,9 +3124,9 @@
     {
       "payer": "SVS",
       "pos": "18",
-      "title": "Tarifgruppe X",
+      "title": "Tarifgruppe",
       "points": "81",
-      "notes": "der Regel nur einmal verrechnet werden. Ausnahmen sind zu begründen. 5. Die unter Abschnitt II bis Abschnitt XIV angeführten Positionen werden zusätzlich neben",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3300,8 +3444,8 @@
     {
       "payer": "SVS",
       "pos": "26h",
-      "title": "Entfernung eines Nagels am",
-      "points": "2",
+      "title": "Entfernung eines Nagels am 2. – 5. Finger oder an der 2. – 5. Zehe AM, D ............",
+      "points": "6",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -3347,6 +3491,14 @@
     },
     {
       "payer": "SVS",
+      "pos": "27m",
+      "title": "Korrektur des Kompressionsverbandes (gem. Pos.Nr. 27l) AM, D, K ......................",
+      "points": "10",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "27n",
       "title": "Verbandwechsel AM, D, K .........................................................................................",
       "points": "6",
@@ -3379,6 +3531,30 @@
     },
     {
       "payer": "SVS",
+      "pos": "2h",
+      "title": "Entfernungszuschlag bei Tag, gem. § 9 Abs. 3 lit.c ..................................................",
+      "points": "3",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "2i",
+      "title": "Entfernungszuschlag bei Nacht, gem. § 9 Abs. 3 lit.c ..............................................",
+      "points": "5",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "2x",
+      "title": "pro Jahr; maximal",
+      "points": "10",
+      "notes": "Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar. Die Zuschlagsposition ist nicht verrechenbar, wenn bei zugewiesenen Patienten bereits ein Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Hinweises auf eine akute Thrombose der tiefen Beinvenen – D.I.C(G).R. ............. 73 Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. In diesem Falle kann von Ärzten für Allgemeinmedizin zusätzlich zu diesem Tarif eine Ordination Untersuchungsmaterial nur einmal verrechenbar, sofern bei einzelnen Positionen nichts Anderes auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01 oder • zusätzlich zu dieser Reduktion der Gewichtskraft hat das Gerät über ein Laufband, auf welchem Untersuchungsmaterial nur einmal verrechenbar, sofern bei einzelnen Positionen nichts Anderes auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01oder 5.02) .................... 3,0 kann (hinsichtlich der Einsendung) nur einmal die Position 54.01 bzw. 54.02 e) die Pos.Nrn. 54.05 bzw. 54.10 beinhalten jeweils auch (zusätzliche) gefärbte",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "30a",
       "title": "Tamponade der Gebärmutter zur Blutstillung ...........................................................",
       "points": "40",
@@ -3404,8 +3580,8 @@
     {
       "payer": "SVS",
       "pos": "30f",
-      "title": "Abstrichentnahme von Sekreten der Geschlechtsorgane,",
-      "points": "1",
+      "title": "Abstrichentnahme von Sekreten der Geschlechtsorgane, 1. Stelle AM, D, U ..........",
+      "points": "4",
       "notes": "am selben Tag nicht verrechenbar. Mögliche Inhalte des Beratungsgespräches sind Lebensjahr. Die Positionen TA, PS, 1j und HMG sind am selben Tag nicht verrechenbar. verrechenbar in maximal 6% der Fälle pro Arzt und Quartal, nicht verrechenbar zur bloßen",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -3428,8 +3604,8 @@
     {
       "payer": "SVS",
       "pos": "31f",
-      "title": "Cardiotokographie, mindestens",
-      "points": "30",
+      "title": "Cardiotokographie, mindestens 30 Min.",
+      "points": "55,6",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -3447,6 +3623,14 @@
       "title": "Sprachaudiometrie .....................................................................................................",
       "points": "40",
       "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "33",
+      "title": "0 2 0 1 2 1 1 1 0 0 0 0 0 0 0 1 0 0 0",
+      "points": "0",
+      "notes": "der Regel nur einmal verrechnet werden. Ausnahmen sind zu begründen. 5. Die unter Abschnitt II bis Abschnitt XIV angeführten Positionen werden zusätzlich neben",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3523,6 +3707,14 @@
     },
     {
       "payer": "SVS",
+      "pos": "34a",
+      "title": "EKG in Ruhe (Ableitungen I, II, III; AVR, AVL, AVF; V1-6) K, L, AM ........................",
+      "points": "69",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "34d",
       "title": "Langzeit EKG (Anlegen des Gerätes,",
       "points": "24",
@@ -3531,10 +3723,26 @@
     },
     {
       "payer": "SVS",
+      "pos": "34g",
+      "title": "Herzschrittmacherkontrolle (1-Kammer oder 2-Kammer-System)",
+      "points": "149,1",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "34p",
       "title": "Messung der Atemwegwiderstände K, I ...................................................................",
       "points": "7",
       "notes": "34h Zusätzliche individuelle Beratung und Erstellung eines schriftlichen Ernährungs-",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "34v",
+      "title": "Weitere Untersuchung nach Pos. 34u ab dem vollendeten",
+      "points": "2",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3571,8 +3779,16 @@
     },
     {
       "payer": "SVS",
+      "pos": "35j",
+      "title": "ENG + EMG (Elektroneurographie und Elektromyographie) ....................................",
+      "points": "108",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "35k",
-      "title": "Eingehende Sensibilitätsprüfung, AM, N, PSY, O",
+      "title": "Eingehende Sensibilitätsprüfung, AM, N, PSY,",
       "points": "6,7",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
@@ -3588,16 +3804,16 @@
     {
       "payer": "SVS",
       "pos": "36d",
-      "title": "Psychotherapeutische Medizin, Einzeltherapie",
-      "points": "50",
+      "title": "Psychotherapeutische Medizin, Einzeltherapie 50 Minuten .....................................",
+      "points": "98",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
       "payer": "SVS",
       "pos": "36e",
-      "title": "Psychotherapeutische Medizin, Einzeltherapie",
-      "points": "25",
+      "title": "Psychotherapeutische Medizin, Einzeltherapie 25 Minuten .....................................",
+      "points": "49",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -3756,8 +3972,8 @@
     {
       "payer": "SVS",
       "pos": "3b",
-      "title": "bei Nacht (von",
-      "points": "20",
+      "title": "bei Nacht (von 20 bis 7 Uhr) .....................................................................................",
+      "points": "40",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -3950,7 +4166,7 @@
       "pos": "45j",
       "title": "Psychiatrische Notfallbehandlung (Krisenintervention) Dauer im Allgemeinen",
       "points": "70",
-      "notes": "Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar. Die Zuschlagsposition ist nicht verrechenbar, wenn bei zugewiesenen Patienten bereits ein Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Hinweises auf eine akute Thrombose der tiefen Beinvenen – D.I.C(G).R. ............. 73 Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. In diesem Falle kann von Ärzten für Allgemeinmedizin zusätzlich zu diesem Tarif eine Ordination Untersuchungsmaterial nur einmal verrechenbar, sofern bei einzelnen Positionen nichts Anderes auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01 oder • zusätzlich zu dieser Reduktion der Gewichtskraft hat das Gerät über ein Laufband, auf welchem Untersuchungsmaterial nur einmal verrechenbar, sofern bei einzelnen Positionen nichts Anderes auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01oder 5.02) .................... 3,0 kann (hinsichtlich der Einsendung) nur einmal die Position 54.01 bzw. 54.02 e) die Pos.Nrn. 54.05 bzw. 54.10 beinhalten jeweils auch (zusätzliche) gefärbte",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3971,9 +4187,25 @@
     },
     {
       "payer": "SVS",
+      "pos": "6l",
+      "title": "Entfernungszuschlag bei Tag, gem. § 9 Abs. 3 lit. f .................................................",
+      "points": "3",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
+      "pos": "6m",
+      "title": "Entfernungszuschlag bei Nacht, gem. § 9 Abs. 3 lit. f ..............................................",
+      "points": "5",
+      "notes": "",
+      "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
+    },
+    {
+      "payer": "SVS",
       "pos": "7b",
-      "title": "bei Nacht (von",
-      "points": "20",
+      "title": "bei Nacht (von 20 bis 7 Uhr) .....................................................................................",
+      "points": "60",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -3988,8 +4220,8 @@
     {
       "payer": "SVS",
       "pos": "8b",
-      "title": "bei Nacht (von",
-      "points": "20",
+      "title": "bei Nacht (von 20 bis 7 Uhr) .....................................................................................",
+      "points": "80",
       "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
@@ -4091,9 +4323,33 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "062",
+      "title": "Harn auf Eiweiß;",
+      "points": "6",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "063",
+      "title": "Harn auf Zucker;",
+      "points": "6",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "065",
       "title": "Alpha-Amylase (Diastase) quant.",
       "points": "12",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "066",
+      "title": "Harn auf Blut qual.;",
+      "points": "4",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -4124,8 +4380,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "1",
-      "title": "Thorax (Herz und Lunge)",
-      "points": "1",
+      "title": "+ 2+",
+      "points": "3",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "10",
+      "title": "24 x 30 €",
+      "points": "11,50",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4156,16 +4420,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "106",
-      "title": "i.v.-Injektion",
-      "points": "2,53",
+      "title": "Kanthoplastik mit Naht €",
+      "points": "43,05",
       "notes": "",
-      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "107",
-      "title": "i.v.-Injektion bei Kindern bis zum",
-      "points": "6",
+      "title": "i.v.-Injektion bei Kindern bis zum 6. Lebensjahr",
+      "points": "3,11",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -4219,6 +4483,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "10p",
+      "title": "24 x",
+      "points": "30",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "11",
       "title": "Biligraphie",
       "points": "1",
@@ -4235,6 +4507,30 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "111",
+      "title": "Elektrolytische Epilation €",
+      "points": "43,05",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "112",
+      "title": "Varizenverödung; 2. bis 10. Injektion je",
+      "points": "4,60",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "118",
+      "title": "Verödung eines Hämorrhoidalknotens; 2. bis 5. Injektion je",
+      "points": "4,60",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "11h",
       "title": "Hydrocele Punktion",
       "points": "15",
@@ -4244,8 +4540,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "11p",
-      "title": "Leitungsanästhesie",
-      "points": "25",
+      "title": "30 x",
+      "points": "40",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4267,11 +4563,19 @@
     },
     {
       "payer": "UNBEKANNT",
-      "pos": "120",
-      "title": "Subcutane oder intravenöse Infusion",
-      "points": "7,20",
+      "pos": "12",
+      "title": "35 x 35 €",
+      "points": "16,72",
       "notes": "",
-      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "120",
+      "title": "Tarsorrhaphie €",
+      "points": "86,23",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -4280,6 +4584,22 @@
       "points": "18,89",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "12f",
+      "title": "Kolposkopie €",
+      "points": "14,37",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "12p",
+      "title": "35 x",
+      "points": "35",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -4348,8 +4668,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "13p",
-      "title": "Phonokardiogramm",
-      "points": "25",
+      "title": "35 x",
+      "points": "43",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4422,7 +4742,15 @@
       "pos": "153",
       "title": "Tonometrie",
       "points": "2,78",
-      "notes": "(nicht verrechenbar von FÄ für Neurologie) 17,79 (nicht verrechenbar für FÄ für Neurologie) 4,46",
+      "notes": "(nicht verrechenbar von FÄ für Neurologie) 17,79",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "156",
+      "title": "+ Probeexcision mit Naht",
+      "points": "11,56",
+      "notes": "(nicht verrechenbar für FÄ für Neurologie) 4,46",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -4436,8 +4764,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "16",
-      "title": "Schädel",
-      "points": "1",
+      "title": "+ 19 Schädel und Felsenbeine",
+      "points": "2",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4491,6 +4819,22 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "174",
+      "title": "Probeexcision mit Naht €",
+      "points": "43,05",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "175",
+      "title": "+ Lidoperation (inkl. Nahtmaterial)",
+      "points": "55,69",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "17e",
       "title": "Halskrawatte",
       "points": "50",
@@ -4500,8 +4844,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "17p",
-      "title": "Tendinitis",
-      "points": "4",
+      "title": "Tendinitis 4 – 6 4 3 76,8 €",
+      "points": "26,60",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4531,6 +4875,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "189",
+      "title": "Spaltung einer Fistula ani €",
+      "points": "86,23",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "18f",
       "title": "Epicutantestung",
       "points": "90",
@@ -4540,9 +4892,17 @@
     {
       "payer": "UNBEKANNT",
       "pos": "18h",
-      "title": "Epicondylitis",
-      "points": "6",
-      "notes": "Zusätzliche Aufnahmen mit Zusätzliche Aufnahme zusätzlich mit besonderer",
+      "title": "Epicondylitis 6 5 3 95,3 €",
+      "points": "32,69",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "18o",
+      "title": "OCT-Untersuchung €",
+      "points": "82,26",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -4587,8 +4947,16 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "1b",
+      "title": "Nachtordination €",
+      "points": "21,37",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "2",
-      "title": "Ösophagus",
+      "title": "+ 3 Ösophagus und Hals",
       "points": "1",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
@@ -4611,11 +4979,99 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "210",
+      "title": "+ Operative Wundversorgung bis 5 Nähte",
+      "points": "26,65",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "211",
+      "title": "+ Operative Wundversorgung 6 bis 10 Nähte",
+      "points": "35,36",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "212",
+      "title": "+ Operative Wundversorgung über",
+      "points": "10",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "213",
+      "title": "+ Gedeckte Tenotomie",
+      "points": "25,10",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "214",
+      "title": "+ Sehnennaht, offene Tenotomie",
+      "points": "39,47",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "215",
+      "title": "Resektion e. kl. Gelenkes €",
+      "points": "148,62",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "22",
       "title": "Zahnstatus, komplett",
       "points": "10",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "220",
+      "title": "+ Nagelentfernung",
+      "points": "12,73",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "222",
+      "title": "+ Implantation von Hormonkristallen",
+      "points": "14,84",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "223",
+      "title": "+ Phimosenoperation",
+      "points": "21,13",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "224",
+      "title": "+ Probeexcision mit Naht",
+      "points": "15,85",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "236",
+      "title": "+ Finger- oder Zehenamputation",
+      "points": "38,36",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -4702,6 +5158,14 @@
       "pos": "26",
       "title": "Fußwurzel mit Mittelfuß",
       "points": "1",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "260",
+      "title": "Exstirpation d. Hymens €",
+      "points": "86,23",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4835,6 +5299,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "287",
+      "title": "Konisation €",
+      "points": "148,62",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "29",
       "title": "Fremdkörper",
       "points": "1",
@@ -4860,8 +5332,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "3",
-      "title": "Hals (Trachea und Struma)",
-      "points": "1",
+      "title": "+ 5 Hals- und Magen-Duodenum",
+      "points": "2",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4875,9 +5347,17 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "301",
+      "title": "Abtragung von Ohrpolypen €",
+      "points": "43,05",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "303",
-      "title": "Epicutan- und Intracutantest",
-      "points": "5",
+      "title": "Epicutan- und Intracutantest 5 - 7 Stoffe",
+      "points": "11,56",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -4891,9 +5371,25 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "30b",
+      "title": "Mammographie €",
+      "points": "102,75",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "30c",
+      "title": "Mammographie einer Brust €",
+      "points": "51,38",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "30n",
       "title": "Elektroneurographie",
-      "points": "135",
+      "points": "135 P",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4939,6 +5435,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "321",
+      "title": "Intubation €",
+      "points": "86,23",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "325",
       "title": "Nachfüllen eines Pneumothorax, einseitig",
       "points": "13,21",
@@ -4955,6 +5459,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "329",
+      "title": "Speichelsteinentfernung €",
+      "points": "86,23",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "32b",
       "title": "Echokardiographie",
       "points": "150",
@@ -4964,8 +5476,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "33",
-      "title": "Lendenwirbelsäule",
-      "points": "1",
+      "title": "+ 36 +",
+      "points": "37",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4995,6 +5507,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "344",
+      "title": "+ Probeexcision in der Frauenheilkunde",
+      "points": "24,50",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "345",
       "title": "Elektrokoagulation der Portio und Cervix",
       "points": "17,79",
@@ -5011,6 +5531,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "347",
+      "title": "+ Spaltung eines Bartholinischen Abszesses",
+      "points": "20,93",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "348",
       "title": "Probecurettage (Strichabrasio)",
       "points": "32,49",
@@ -5020,9 +5548,17 @@
     {
       "payer": "UNBEKANNT",
       "pos": "35",
-      "title": "Becken",
+      "title": "+ 39 Becken und Hüftgelenke",
       "points": "1",
       "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "350",
+      "title": "Meatotomie €",
+      "points": "43,05",
+      "notes": "präoperative Diagnostik hinweist.",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -5044,8 +5580,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "36",
-      "title": "Kreuzbein",
-      "points": "1",
+      "title": "+ 37 +",
+      "points": "38",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5054,6 +5590,14 @@
       "pos": "363",
       "title": "Wiederbelebung beim scheintoten Neugeborenen",
       "points": "13,96",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "366",
+      "title": "+ Naht eines Dammrisses 3. Grades",
+      "points": "124,71",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -5187,6 +5731,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "417",
+      "title": "+ Locus Kiesselbach, je Seite",
+      "points": "8,37",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "42",
       "title": "Sterno-Claviculargelenke",
       "points": "1",
@@ -5211,6 +5763,46 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "425",
+      "title": "+ Submuköse Septumresektion",
+      "points": "39,47",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "426",
+      "title": "+ Siebbeinradikaloperation, einseitig",
+      "points": "39,47",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "427",
+      "title": "+ Siebbeinradikaloperation, beidseitig",
+      "points": "67,98",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "428",
+      "title": "+ Adenotomie",
+      "points": "29,20",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "429",
+      "title": "+ Mukotomie",
+      "points": "14,80",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "42b",
       "title": "Harn auf Eiweiß, quant.",
       "points": "4",
@@ -5224,6 +5816,14 @@
       "points": "1",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "430",
+      "title": "+ Tracheotomie",
+      "points": "66,06",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -5340,16 +5940,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "454",
-      "title": "Biopsie der Prostata (für die",
-      "points": "1",
+      "title": "Biopsie der Prostata (für die 1. und 2. Biopsie)",
+      "points": "33,42",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "459",
-      "title": "Biopsie der Prostata (ab der",
-      "points": "3",
+      "title": "Biopsie der Prostata (ab der 3. Biopsie)",
+      "points": "11,15",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -5403,6 +6003,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "468",
+      "title": "+ Blasenpunktion",
+      "points": "9,39",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "469",
       "title": "Lithotripsie",
       "points": "100,10",
@@ -5424,6 +6032,14 @@
       "points": "1",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "470",
+      "title": "Extraktion mit der Zeiss'schen Schlinge",
+      "points": "55,58",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -5462,6 +6078,22 @@
       "pos": "48a",
       "title": "Thymoltrübungsreaktion",
       "points": "10",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "48c",
+      "title": "RF = Latex (Rheumafaktor)",
+      "points": "10",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "49a",
+      "title": "* Gesamtbilirubin i.S.",
+      "points": "11",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5539,9 +6171,41 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "52d",
+      "title": "* Harnsäure, quant. i.S.",
+      "points": "20",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "52f",
+      "title": "* Kalzium, quant. i.S.",
+      "points": "20",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "52g",
+      "title": "* Eisen, quant. i.S.",
+      "points": "20",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "52n",
       "title": "Prothrombinzeit-Bestimmung",
       "points": "20",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "52r",
+      "title": "CRP €",
+      "points": "9",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5611,6 +6275,22 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "53b",
+      "title": "*** Kalium, quant. i.S.",
+      "points": "23",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "54",
+      "title": "1 Kniegelenk",
+      "points": "1",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "542",
       "title": "Aerosolinhalation (ohne Medikament)",
       "points": "2,78",
@@ -5636,56 +6316,56 @@
     {
       "payer": "UNBEKANNT",
       "pos": "553",
-      "title": "Filmgröße",
-      "points": "9",
+      "title": "Filmgröße 9 x 12",
+      "points": "2,84",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "554",
-      "title": "Filmgröße",
-      "points": "13",
+      "title": "Filmgröße 13 x 18",
+      "points": "3,58",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "555",
-      "title": "Filmgröße",
-      "points": "18",
+      "title": "Filmgröße 18 x 24",
+      "points": "4,15",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "556",
-      "title": "Filmgröße",
-      "points": "15",
+      "title": "Filmgröße 15 x 40",
+      "points": "4,54",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "557",
-      "title": "Filmgröße",
-      "points": "24",
+      "title": "Filmgröße 24 x 30",
+      "points": "5,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "558",
-      "title": "Filmgröße",
-      "points": "30",
+      "title": "Filmgröße 30 x 40",
+      "points": "6,23",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "559",
-      "title": "Filmgröße",
-      "points": "35",
+      "title": "Filmgröße 35 x 35",
+      "points": "7,58",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -5710,7 +6390,7 @@
       "pos": "57",
       "title": "Gallenblase",
       "points": "1",
-      "notes": "höchstens € 1.882,10 pro Quartal limitiert. unlimitiert ab 1.4.2018 präoperative Diagnostik hinweist. ohne zusätzliche Honorierung zu verwenden. Werden in einem",
+      "notes": "höchstens € 1.882,10 pro Quartal limitiert. unlimitiert ab 1.4.2018",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -5724,56 +6404,64 @@
     {
       "payer": "UNBEKANNT",
       "pos": "571",
-      "title": "Filmgröße",
-      "points": "9",
+      "title": "Filmgröße 9 x 12",
+      "points": "4,15",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "572",
-      "title": "Filmgröße",
-      "points": "13",
+      "title": "Filmgröße 13 x 18",
+      "points": "5,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "573",
-      "title": "Filmgröße",
-      "points": "18",
+      "title": "Filmgröße 18 x 24",
+      "points": "6,03",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "574",
-      "title": "Filmgröße",
-      "points": "15",
+      "title": "Filmgröße 15 x 40",
+      "points": "6,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "575",
-      "title": "Filmgröße",
-      "points": "24",
+      "title": "Filmgröße 24 x 30",
+      "points": "7,18",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "576",
-      "title": "Filmgröße",
-      "points": "30",
+      "title": "Filmgröße 30 x 40",
+      "points": "9,42",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "577",
-      "title": "Filmgröße",
-      "points": "35",
+      "title": "Filmgröße 35 x 35",
+      "points": "10,99",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "578",
+      "title": "BV + FS Zuschlag zur Durchleuchtung",
+      "points": "3,68",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -5788,24 +6476,24 @@
     {
       "payer": "UNBEKANNT",
       "pos": "590",
-      "title": "Sonographie eines Organes",
-      "points": "14,40",
+      "title": "Sonographie eines Organes 14,40 21,03",
+      "points": "35,43",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "591",
-      "title": "Sonographie von zwei Organen",
-      "points": "22,73",
+      "title": "Sonographie von zwei Organen 22,73 26,28",
+      "points": "49,01",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "595",
-      "title": "Sonographie bei Schwangerschaft",
-      "points": "14,40",
+      "title": "Sonographie bei Schwangerschaft 14,40 21,03",
+      "points": "35,43",
       "notes": "Infiltrationsanästhesie (Pos. 136) zusätzlich verrechnet werden. Pos. 114 nur einmal verrechenbar. 5.2. Eine ergometrische Untersuchung kann nur einmal pro Patient und Quartal verrechnet werden,",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -5988,7 +6676,7 @@
     {
       "payer": "UNBEKANNT",
       "pos": "653",
-      "title": "Thrombotest oder Quicktest oder PTZ",
+      "title": "Thrombotest oder Quicktest oder",
       "points": "28",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
@@ -6019,9 +6707,33 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "664",
+      "title": "Harn auf Eiweiß;",
+      "points": "6",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "665",
+      "title": "Harn auf Zucker;",
+      "points": "6",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "667",
       "title": "Alpha-Amylase (Diastase) quant.",
       "points": "12",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "668",
+      "title": "Harn auf Blut qual.;",
+      "points": "4",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6067,33 +6779,49 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "7",
+      "title": "13 x 18 €",
+      "points": "7,44",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "70",
+      "title": "Ersthonorar €",
+      "points": "12,64",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "700",
-      "title": "Kind bis",
-      "points": "5",
+      "title": "Kind bis 5 Jahre 28,76",
+      "points": "17,69",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "701",
-      "title": "Kind von",
-      "points": "5",
+      "title": "Kind von 5 bis 12 Jahre 31,04",
+      "points": "17,69",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "702",
-      "title": "Erwachsener",
-      "points": "38,62",
+      "title": "Erwachsener 38,62",
+      "points": "18,34",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "703",
-      "title": "Oesophagus (Schluckakt)",
-      "points": "34,05",
+      "title": "Oesophagus (Schluckakt) 34,05",
+      "points": "32,73",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6108,26 +6836,42 @@
     {
       "payer": "UNBEKANNT",
       "pos": "706",
-      "title": "Halsorgane",
-      "points": "29,97",
+      "title": "Halsorgane 29,97",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "708",
-      "title": "Larynx",
-      "points": "13,53",
+      "title": "Larynx 13,53",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "709",
-      "title": "Magen-Duodenum (ohne Doppelkontrast)",
-      "points": "45,37",
+      "title": "Magen-Duodenum (ohne Doppelkontrast) 45,37",
+      "points": "39,33",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "70p",
+      "title": "Ersthonorar €",
+      "points": "12,64",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "71",
+      "title": "Zweithonorar €",
+      "points": "8,57",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -6140,40 +6884,40 @@
     {
       "payer": "UNBEKANNT",
       "pos": "711",
-      "title": "Dünndarmpassage",
-      "points": "65,34",
+      "title": "Dünndarmpassage 65,34",
+      "points": "39,33",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "713",
-      "title": "Irrigoskopie ohne Doppelkontrast",
-      "points": "62,50",
+      "title": "Irrigoskopie ohne Doppelkontrast 62,50",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "714",
-      "title": "Irrigoskopie mit Doppelkontrast",
-      "points": "95,86",
+      "title": "Irrigoskopie mit Doppelkontrast 95,86",
+      "points": "47,99",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "715",
-      "title": "Appendix pro Tag (maximal",
-      "points": "3",
+      "title": "Appendix pro Tag (maximal 3 Tage) 20,63",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "717",
-      "title": "Perorale Cholecystographie",
-      "points": "18,14",
+      "title": "Perorale Cholecystographie 18,14",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6195,6 +6939,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "71p",
+      "title": "Zweithonorar €",
+      "points": "8,57",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "720",
       "title": "Kreatinin quant.i.S.",
       "points": "3,50",
@@ -6204,16 +6956,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "722",
-      "title": "Abdomen nativ",
-      "points": "21,12",
+      "title": "Abdomen nativ 21,12",
+      "points": "9,84",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "723",
-      "title": "Harnblase nativ",
-      "points": "8,05",
+      "title": "Harnblase nativ 8,05",
+      "points": "6,57",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6228,16 +6980,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "726",
-      "title": "Urethrographie",
-      "points": "41,04",
+      "title": "Urethrographie 41,04",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "727",
-      "title": "Harntrakt Nativaufnahme",
-      "points": "14,83",
+      "title": "Harntrakt Nativaufnahme 14,83",
+      "points": "6,57",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6292,32 +7044,32 @@
     {
       "payer": "UNBEKANNT",
       "pos": "734",
-      "title": "Schädel",
-      "points": "20,16",
+      "title": "Schädel 20,16",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "735",
-      "title": "Gesichtsschädel",
-      "points": "16,07",
+      "title": "Gesichtsschädel 16,07",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "736",
-      "title": "Schädelbasis",
-      "points": "10,09",
+      "title": "Schädelbasis 10,09",
+      "points": "6,57",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "737",
-      "title": "Sella (Hypophyse)",
-      "points": "6,76",
+      "title": "Sella (Hypophyse) 6,76",
+      "points": "6,57",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6332,56 +7084,72 @@
     {
       "payer": "UNBEKANNT",
       "pos": "741",
-      "title": "Nasenbein",
-      "points": "10,21",
+      "title": "Nasenbein 10,21",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "742",
-      "title": "Kiefergelenk pro Seite",
-      "points": "13,53",
+      "title": "Kiefergelenk pro Seite 13,53",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "743",
-      "title": "Oberkiefer pro Seite",
-      "points": "14,79",
+      "title": "Oberkiefer pro Seite 14,79",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "744",
-      "title": "Unterkiefer pro Seite",
-      "points": "14,79",
+      "title": "Unterkiefer pro Seite 14,79",
+      "points": "13,12",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "745",
+      "title": "Zähne (1 - 3 benachbarte) 3,46",
+      "points": "6,57",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "746",
+      "title": "Zahnstatus (10 und mehr) 13,82",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "747",
-      "title": "HWS, ap. und seitl.",
-      "points": "22,85",
+      "title": "HWS, ap. und seitl. 22,85",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "750",
-      "title": "Brustwirbelsäule ap. und seitl.",
-      "points": "19,23",
+      "title": "Brustwirbelsäule ap. und seitl. 19,23",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "751",
-      "title": "LWS, ap. und seitl. inkl. Kreuzbein",
-      "points": "22,09",
+      "title": "LWS, ap. und seitl. inkl. Kreuzbein 22,09",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6396,24 +7164,24 @@
     {
       "payer": "UNBEKANNT",
       "pos": "753",
-      "title": "LWS - Schrägaufnahmen",
-      "points": "18,63",
+      "title": "LWS - Schrägaufnahmen 18,63",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "754",
-      "title": "Kreuz- und Steißbein",
-      "points": "18,14",
+      "title": "Kreuz- und Steißbein 18,14",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "755",
-      "title": "Einzelne Wirbelsäulenabschnitte",
-      "points": "18,14",
+      "title": "Einzelne Wirbelsäulenabschnitte 18,14",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6451,81 +7219,89 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "761",
+      "title": "1 Hüftgelenk ap./ax. 20,93",
+      "points": "14,39",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "762",
-      "title": "beide Hüftgelenke ap./ax.",
-      "points": "38,68",
+      "title": "beide Hüftgelenke ap./ax. 38,68",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "763",
-      "title": "Hüftgelenk bei Endoprothese",
-      "points": "19,40",
+      "title": "Hüftgelenk bei Endoprothese 19,40",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "764",
-      "title": "Sacroiliacalgelenk",
-      "points": "16,07",
+      "title": "Sacroiliacalgelenk 16,07",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "765",
-      "title": "Rippen einseitig ohne Unfall",
-      "points": "23,09",
+      "title": "Rippen einseitig ohne Unfall 23,09",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "766",
-      "title": "Rippen beidseitig ohne Unfall",
-      "points": "46,17",
+      "title": "Rippen beidseitig ohne Unfall 46,17",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "767",
-      "title": "Rippen einseitig bei Unfall",
-      "points": "32,06",
+      "title": "Rippen einseitig bei Unfall 32,06",
+      "points": "16,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "768",
-      "title": "Rippen beidseitig bei Unfall",
-      "points": "43,62",
+      "title": "Rippen beidseitig bei Unfall 43,62",
+      "points": "22,95",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "769",
-      "title": "Sternum",
-      "points": "19,96",
+      "title": "Sternum 19,96",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "770",
-      "title": "Clavicula (einseitig)",
-      "points": "9,65",
+      "title": "Clavicula (einseitig) 9,65",
+      "points": "7,83",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "771",
-      "title": "Clavicula (beidseitig)",
-      "points": "16,07",
+      "title": "Clavicula (beidseitig) 16,07",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6548,56 +7324,56 @@
     {
       "payer": "UNBEKANNT",
       "pos": "774",
-      "title": "Scapula (einseitig)",
-      "points": "19,75",
+      "title": "Scapula (einseitig) 19,75",
+      "points": "13,74",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "775",
-      "title": "Scapula (beidseitig)",
-      "points": "37,86",
+      "title": "Scapula (beidseitig) 37,86",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "776",
-      "title": "Schultergelenk (einseitig)",
-      "points": "18,70",
+      "title": "Schultergelenk (einseitig) 18,70",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "777",
-      "title": "Schultergelenk (beidseitig)",
-      "points": "34,19",
+      "title": "Schultergelenk (beidseitig) 34,19",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "778",
-      "title": "Ober- oder Unterarm",
-      "points": "17,92",
+      "title": "Ober- oder Unterarm 17,92",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "779",
-      "title": "Ellbogengelenk (einseitig)",
-      "points": "16,14",
+      "title": "Ellbogengelenk (einseitig) 16,14",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "780",
-      "title": "Ellbogengelenk (beidseitig)",
-      "points": "29,61",
+      "title": "Ellbogengelenk (beidseitig) 29,61",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6612,56 +7388,56 @@
     {
       "payer": "UNBEKANNT",
       "pos": "783",
-      "title": "Hand inkl. Mittelhand (einseitig)",
-      "points": "17,66",
+      "title": "Hand inkl. Mittelhand (einseitig) 17,66",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "784",
-      "title": "Hand inkl. Mittelhand (beidseitig)",
-      "points": "32,15",
+      "title": "Hand inkl. Mittelhand (beidseitig) 32,15",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "786",
-      "title": "Porphyrin im Sammelharn, qual.",
-      "points": "2,11",
+      "title": "1 Finger bzw. 1 Zehe 6,76",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "787",
-      "title": "Oberschenkel",
-      "points": "18,54",
+      "title": "Oberschenkel 18,54",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "788",
-      "title": "Unterschenkel",
-      "points": "18,16",
+      "title": "Unterschenkel 18,16",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "789",
-      "title": "Kniegelenk (einseitig)",
-      "points": "17,66",
+      "title": "Kniegelenk (einseitig) 17,66",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "790",
-      "title": "Kniegelenk (beidseitig)",
-      "points": "32,15",
+      "title": "Kniegelenk (beidseitig) 32,15",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6684,16 +7460,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "794",
-      "title": "Sprunggelenk (einseitig)",
-      "points": "16,41",
+      "title": "Sprunggelenk (einseitig) 16,41",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "795",
-      "title": "Sprunggelenk (beidseitig)",
-      "points": "29,61",
+      "title": "Sprunggelenk (beidseitig) 29,61",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6715,6 +7491,14 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "80",
+      "title": "35 x 43 €",
+      "points": "17,72",
+      "notes": "Zusätzliche Aufnahmen mit Zusätzliche Aufnahme zusätzlich mit besonderer",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "801",
       "title": "Elastische Fasern Untersuchung auf",
       "points": "0,98",
@@ -6724,66 +7508,74 @@
     {
       "payer": "UNBEKANNT",
       "pos": "802",
-      "title": "Calcaneus (einseitig)",
-      "points": "8,12",
+      "title": "Calcaneus (einseitig) 8,12",
+      "points": "7,83",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "803",
-      "title": "Calcaneus (beidseitig)",
-      "points": "13,53",
+      "title": "Calcaneus (beidseitig) 13,53",
+      "points": "13,12",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "804",
-      "title": "Calcaneus bei Trauma (einseitig)",
-      "points": "14,89",
+      "title": "Calcaneus bei Trauma (einseitig) 14,89",
+      "points": "14,39",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "805",
-      "title": "Calcaneus bei Trauma (beidseitig)",
-      "points": "27,04",
+      "title": "Calcaneus bei Trauma (beidseitig) 27,04",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "806",
-      "title": "Fremdkörperlokalisation",
-      "points": "30,24",
+      "title": "Fremdkörperlokalisation 30,24",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "807",
-      "title": "Fistelfüllung",
-      "points": "31,88",
+      "title": "Fistelfüllung 31,88",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "808",
-      "title": "Sialographie inkl. Nativaufnahme",
-      "points": "20,29",
+      "title": "Sialographie inkl. Nativaufnahme 20,29",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "809",
-      "title": "Augenfremdkörper",
-      "points": "20,29",
+      "title": "Augenfremdkörper 20,29",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "80p",
+      "title": "35 x 43 €",
+      "points": "17,72",
+      "notes": "ohne zusätzliche Honorierung zu verwenden. Werden in einem",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -6796,8 +7588,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "812",
-      "title": "Hystero-Salpingographie",
-      "points": "37,98",
+      "title": "Hystero-Salpingographie 37,98",
+      "points": "26,19",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6820,32 +7612,40 @@
     {
       "payer": "UNBEKANNT",
       "pos": "817",
-      "title": "Sternum",
-      "points": "27,17",
+      "title": "Sternum 27,17",
+      "points": "19,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "818",
-      "title": "Leer-Zono Niere",
-      "points": "16,89",
+      "title": "Leer-Zono Niere 16,89",
+      "points": "9,84",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "819",
-      "title": "Arthrographie eines Kniegelenkes",
-      "points": "46,01",
+      "title": "Arthrographie eines Kniegelenkes 46,01",
+      "points": "32,73",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "82",
+      "title": "9 x 12 €",
+      "points": "4,22",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "821",
-      "title": "Erste Untersuchung der Schwangeren bis zur",
-      "points": "16",
+      "title": "Erste Untersuchung der Schwangeren bis zur 16.",
+      "points": "31,55",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6856,6 +7656,22 @@
       "points": "6,65",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "82p",
+      "title": "9 x 12 €",
+      "points": "4,22",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "83",
+      "title": "13 x 18 €",
+      "points": "5,39",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -6907,6 +7723,22 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "83p",
+      "title": "13 x 18 €",
+      "points": "5,39",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "84",
+      "title": "18 x 24 €",
+      "points": "8,72",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "841",
       "title": "Sediment nativ",
       "points": "0,53",
@@ -6955,9 +7787,41 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "84p",
+      "title": "18 x 24 €",
+      "points": "8,72",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "85",
+      "title": "15 x 40 €",
+      "points": "7,56",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "850",
       "title": "Immunologischer Schwangerschaftstest",
       "points": "10,59",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "853",
+      "title": "FT 3",
+      "points": "15,41",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "855",
+      "title": "T4-Test (vierfach jodiertes Thyroxin)",
+      "points": "11,53",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -6971,11 +7835,35 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "858",
+      "title": "FT 4",
+      "points": "14,44",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "859",
       "title": "Ferritin i.S.",
       "points": "14,44",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "85p",
+      "title": "15 x 40 €",
+      "points": "7,56",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "86",
+      "title": "24 x 30 €",
+      "points": "11,50",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
@@ -7003,6 +7891,22 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "86p",
+      "title": "24 x 30 €",
+      "points": "11,50",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "87",
+      "title": "30 x 40 €",
+      "points": "14,99",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "870",
       "title": "Blutentnahme",
       "points": "2,25",
@@ -7011,10 +7915,34 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "87p",
+      "title": "30 x 40 €",
+      "points": "14,99",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "88",
+      "title": "35 x 35 €",
+      "points": "16,72",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "88p",
+      "title": "35 x 35 €",
+      "points": "16,72",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "890",
       "title": "Zuschlag für Blutentnahme am Krankenbett durch Arzt",
       "points": "17,68",
-      "notes": "sen Tarifen nicht verrechenbar, ausgenommen \"ST\" bezeichnete Positionen. Bei Verwendung Blutentnahme nur einmal verrechenbar.",
+      "notes": "sen Tarifen nicht verrechenbar, ausgenommen \"ST\" bezeichnete Positionen. Bei Verwendung",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -7022,6 +7950,14 @@
       "pos": "8a",
       "title": "Eigenblutinjektion",
       "points": "8",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "8p",
+      "title": "18 x",
+      "points": "24",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7051,97 +7987,169 @@
     },
     {
       "payer": "UNBEKANNT",
+      "pos": "90b",
+      "title": "Wärmelampe €",
+      "points": "1,35",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "90c",
+      "title": "UV-Bestrahlung €",
+      "points": "1,93",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "90d",
+      "title": "Galvanisation €",
+      "points": "2,41",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "90e",
+      "title": "Schwellstrom €",
+      "points": "3,35",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "90w",
+      "title": "Lymphdrainage *) €",
+      "points": "24,77",
+      "notes": "",
+      "source": "kaernten-tarife-2024-01-01b.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
       "pos": "911",
-      "title": "Format",
-      "points": "9",
+      "title": "Format 9 x 12",
+      "points": "5,62",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "912",
-      "title": "Format",
-      "points": "13",
+      "title": "Format 13 x 18",
+      "points": "6,76",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "913",
-      "title": "Format",
-      "points": "18",
+      "title": "Format 18 x 24",
+      "points": "8,05",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "914",
-      "title": "Format",
-      "points": "15",
+      "title": "Format 15 x 40",
+      "points": "9,05",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "915",
-      "title": "Format",
-      "points": "24",
+      "title": "Format 24 x 30",
+      "points": "10,09",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "916",
-      "title": "Format",
-      "points": "20",
+      "title": "Format 20 x 40",
+      "points": "9,33",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "917",
-      "title": "Format",
-      "points": "30",
+      "title": "Format 30 x 40",
+      "points": "13,01",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "918",
-      "title": "Format",
-      "points": "35",
+      "title": "Format 35 x 35",
+      "points": "13,82",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "919",
-      "title": "Format",
-      "points": "35",
+      "title": "Format 35 x 43",
+      "points": "15,02",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "920",
-      "title": "Format",
-      "points": "30",
+      "title": "Format 30 x 90",
+      "points": "29,11",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "926",
+      "title": "1 - 3 Stück",
+      "points": "3,46",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "927",
+      "title": "4 - 6 Stück",
+      "points": "6,91",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "928",
+      "title": "7 - 9 Stück",
+      "points": "10,36",
+      "notes": "",
+      "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
+    },
+    {
+      "payer": "UNBEKANNT",
+      "pos": "929",
+      "title": "10 - 12 Stück",
+      "points": "13,82",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "940",
-      "title": "Sonographie eines Organes",
-      "points": "12,01",
+      "title": "Sonographie eines Organes 12,01 17,60",
+      "points": "29,61",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "941",
-      "title": "Sonographie von zwei Organen",
-      "points": "18,98",
+      "title": "Sonographie von zwei Organen 18,98 21,96",
+      "points": "40,94",
       "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
@@ -7156,8 +8164,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "985",
-      "title": "Untersuchung des Neugeborenen in der",
-      "points": "1",
+      "title": "Untersuchung des Neugeborenen in der 1.",
+      "points": "31,30",
       "notes": "11. Hausbesuche zur ausschließlichen Vornahme von MKP-Untersuchungen sind nicht verrechenbar.",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },

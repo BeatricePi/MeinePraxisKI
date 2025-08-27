@@ -19,14 +19,16 @@ function guessPayer(filename) {
   return "UNBEKANNT";
 }
 
-// Regex-Kandidaten (versch. Layouts in den PDFs)
+// Regex-Kandidaten (erlaubt optionale Spalte wie "AL" vor den Punkten)
 const lineRegexes = [
-  // z.B. "54 Blutentnahme aus der Vene 4/I"
-  /^\s*(\d{1,4}[a-z]?)\s+([A-Za-zÄÖÜäöüß().,%\-–/ ]{3,}?)\s+(\d+\s*\/\s*[IVX]+|\d+[.,]?\d*)\s*$/,
-  // z.B. "56 Intramuskuläre Injektion 2/I" (mit zusätzlichen Worten rechts)
-  /^\s*(\d{1,4}[a-z]?)\s+([A-Za-zÄÖÜäöüß().,%\-–/ ]{3,}?)\s+(\d+\s*\/\s*[IVX]+|\d+[.,]?\d*)\b.*$/,
-  // BVAEB kann Buchstaben nach der Hauptnummer haben: "11a Subcutane Injektion 2"
-  /^\s*(\d{1,3}[a-z])\s+([A-Za-zÄÖÜäöüß().,%\-–/ ]{3,}?)\s+(\d+[.,]?\d*)\s*$/
+  // z.B. "12c Demenzpatienten – Angehörigengespräch AL 5/II ..."
+  /^\s*(\d{1,4}[a-z]?)\s+(.+?)\s+(?:[A-ZÄÖÜ]{1,3}\s+)?(\d+\s*\/\s*[IVX]+|\d+[.,]?\d*|\d+\s*P)\s*$/,
+
+  // z.B. "56 Intramuskuläre Injektion 2/I ..." (ohne Zusatzspalte)
+  /^\s*(\d{1,4}[a-z]?)\s+(.+?)\s+(\d+\s*\/\s*[IVX]+|\d+[.,]?\d*|\d+\s*P)\b.*$/,
+
+  // z.B. "11a Subcutane Injektion 2" (Buchstaben-Suffix)
+  /^\s*(\d{1,3}[a-z])\s+(.+?)\s+(\d+[.,]?\d*)\s*$/
 ];
 
 async function parsePdf(filePath) {
