@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-08-27T13:49:31.567Z",
+  "generatedAt": "2025-08-27T14:30:51.273Z",
   "items": [
     {
       "payer": "BVAEB",
@@ -166,7 +166,7 @@
       "pos": "11r",
       "title": "jede weitere Injektion .....................................................................................................................................",
       "points": "4",
-      "notes": "",
+      "notes": "(höchstens 6 i. v. Injektionen pro Bein und Quartal)",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -174,7 +174,7 @@
       "pos": "11t",
       "title": "jede weitere Injektion .....................................................................................................................................",
       "points": "4",
-      "notes": "",
+      "notes": "(höchstens 4 Injektionen pro Quartal)",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -310,7 +310,7 @@
       "pos": "15c",
       "title": "Allergenaustestung (Prick-, Scratch-, Intracutantest) ..................................................................................",
       "points": "40",
-      "notes": "pro Behandlungsfall (ein Krankheitsgeschehen) auch bei Quartalsüberschreitung nur einmal und",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -318,7 +318,7 @@
       "pos": "15d",
       "title": "Allergenaustestung (Prick-, Scratch-, Intracutantest) ..................................................................................",
       "points": "54",
-      "notes": "pro Behandlungsfall (ein Krankheitsgeschehen) auch bei Quartalsüberschreitung nur einmal und",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -678,7 +678,7 @@
       "pos": "1x",
       "title": "jährlich ab dem",
       "points": "35",
-      "notes": "(nur einmal pro Seite und nicht gemeinsam mit Pos. Nr. R320) nicht verrechenbar für Vertragsärzte in Kärnten und Vorarlberg) H3 bei Verlängerung aufgrund eines neuen oder zusätzlichen Krankheitsbildes ................................. € 65,4056 Pro Hauskrankenpflegefall nur einmal verrechenbar. Wenn der Vertreter in einem",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1182,7 +1182,7 @@
       "pos": "30j",
       "title": "Endocervicale Abstrichnahme für HPV- und Chlamydiennachweis, pro Sitzung...........................................",
       "points": "4",
-      "notes": "nicht verrechenbar zur bloßen Rezeptausstellung",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1230,7 +1230,7 @@
       "pos": "32g",
       "title": "Otomikroskopische Untersuchung .................................................................................................................",
       "points": "8",
-      "notes": "",
+      "notes": "höchstens in 35% der Behandlungsfälle verrechenbar",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1334,7 +1334,7 @@
       "pos": "34c",
       "title": "Drei zusätzliche Ableitungen mit Begründung ......................................................................................",
       "points": "9,7764",
-      "notes": "34c Drei zusätzliche Ableitungen mit Begründung ...................................................................................... 9,7764",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1398,7 +1398,7 @@
       "pos": "34r",
       "title": "Blutgasanalyse inkl. Belastung oder Sauerstoffgabe ..................................................................................",
       "points": "60",
-      "notes": "",
+      "notes": "Pos. Nrn. 34r und 34q können pro Patient und Tag höchstens einmal verrechnet werden.",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1430,7 +1430,7 @@
       "pos": "34y",
       "title": "Langzeit-EKG ...................................................................................................................................",
       "points": "100,0688",
-      "notes": "34h Zusätzliche individuelle Beratung und Erstellung eines schriftlichen Ernährungsplanes für",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1702,7 +1702,7 @@
       "pos": "38x",
       "title": "Uroflowmetrie einschließlich Registrierung .................................................................................................",
       "points": "21",
-      "notes": "",
+      "notes": "höchstens in 30 % der Fälle im Quartal verrechenbar",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1902,7 +1902,7 @@
       "pos": "45a",
       "title": "Erstuntersuchung/-behandlung ............................................................................................................",
       "points": "237,06",
-      "notes": "Die Positionen 45b bis 45d, 45g, 45i, 45j sind am selben Tag nicht verrechenbar.",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1910,7 +1910,7 @@
       "pos": "45b",
       "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen 15 Minuten ..............................................",
       "points": "46,00",
-      "notes": "Einmal pro Patient und Tag verrechenbar. Die Positionen 45a, 45c und 45d sind am selben Tag nicht verrechenbar.",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1918,7 +1918,7 @@
       "pos": "45c",
       "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen 25 Minuten ..............................................",
       "points": "76,65",
-      "notes": "Einmal pro Patient und Tag verrechenbar. Die Positionen 45a, 45b und 45d sind am selben Tag nicht verrechenbar.",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1926,7 +1926,7 @@
       "pos": "45d",
       "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen 50 Minuten ............................................",
       "points": "153,33",
-      "notes": "Einmal pro Patient und Tag verrechenbar. Die Positionen 45a, 45b und 45c sind am selben Tag nicht verrechenbar.",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1950,7 +1950,7 @@
       "pos": "45j",
       "title": "Psychiatrische Notfallbehandlung (Krisenintervention), Dauer im Allgemeinen 70 Minuten .................",
       "points": "173,47",
-      "notes": "Die Positionen 45a, 45b, 45c, 45d, 45e, 45f, 45g, 45h, 45i und 35f sind am selben Tag nicht verrechenbar.",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1966,7 +1966,7 @@
       "pos": "45l",
       "title": "Hausbesuch ..........................................................................................................................................",
       "points": "21,71",
-      "notes": "Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Die Zuschlagsposition ist nicht verrechenbar, wenn bei zugewiesenen Patienten bereits ein Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar nur einmal verrechenbar. FD 5 Farbduplexsonographie der Extremitätenvenen bei Vorliegen eines klinischen Hinweises Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. von Ärzten für Allgemeinmedizin zusätzlich zu diesem Tarif eine Ordination nach Position A1 und von durchgeführt, ist die Entnahme von Untersuchungsmaterial nur einmal verrechenbar, sofern bei auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht neben 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01 oder 5.02) ........................................... 0,93 O 30b Operation einer Rektovaginal- oder Cystovaginalfistel mit zusätzlicher plastischer Deckung ................. G.U. nur einmal verrechenbar durchgeführt, ist die Entnahme von Untersuchungsmaterial nur einmal verrechenbar, sofern bei auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht neben 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01 oder 5.02) ........................................... 0,93 Abholdienste, etc. können nicht zusätzlich in Rechnung gestellt werden. Untersuchungen ist zusätzlich eine besondere Ausbildung und eine entsprechende Erfahrung notwendig. Die Befunde müssen vollständig sein und gegebenenfalls Hinweise auf konsiliare Gutachten enthalten. b) Die Pos. 22.03 bzw. 22.07 beinhalten jeweils auch (zusätzliche) gefärbte Schnittpräparate –",
+      "notes": "",
       "source": "Honorarordnung_BVAEB_2024_ab_Mai.pdf"
     },
     {
@@ -1990,7 +1990,7 @@
       "pos": "019",
       "title": "In Arbeit",
       "points": "23.04",
-      "notes": "haltung verschlüsselt. Zusätzlich wird die SV-Nr noch verschlüsselt für das noch zu errichtende bPK An-",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2014,7 +2014,7 @@
       "pos": "100",
       "title": "höchstens",
       "points": "2",
-      "notes": "bzw. Bestätigung des Impferfolges) sind nicht verrechenbar. genzträgers nur einmal verrechenbar",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2022,7 +2022,7 @@
       "pos": "11",
       "title": "Uhr =",
       "points": "3",
-      "notes": "Folgende Sonderleistungen sind zusätzlich verrechenbar Zusätzliche fakultative Schwangerschaftsuntersuchung: Zusätzliche fakultative Kindesuntersuchung: geuntersuchungsprogramm enthalten sind, können nicht zusätzlich in Rechnung gestellt wer- neuen bzw. zusätzlichen die krankenhausersetzende medizinische kenpflegefall nur einmal verrechenbar. Wenn der Vertreter in einem doch außerhalb dieser Limitierungsbestimmungen vergütet werden. Nähere Hinweise über die wenn diese Untersuchung zusätzlich notwendig ist; d) im Falle einer zusätzlichen Verrechnung der Pos. Nr. 108 (Blaubinden, Elastoplastverband Sonderleistungen die Ziffer II zugeordnet, wobei diese Bezeichnung zusätzlich nach der für die",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2046,7 +2046,7 @@
       "pos": "12e",
       "title": "Heilmittelgespräch",
       "points": "5/II",
-      "notes": "zusätzlich nicht verrechenbar",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2086,7 +2086,7 @@
       "pos": "15",
       "title": "kann nicht gleichzeitig mit Position",
       "points": "176",
-      "notes": "€ 2,22 ab 01.01.2022 bzw. € 2,32 ab 01.01.2023 bzw. € 2,41 ab 01.01.2024 pro Quartal limitiert.",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2110,7 +2110,7 @@
       "pos": "160",
       "title": "Katheterismus beim Mann",
       "points": "4/I",
-      "notes": "8/II nur einmal am Tag verrechenbar und nicht 4/I nur einmal am Tag verrechenbar und nicht",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2150,7 +2150,7 @@
       "pos": "174b",
       "title": "Epicutantestung (bis",
       "points": "14",
-      "notes": "in zusätzlich 3% der § 2-Fälle pro Quartal",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2206,7 +2206,7 @@
       "pos": "178t",
       "title": "Rheumafaktor I, K",
       "points": "15",
-      "notes": "5/I Hinweis: EMG-Berechtigung limitiert ab 1.7.2019: unlimitiert bungen und Ähnliches) zusätzlich erbracht wird. In solchen Fällen ist dies beim jeweiligen Behandlungs- € 1,49 ab 01.01.2024 pro Quartal limitiert. Der durchschnittliche Fallwert wird nur von jenen Vertrags-",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2214,7 +2214,7 @@
       "pos": "180",
       "title": "mind.",
       "points": "3",
-      "notes": "Die Begründung muss ausreichend sein und durch Belege und Hinweise über bestimmte Krankheitsfälle",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2238,7 +2238,7 @@
       "pos": "197",
       "title": "Aerosol",
       "points": "5/I",
-      "notes": "e) Der für die Erbringung der OP-Leistungen erforderliche Sachaufwand kann zusätzlich verrechnet Strahles nur einmal verrechenbar diese Position nur einmal verrechenbar meinsam nicht verrechenbar meinsam nicht verrechenbar. diese Position nur einmal verrechenbar Hinweises auf eine akute diese Position nur einmal verrechenbar. chungsgang kann der Honorartarif nur einmal in Ansatz gebracht werden. Der Begriff \"Untersuchungs- norartarif für die Durchleuchtung des betroffenen Organs nur das Filmformat zusätzlich verrechnet wer-",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2254,7 +2254,7 @@
       "pos": "1x",
       "title": "jährlich ab dem",
       "points": "25",
-      "notes": "Aktualitätshinweis:",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2278,7 +2278,7 @@
       "pos": "2024",
       "title": "vereinbart. Die genaue Höhe des Einmalbetrages",
       "points": "2024",
-      "notes": "f) Die Position kann pro neu aufgenommenen Patienten zusätzlich zu den erbrachten Leistungen pro",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2286,7 +2286,7 @@
       "pos": "21",
       "title": "Gerinnungszeit",
       "points": "2/I",
-      "notes": "sätzlich nicht verrechenbar",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2374,7 +2374,7 @@
       "pos": "5",
       "title": "Facharztzuschlag einfach",
       "points": "4/I",
-      "notes": "Facharztzuschlag wird nur einmal pro Überwei- Facharztzuschlag wird nur einmal pro Überwei-",
+      "notes": "Fachgebietes, höchstens zweimal je Fall und Monat",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2606,7 +2606,7 @@
       "pos": "53",
       "title": "Gastroskopie C",
       "points": "42/II",
-      "notes": "4/I nicht verrechenbar mit den Positionen 18,",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2638,7 +2638,7 @@
       "pos": "533",
       "title": "Tomografie",
       "points": "20",
-      "notes": "muss vom Vertragsarzt zusätzlich ein erweitertes Leistungsprotokoll vorgelegt werden. Art, Auf- auch der Ärztekammer für Tirol übersandt. Die Ärztekammer für Tirol erhält zusätzlich je einen zusätzlich Korrekturhinweise zur Kilometerliste und zur Meldung über den offiziellen Bereit- diagn. Laboruntersuchungen aller Art werden den Primarärzten zusätzliche Grund- und Son- Außerhalb der Fallbegrenzung und zum Wert der 1. Punktegruppe werden zusätzlich zur ersten b) an alle Vertragsärzte zusätzlich 01.01.2023 bzw. € 1,49 ab 01.01.2024 pro Quartal limitiert. Nicht verrechenbar für für RAD,",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2814,7 +2814,7 @@
       "pos": "67",
       "title": "Skiaskopie",
       "points": "6/I",
-      "notes": "10/II mit Pos. 74 und Pos. 84 nicht verrechenbar tion nur einmal zur Verrechnung. Sollten zusätzlich verrechenbar. 10/II mit Pos. 74 und Pos. 84 nicht verrechenbar 4/I mit Pos. 74 und Pos. 84 nicht verrechenbar",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2830,7 +2830,7 @@
       "pos": "83",
       "title": "Wimpernepilation AL,",
       "points": "4/I",
-      "notes": "a) Betäubung (Oberflächenanästhesie ist nicht verrechenbar)",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2846,7 +2846,7 @@
       "pos": "86a",
       "title": "Perineurale Infiltration O,",
       "points": "4/II",
-      "notes": "nur einmal pro Unfallereignis möglich,",
+      "notes": "",
       "source": "OEGK_Gesamtvertrag_und_Honorarordnung_2022-2024.pdf"
     },
     {
@@ -2958,7 +2958,7 @@
       "pos": "11w",
       "title": "Intraarticuläre Injektion (kleine Gelenke)* ................................................................",
       "points": "30",
-      "notes": "",
+      "notes": "* je Gelenk und Abrechnungszeitraum sind höchstens sechs Injektionen verrechenbar",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3118,7 +3118,7 @@
       "pos": "17k",
       "title": "Aus der Harnblase .............................................................................................",
       "points": "45",
-      "notes": "je Behandlungsregion nur einmal verrechenbar; nicht verrechenbar von Fachärzten für Augenheilkunde und Urologie je Behandlungsregion nur einmal verrechenbar",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3158,7 +3158,7 @@
       "pos": "19b",
       "title": "Endoskopische Untersuchung des Nasen-Rachenraumes ...............................",
       "points": "20",
-      "notes": "Die Verrechenbarkeit ist mit 10% der Fälle pro Arzt und Monat limitiert. Nicht am",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3222,7 +3222,7 @@
       "pos": "1j",
       "title": "Ärztliche Koordinierungstätigkeit durch den behandlungsführenden Arzt",
       "points": "23",
-      "notes": "Die Position ist zusätzlich zu Position SUB und WSUB pro Patient und Quartal maximal",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3230,7 +3230,7 @@
       "pos": "1x",
       "title": "jährlich ab dem",
       "points": "35",
-      "notes": "(nur einmal pro Seite und nicht gemeinsam mit Pos. Nr. R320) Zusätzlich werden für das österreichische Brustkrebsfrüherkennungsprogramm Erweiterungen für die Bei CR wird zusätzlich mit jeder im Routinebetrieb verwendeten Kassette eine Aufnahme durchgeführt, da Zusätzlich gesetzlich erforderliche Dosisausbeute (Y60) sowie Dynamikumfang nach ÖNS5240-12. Die in diesen EPQC Dokumenten angeführten zusätzlichen Prüfverfahren bzw. Erweiterungen zu den",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3550,7 +3550,7 @@
       "pos": "2x",
       "title": "pro Jahr; maximal",
       "points": "10",
-      "notes": "Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar. Die Zuschlagsposition ist nicht verrechenbar, wenn bei zugewiesenen Patienten bereits ein Die Positionen DS 3 und FD 1 sind gemeinsam nicht verrechenbar Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. Hinweises auf eine akute Thrombose der tiefen Beinvenen – D.I.C(G).R. ............. 73 Auch bei Messung aller Extremitäten ist diese Position nur einmal verrechenbar. In diesem Falle kann von Ärzten für Allgemeinmedizin zusätzlich zu diesem Tarif eine Ordination Untersuchungsmaterial nur einmal verrechenbar, sofern bei einzelnen Positionen nichts Anderes auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01 oder • zusätzlich zu dieser Reduktion der Gewichtskraft hat das Gerät über ein Laufband, auf welchem Untersuchungsmaterial nur einmal verrechenbar, sofern bei einzelnen Positionen nichts Anderes auch bei Verwendung eines Mehrfachreagenzträgers nur einmal verrechenbar, nicht 5.03 Sediment (bei pathologischem Hinweis aus Position 5.01oder 5.02) .................... 3,0 kann (hinsichtlich der Einsendung) nur einmal die Position 54.01 bzw. 54.02 e) die Pos.Nrn. 54.05 bzw. 54.10 beinhalten jeweils auch (zusätzliche) gefärbte",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3582,7 +3582,7 @@
       "pos": "30f",
       "title": "Abstrichentnahme von Sekreten der Geschlechtsorgane, 1. Stelle AM, D, U ..........",
       "points": "4",
-      "notes": "am selben Tag nicht verrechenbar. Mögliche Inhalte des Beratungsgespräches sind Lebensjahr. Die Positionen TA, PS, 1j und HMG sind am selben Tag nicht verrechenbar. verrechenbar in maximal 6% der Fälle pro Arzt und Quartal, nicht verrechenbar zur bloßen",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3630,7 +3630,7 @@
       "pos": "33",
       "title": "0 2 0 1 2 1 1 1 0 0 0 0 0 0 0 1 0 0 0",
       "points": "0",
-      "notes": "der Regel nur einmal verrechnet werden. Ausnahmen sind zu begründen. 5. Die unter Abschnitt II bis Abschnitt XIV angeführten Positionen werden zusätzlich neben",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3718,7 +3718,7 @@
       "pos": "34d",
       "title": "Langzeit EKG (Anlegen des Gerätes,",
       "points": "24",
-      "notes": "Die Verrechenbarkeit ist mit 15% der Fälle pro Arzt und Monat limitiert.",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3734,7 +3734,7 @@
       "pos": "34p",
       "title": "Messung der Atemwegwiderstände K, I ...................................................................",
       "points": "7",
-      "notes": "34h Zusätzliche individuelle Beratung und Erstellung eines schriftlichen Ernährungs-",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3758,7 +3758,7 @@
       "pos": "35b",
       "title": "Ausführliche neuropsychiatrische Exploration – K(KNP) PSY ..................................",
       "points": "40",
-      "notes": "",
+      "notes": "Höchstens einmal pro Fall und Kalenderhalbjahr verrechenbar. Das Ergebnis der Exploration",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3822,7 +3822,7 @@
       "pos": "36f",
       "title": "Psychotherapeutische Medizin, Gruppentherapie",
       "points": "90",
-      "notes": "Auch bei Quartalsüberschreitung nur einmal pro Behandlungsfall (ein",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3830,7 +3830,7 @@
       "pos": "37c",
       "title": "Epicutan-Standardtest (derzeit",
       "points": "27",
-      "notes": "Auch bei Quartalsüberschreitung nur einmal pro Behandlungsfall (ein Krankheits-",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -3902,7 +3902,7 @@
       "pos": "38l",
       "title": "Exkochleation kleiner spitzer Kondylome und kleiner Warzen C, G, K ....................",
       "points": "15",
-      "notes": "nur einmal am Tag verrechenbar",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -4134,7 +4134,7 @@
       "pos": "45b",
       "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen",
       "points": "15",
-      "notes": "Tag nicht verrechenbar.",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -4142,7 +4142,7 @@
       "pos": "45c",
       "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen",
       "points": "25",
-      "notes": "Tag nicht verrechenbar.",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -4150,7 +4150,7 @@
       "pos": "45d",
       "title": "Psychiatrische Diagnostik und Intervention, im Allgemeinen",
       "points": "50",
-      "notes": "Tag nicht verrechenbar.",
+      "notes": "",
       "source": "SVS_1_Gesamtvertrag_und_Honorarordnung_2025.pdf"
     },
     {
@@ -4254,7 +4254,7 @@
       "pos": "004",
       "title": "Tagbesuch an Sonn- oder Feiertagen",
       "points": "48,27",
-      "notes": "zusätzlichen akuten Erkrankungen, wie z.B. Pneumonie, (nicht verrechenbar bei normalen Kontrollvisiten;",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -4388,8 +4388,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "10",
-      "title": "24 x 30 €",
-      "points": "11,50",
+      "title": "24 x 30",
+      "points": "€ 11,50",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4420,8 +4420,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "106",
-      "title": "Kanthoplastik mit Naht €",
-      "points": "43,05",
+      "title": "Kanthoplastik mit Naht",
+      "points": "€ 43,05",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4508,8 +4508,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "111",
-      "title": "Elektrolytische Epilation €",
-      "points": "43,05",
+      "title": "Elektrolytische Epilation",
+      "points": "€ 43,05",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4564,16 +4564,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "12",
-      "title": "35 x 35 €",
-      "points": "16,72",
+      "title": "35 x 35",
+      "points": "€ 16,72",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "120",
-      "title": "Tarsorrhaphie €",
-      "points": "86,23",
+      "title": "Tarsorrhaphie",
+      "points": "€ 86,23",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4588,8 +4588,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "12f",
-      "title": "Kolposkopie €",
-      "points": "14,37",
+      "title": "Kolposkopie",
+      "points": "€ 14,37",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4694,7 +4694,7 @@
       "pos": "141",
       "title": "Rektale Untersuchung",
       "points": "2,61",
-      "notes": "Thrombosewahrscheinlichkeit (Wells Score). Nicht verrechenbar bei",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -4702,7 +4702,7 @@
       "pos": "14l",
       "title": "Sprachaudiometrie",
       "points": "30",
-      "notes": "",
+      "notes": "in höchstens",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -4742,7 +4742,7 @@
       "pos": "153",
       "title": "Tonometrie",
       "points": "2,78",
-      "notes": "(nicht verrechenbar von FÄ für Neurologie) 17,79",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -4750,14 +4750,14 @@
       "pos": "156",
       "title": "+ Probeexcision mit Naht",
       "points": "11,56",
-      "notes": "(nicht verrechenbar für FÄ für Neurologie) 4,46",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "15g",
       "title": "therapeutisches Ge-",
-      "points": "47",
+      "points": "47 P",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4820,8 +4820,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "174",
-      "title": "Probeexcision mit Naht €",
-      "points": "43,05",
+      "title": "Probeexcision mit Naht",
+      "points": "€ 43,05",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4844,8 +4844,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "17p",
-      "title": "Tendinitis 4 – 6 4 3 76,8 €",
-      "points": "26,60",
+      "title": "Tendinitis 4 – 6 4 3 76,8",
+      "points": "€ 26,60",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4876,8 +4876,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "189",
-      "title": "Spaltung einer Fistula ani €",
-      "points": "86,23",
+      "title": "Spaltung einer Fistula ani",
+      "points": "€ 86,23",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -4892,17 +4892,17 @@
     {
       "payer": "UNBEKANNT",
       "pos": "18h",
-      "title": "Epicondylitis 6 5 3 95,3 €",
-      "points": "32,69",
+      "title": "Epicondylitis 6 5 3 95,3",
+      "points": "€ 32,69",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "18o",
-      "title": "OCT-Untersuchung €",
-      "points": "82,26",
-      "notes": "",
+      "title": "OCT-Untersuchung",
+      "points": "€ 82,26",
+      "notes": "in höchstens",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -4934,22 +4934,22 @@
       "pos": "196",
       "title": "Gehviertelstunde",
       "points": "4,50",
-      "notes": "gen, so wird beim ersten Besuch zusätzlich zum Visitenhonorar der Grundbetrag be- 2.3. Am gleichen Tag können bei Besuchen im selben Ort Wegegebühren in der Regel nur einmal ver-",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "19g",
       "title": "therapeutisches Ge-",
-      "points": "94",
+      "points": "94 P",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "1b",
-      "title": "Nachtordination €",
-      "points": "21,37",
+      "title": "Nachtordination",
+      "points": "€ 21,37",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5020,8 +5020,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "215",
-      "title": "Resektion e. kl. Gelenkes €",
-      "points": "148,62",
+      "title": "Resektion e. kl. Gelenkes",
+      "points": "€ 148,62",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5101,7 +5101,7 @@
       "payer": "UNBEKANNT",
       "pos": "24h",
       "title": "therapeutisches Ge-",
-      "points": "188",
+      "points": "188 P",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5164,8 +5164,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "260",
-      "title": "Exstirpation d. Hymens €",
-      "points": "86,23",
+      "title": "Exstirpation d. Hymens",
+      "points": "€ 86,23",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5300,8 +5300,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "287",
-      "title": "Konisation €",
-      "points": "148,62",
+      "title": "Konisation",
+      "points": "€ 148,62",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5348,8 +5348,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "301",
-      "title": "Abtragung von Ohrpolypen €",
-      "points": "43,05",
+      "title": "Abtragung von Ohrpolypen",
+      "points": "€ 43,05",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5372,16 +5372,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "30b",
-      "title": "Mammographie €",
-      "points": "102,75",
+      "title": "Mammographie",
+      "points": "€ 102,75",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "30c",
-      "title": "Mammographie einer Brust €",
-      "points": "51,38",
+      "title": "Mammographie einer Brust",
+      "points": "€ 51,38",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5436,8 +5436,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "321",
-      "title": "Intubation €",
-      "points": "86,23",
+      "title": "Intubation",
+      "points": "€ 86,23",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5460,8 +5460,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "329",
-      "title": "Speichelsteinentfernung €",
-      "points": "86,23",
+      "title": "Speichelsteinentfernung",
+      "points": "€ 86,23",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -5470,7 +5470,7 @@
       "pos": "32b",
       "title": "Echokardiographie",
       "points": "150",
-      "notes": "Kardiologie: unlimitiert Kardiologie: unlimitiert",
+      "notes": "in höchstens 17% der",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -5556,9 +5556,9 @@
     {
       "payer": "UNBEKANNT",
       "pos": "350",
-      "title": "Meatotomie €",
-      "points": "43,05",
-      "notes": "präoperative Diagnostik hinweist.",
+      "title": "Meatotomie",
+      "points": "€ 43,05",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -5902,7 +5902,7 @@
       "pos": "444",
       "title": "Therapiephase",
       "points": "3",
-      "notes": "nostik und Erstbehandlung und ist nur einmal pro Patient verrechenbar. Die Dauer beträgt mind. 6 behandlung und ist nur einmal pro Patient verrechenbar. Die Dauer beträgt mind. 6 Wochen bis max. Quartal nur einmal verrechenbar und max. für 2 Quartale. sorgeuntersuchungsprogramm enthalten sind, nicht zusätzlich in Rechnung gestellt werden. ten sind, nicht zusätzlich in Rechnung gestellt werden. 3.6. Gemäß § 34 Abs. 3 VU-GV 2005 soll zusätzlich zum Befundblatt das Dokumentationsblatt",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -6203,14 +6203,6 @@
     },
     {
       "payer": "UNBEKANNT",
-      "pos": "52r",
-      "title": "CRP €",
-      "points": "9",
-      "notes": "",
-      "source": "kaernten-tarife-2024-01-01b.pdf"
-    },
-    {
-      "payer": "UNBEKANNT",
       "pos": "53",
       "title": "Beide Kniegelenke",
       "points": "1",
@@ -6390,7 +6382,7 @@
       "pos": "57",
       "title": "Gallenblase",
       "points": "1",
-      "notes": "höchstens € 1.882,10 pro Quartal limitiert. unlimitiert ab 1.4.2018",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -6470,7 +6462,7 @@
       "pos": "58a",
       "title": "Pilzkultur",
       "points": "50",
-      "notes": "zusätzliche Leistungsposition außerhalb des",
+      "notes": "in höchstens",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -6494,7 +6486,7 @@
       "pos": "595",
       "title": "Sonographie bei Schwangerschaft 14,40 21,03",
       "points": "35,43",
-      "notes": "Infiltrationsanästhesie (Pos. 136) zusätzlich verrechnet werden. Pos. 114 nur einmal verrechenbar. 5.2. Eine ergometrische Untersuchung kann nur einmal pro Patient und Quartal verrechnet werden,",
+      "notes": "Nur von FÄ für Gynäkologie in höchstens 15 % der Behandlungsfälle verrechenbar.",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -6502,7 +6494,7 @@
       "pos": "5b",
       "title": "Prostatamassage",
       "points": "5",
-      "notes": "Harnblase (zusätzlich",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -6510,7 +6502,7 @@
       "pos": "5e",
       "title": "Zahnextraktion",
       "points": "5",
-      "notes": "Fachärzte, die hierfür nicht ausschließlich oder zusätzlich",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -6780,16 +6772,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "7",
-      "title": "13 x 18 €",
-      "points": "7,44",
+      "title": "13 x 18",
+      "points": "€ 7,44",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "70",
-      "title": "Ersthonorar €",
-      "points": "12,64",
+      "title": "Ersthonorar",
+      "points": "€ 12,64",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -6860,16 +6852,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "70p",
-      "title": "Ersthonorar €",
-      "points": "12,64",
+      "title": "Ersthonorar",
+      "points": "€ 12,64",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "71",
-      "title": "Zweithonorar €",
-      "points": "8,57",
+      "title": "Zweithonorar",
+      "points": "€ 8,57",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -6940,8 +6932,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "71p",
-      "title": "Zweithonorar €",
-      "points": "8,57",
+      "title": "Zweithonorar",
+      "points": "€ 8,57",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7492,9 +7484,9 @@
     {
       "payer": "UNBEKANNT",
       "pos": "80",
-      "title": "35 x 43 €",
-      "points": "17,72",
-      "notes": "Zusätzliche Aufnahmen mit Zusätzliche Aufnahme zusätzlich mit besonderer",
+      "title": "35 x 43",
+      "points": "€ 17,72",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -7572,9 +7564,9 @@
     {
       "payer": "UNBEKANNT",
       "pos": "80p",
-      "title": "35 x 43 €",
-      "points": "17,72",
-      "notes": "ohne zusätzliche Honorierung zu verwenden. Werden in einem",
+      "title": "35 x 43",
+      "points": "€ 17,72",
+      "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
@@ -7636,8 +7628,8 @@
     {
       "payer": "UNBEKANNT",
       "pos": "82",
-      "title": "9 x 12 €",
-      "points": "4,22",
+      "title": "9 x 12",
+      "points": "€ 4,22",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7660,16 +7652,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "82p",
-      "title": "9 x 12 €",
-      "points": "4,22",
+      "title": "9 x 12",
+      "points": "€ 4,22",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "83",
-      "title": "13 x 18 €",
-      "points": "5,39",
+      "title": "13 x 18",
+      "points": "€ 5,39",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7724,16 +7716,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "83p",
-      "title": "13 x 18 €",
-      "points": "5,39",
+      "title": "13 x 18",
+      "points": "€ 5,39",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "84",
-      "title": "18 x 24 €",
-      "points": "8,72",
+      "title": "18 x 24",
+      "points": "€ 8,72",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7782,22 +7774,22 @@
       "pos": "846",
       "title": "Schilddrüse, Nebenschilddrüse",
       "points": "29,60",
-      "notes": "bei Vorliegen eines klinischen Hinweises auf bei Vorliegen eines klinischen Hinweises auf kann nur einmal pro Fall und Quartal in Rechnung gestellt werden.",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "84p",
-      "title": "18 x 24 €",
-      "points": "8,72",
+      "title": "18 x 24",
+      "points": "€ 8,72",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "85",
-      "title": "15 x 40 €",
-      "points": "7,56",
+      "title": "15 x 40",
+      "points": "€ 7,56",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7852,16 +7844,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "85p",
-      "title": "15 x 40 €",
-      "points": "7,56",
+      "title": "15 x 40",
+      "points": "€ 7,56",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "86",
-      "title": "24 x 30 €",
-      "points": "11,50",
+      "title": "24 x 30",
+      "points": "€ 11,50",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7892,16 +7884,16 @@
     {
       "payer": "UNBEKANNT",
       "pos": "86p",
-      "title": "24 x 30 €",
-      "points": "11,50",
+      "title": "24 x 30",
+      "points": "€ 11,50",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "87",
-      "title": "30 x 40 €",
-      "points": "14,99",
+      "title": "30 x 40",
+      "points": "€ 14,99",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7916,24 +7908,24 @@
     {
       "payer": "UNBEKANNT",
       "pos": "87p",
-      "title": "30 x 40 €",
-      "points": "14,99",
+      "title": "30 x 40",
+      "points": "€ 14,99",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "88",
-      "title": "35 x 35 €",
-      "points": "16,72",
+      "title": "35 x 35",
+      "points": "€ 16,72",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "88p",
-      "title": "35 x 35 €",
-      "points": "16,72",
+      "title": "35 x 35",
+      "points": "€ 16,72",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -7942,7 +7934,7 @@
       "pos": "890",
       "title": "Zuschlag für Blutentnahme am Krankenbett durch Arzt",
       "points": "17,68",
-      "notes": "sen Tarifen nicht verrechenbar, ausgenommen \"ST\" bezeichnete Positionen. Bei Verwendung",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
@@ -7988,40 +7980,40 @@
     {
       "payer": "UNBEKANNT",
       "pos": "90b",
-      "title": "Wärmelampe €",
-      "points": "1,35",
+      "title": "Wärmelampe",
+      "points": "€ 1,35",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "90c",
-      "title": "UV-Bestrahlung €",
-      "points": "1,93",
+      "title": "UV-Bestrahlung",
+      "points": "€ 1,93",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "90d",
-      "title": "Galvanisation €",
-      "points": "2,41",
+      "title": "Galvanisation",
+      "points": "€ 2,41",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "90e",
-      "title": "Schwellstrom €",
-      "points": "3,35",
+      "title": "Schwellstrom",
+      "points": "€ 3,35",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
     {
       "payer": "UNBEKANNT",
       "pos": "90w",
-      "title": "Lymphdrainage *) €",
-      "points": "24,77",
+      "title": "Lymphdrainage *)",
+      "points": "€ 24,77",
       "notes": "",
       "source": "kaernten-tarife-2024-01-01b.pdf"
     },
@@ -8166,7 +8158,7 @@
       "pos": "985",
       "title": "Untersuchung des Neugeborenen in der 1.",
       "points": "31,30",
-      "notes": "11. Hausbesuche zur ausschließlichen Vornahme von MKP-Untersuchungen sind nicht verrechenbar.",
+      "notes": "",
       "source": "Honorarordnung-fuer-Vertragsaerzte-und-Vertragsgruppenpraxen.pdf"
     },
     {
