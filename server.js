@@ -239,6 +239,31 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
 
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
+  // --- Frühzeitige Rückfragen erzwingen, wenn Eingabe unklar ---
+// Wir erkennen häufige Fälle heuristisch und fragen direkt nach,
+// statt sofort das Modell aufzurufen.
+const nt = norm(userInput);
+let preQuestion = null;
+
+// Beispiel-Heuristiken (erweiterbar):
+if (/(gespraech|gespräch|angehorig|angehörig)/i.test(nt)) {
+  preQuestion = "Rückfrage: Wie lange hat das Angehörigengespräch gedauert? (bis 20 Minuten / über 20 Minuten)";
+}
+if (/(blut|blutabnahme|venenblut)/i.test(nt)) {
+  preQuestion = "Rückfrage: War es eine Blutentnahme aus der Vene (ÖGK Pos 54) oder etwas anderes (z. B. Aderlass Pos 55)?";
+}
+
+// Wenn wir wenig/unsichere Kandidaten haben, lieber fragen
+if (!preQuestion && candidates.length < 3) {
+  const vorschlaege = candidates.slice(0, 6).map(c => `${c.pos} – ${c.title}`).join("\n");
+  preQuestion = vorschlaege
+    ? `Unklar. Meintest du eine der folgenden Leistungen?\n${vorschlaege}\nWenn keine passt: Bitte genauer beschreiben.`
+    : "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
+}
+
+if (preQuestion) {
+  // UI versteht 'output' – also liefern wir die Rückfrage hier schon als Antwort.
+  return res.json({ output: preQuestion });
 
   // Fallback-Kandidaten, wenn gar nichts gefunden wurde
   if (!candidates.length) {
@@ -320,11 +345,18 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
     const allowed = new Set(candidates.map((c) => String(c.pos).toLowerCase()));
     const used = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map((s) => s.toLowerCase())));
     const illegal = used.filter((x) => !allowed.has(x));
-    if (illegal.length) {
-      return res.status(422).json({
-        error: `Antwort enthält nicht freigegebene Position(en): ${illegal.join(", ")}. Bitte Eingabe präzisieren.`,
-        debug: { allowed: Array.from(allowed).slice(0, 20) },
-      });
+   // Validierung: nur erlaubte Nummern – aber statt 422 geben wir eine Auswahl-/Rückfrage zurück
+const allowed = new Set(candidates.map(c => String(c.pos).toLowerCase()));
+const used = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
+const illegal = used.filter(x => !allowed.has(x));
+
+if (illegal.length) {
+  const options = candidates.slice(0, 6).map(c => `${c.pos} – ${c.title}`).join("\n");
+  const frage = options
+    ? `Unklar – nur folgende Positionen sind zugelassen:\n${options}\nWelche trifft zu?`
+    : "Unklar – bitte Eingabe präzisieren (Träger, Technik, Dauer, Art).";
+  return res.json({ output: frage });
+}
     }
 
     res.json({ output, usage: data?.usage || null });
