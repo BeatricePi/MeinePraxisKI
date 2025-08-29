@@ -2,7 +2,7 @@
 
 const Fuse = require("fuse.js");
 const catalogIndex = require("./catalogs/index.json");
-const rules = require("./scripts/rules/catalog_rules.json"); // <-- Pfad korrigiert
+const rules = require("./scripts/rules/catalog_rules.json"); // <-- Pfad muss so sein
 
 const express = require("express");
 const path = require("path");
@@ -176,17 +176,16 @@ function preferredByRules(userText, payer) {
 function findCandidates(userText, payer, limit = 12) {
   const allItems = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
-  // 1) deterministische Regeln
+  // 1) deterministische Regeln (wenn getroffen, NUR diese zurückgeben)
   const preferCodes = preferredByRules(userText, payer);
   if (preferCodes.length) {
     const preferred = allItems.filter(x => preferCodes.includes(String(x.pos)));
-    const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.35, keys: ["title"] });
-    const extras = fuse.search(userText).map(r => r.item).filter(x => !preferCodes.includes(String(x.pos)));
-    return [...preferred, ...extras].slice(0, limit);
+    // HARTER GATE: keine Fuzzy-Extras mehr, um 400/401 zu verhindern
+    return preferred.slice(0, limit);
   }
 
-  // 2) Fuzzy
-  const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.35, keys: ["title"] });
+  // 2) Fuzzy-Fallback (nur wenn es KEINE Regel gab)
+  const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.3, keys: ["title"] });
   return fuse.search(userText).slice(0, limit).map(r => r.item);
 }
 
@@ -195,6 +194,7 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   const userInput = (req.body?.prompt || "").toString().trim();
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
   if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
+
   // --- Grounding: Träger erkennen & Kandidaten suchen ---
   const payer = detectPayer(userInput);
   const candidates = findCandidates(userInput, payer);
@@ -206,10 +206,6 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
     preferCodes,
     cand: candidates.map(c => c.pos).slice(0, 10)
   });
-
-  // --- Grounding: Träger erkennen & Kandidaten suchen ---
-  const payer = detectPayer(userInput);
-  const candidates = findCandidates(userInput, payer);
 
   // Sicherheitsnetz: Ohne Kandidaten keine KI-Antwort
   if (!candidates.length) {
@@ -286,3 +282,4 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück.
 
 // Start
 app.listen(PORT, () => log(`Server läuft auf Port ${PORT}`));
+
