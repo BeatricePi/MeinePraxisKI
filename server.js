@@ -147,19 +147,36 @@ Copy-Paste-Liste: 200; 201`
 ];
 
 // === Helper: Payer erkennen + Regeln + Kandidaten ===
+// --- Robust: Payer erkennen + Normalisierung + Kandidatensuche ---
+// Payer aus Text heuristisch bestimmen
 function detectPayer(text) {
   const t = (text || "").toLowerCase();
-  if (t.includes("ögk") || t.includes("ö g k") || t.includes("gesundheitskasse") || t.includes("oegk")) return "ÖGK";
-  if (t.includes("bvaeb")) return "BVAEB";
-  if (t.includes("svs")) return "SVS";
-  if (t.includes("kuf")) return "KUF";
+  if (/(ö\s*g\s*k|ögk|oegk|gesundheitskasse)/i.test(t)) return "ÖGK";
+  if (/bvaeb/i.test(t)) return "BVAEB";
+  if (/svs/i.test(t)) return "SVS";
+  if (/kuf/i.test(t)) return "KUF";
   return null;
 }
+
+// Text normalisieren (Umlaute/Diakritika raus, Sonderzeichen -> Leerzeichen)
 function norm(s = "") {
-  return s.toLowerCase()
+  return s
+    .toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+    .replace(/[^\w\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
+
+// Synonym-/Stichwort-Erweiterungen für freie Formulierungen
+const SYNONYMS = {
+  "angehorigengesprach": ["angehoerigengespraech", "gespraech mit angehoerigen", "angehoerigen", "angehoerig"],
+  "demenz": ["alzheimer", "kognitive stoerung", "gedaechtnisstoerung"],
+  "blutabnahme": ["venenblut", "blutentnahme"],
+  "injektion": ["spritze"]
+};
+
+// Regeln aus JSON (falls vorhanden) – bevorzugte Codes bei bestimmten Mustern
 function ruleMatches(text, r, payer) {
   if (r.payer && payer && r.payer !== payer) return false;
   const t = norm(text);
@@ -168,28 +185,63 @@ function ruleMatches(text, r, payer) {
   return true;
 }
 function preferredByRules(userText, payer) {
-  for (const r of rules) {
-    if (ruleMatches(userText, r, payer)) return r.prefer || [];
-  }
+  try {
+    if (Array.isArray(rules)) {
+      for (const r of rules) if (ruleMatches(userText, r, payer)) return r.prefer || [];
+    }
+  } catch {}
   return [];
 }
-function findCandidates(userText, payer, limit = 12) {
-  const allItems = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
-  // 1) deterministische Regeln
-  const preferCodes = preferredByRules(userText, payer);
-  if (preferCodes.length) {
-    const preferred = allItems.filter(x => preferCodes.includes(String(x.pos)));
-    const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.35, keys: ["title"] });
-    const extras = fuse.search(userText).map(r => r.item).filter(x => !preferCodes.includes(String(x.pos)));
-    return [...preferred, ...extras].slice(0, limit);
+// Kandidaten suchen – tolerant, mit Synonymen, Fallback & Scoring
+function findCandidates(userText, payer, limit = 12) {
+  const items = catalogIndex.items.filter(x => !payer || x.payer === payer);
+
+  // 0) Regel-getriebene Favoriten
+  const preferCodes = preferredByRules(userText, payer).map(String);
+
+  // 1) Query aufbereiten + Synonyme erweitern
+  const q = norm(userText);
+  const tokens = q.split(" ").filter(Boolean);
+  const expandedTokens = new Set(tokens);
+  for (const tok of tokens) {
+    if (SYNONYMS[tok]) SYNONYMS[tok].forEach(s => expandedTokens.add(norm(s)));
+  }
+  const expandedQuery = Array.from(expandedTokens).join(" ");
+
+  // 2) Fuzzy-Suche (toleranter als vorher)
+  const fuse = new Fuse(items, {
+    includeScore: true,
+    threshold: 0.6,          // toleranter
+    distance: 200,
+    ignoreLocation: true,
+    keys: ["title"]          // im Index ist der Originaltitel
+  });
+  let found = fuse.search(expandedQuery).map(r => r.item);
+
+  // 3) Fallback: einfacher Token-Overlap (wenn Fuzzy nix findet)
+  if (!found.length) {
+    const toks = new Set(expandedQuery.split(" ").filter(t => t.length > 2));
+    const scored = items.map(it => {
+      const nt = norm(it.title);
+      let overlap = 0;
+      for (const t of toks) if (nt.includes(t)) overlap++;
+      return { it, overlap };
+    }).filter(x => x.overlap > 0)
+      .sort((a,b) => b.overlap - a.overlap)
+      .map(x => x.it);
+    found = scored;
   }
 
-  // 2) Fuzzy
-  const fuse = new Fuse(allItems, { includeScore: true, threshold: 0.35, keys: ["title"] });
-  return fuse.search(userText).slice(0, limit).map(r => r.item);
-}
+  // 4) Favoriten (aus Regeln) ganz nach vorne
+  if (preferCodes.length) {
+    const pref = found.filter(x => preferCodes.includes(String(x.pos)));
+    const rest = found.filter(x => !preferCodes.includes(String(x.pos)));
+    found = [...pref, ...rest];
+  }
 
+  return found.slice(0, limit);
+}
 // === API ENDPOINT ===
 app.post("/api/abrechnen", requireAuth, async (req, res) => {
   const userInput = (req.body?.prompt || "").toString().trim();
@@ -208,11 +260,33 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
     cand: candidates.map(c => c.pos).slice(0, 10)
   });
 
-  // Sicherheitsnetz: Ohne Kandidaten keine KI-Antwort
-  if (!candidates.length) {
-    return res.status(400).json({
-      error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. 'ÖGK, Blutentnahme aus der Vene')."
-    });
+  // Kandidaten suchen (tolerant). Wenn sehr wenige Treffer, erweitere auf Top aus Payer.
+let candidates = findCandidates(userInput, payer);
+if (candidates.length < 1) {
+  const pool = catalogIndex.items.filter(x => !payer || x.payer === payer);
+  // nimm einfach ein paar sinnvolle Kandidaten aus dem Pool mit typischen Begriffen
+  const common = ["gespraech", "demenz", "angehorig", "beratung", "ordination"];
+  const poolScored = pool.map(it => {
+    const nt = norm(it.title);
+    let score = 0; common.forEach(c => { if (nt.includes(c)) score++; });
+    return { it, score };
+  }).sort((a,b) => b.score - a.score).map(x => x.it);
+  candidates = poolScored.slice(0, 8);
+}
+
+// Wenn wir nur schwache Hinweise haben: zwinge die KI ausdrücklich zu Rückfragen.
+const gatingRules = `
+DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
+${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points}${c.notes ? " | " + c.notes : ""}`).join("\n")}
+Wenn die Eingabe unklar ist, STELLE ZUERST GEZIELTE RÜCKFRAGEN (z. B. Gesprächsdauer, Art des Gesprächs, Träger, Technik).
+`;
+
+// Messages aufbauen (Systemprompt + Regeln + Fewshots + User)
+const messages = [
+  { role: "system", content: SYSTEM_PROMPT + "\n" + gatingRules },
+  ...FEW_SHOTS,
+  { role: "user", content: userInput }
+];
   }
 
   // Regeln für das Modell: Nur aus diesen Kandidaten wählen
