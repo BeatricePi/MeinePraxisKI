@@ -341,14 +341,30 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
     const output = data?.choices?.[0]?.message?.content?.trim() || "";
     if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
 
-    // Validierung: nur erlaubte Nummern
-    const allowed = new Set(candidates.map((c) => String(c.pos).toLowerCase()));
-    const used = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map((s) => s.toLowerCase())));
-    const illegal = used.filter((x) => !allowed.has(x));
-   // Validierung: nur erlaubte Nummern – aber statt 422 geben wir eine Auswahl-/Rückfrage zurück
-const allowed = new Set(candidates.map(c => String(c.pos).toLowerCase()));
-const used = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
-const illegal = used.filter(x => !allowed.has(x));
+// --- Validierung: nur erlaubte Nummern (soft) ---
+const allowedSet = new Set(candidates.map(c => String(c.pos).toLowerCase()));
+const usedCodes = Array.from(
+  new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase()))
+);
+const illegalCodes = usedCodes.filter(x => !allowedSet.has(x));
+
+if (illegalCodes.length) {
+  // Statt 422: Rückfrage + Kandidaten anbieten
+  const rows = candidates.map(c =>
+    `${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`
+  ).join("\n");
+
+  const clarification =
+`Rückfrage: Welche Position ist gemeint? (Deine Eingabe enthielt: ${illegalCodes.join(", ")})
+
+Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+------- | ------------- | -------- | -----------
+${rows}
+
+Copy-Paste-Liste: ${candidates.map(c => c.pos).join("; ")}`;
+
+  return res.json({ output: clarification, usage: data?.usage || null });
+}
 
 if (illegal.length) {
   const options = candidates.slice(0, 6).map(c => `${c.pos} – ${c.title}`).join("\n");
