@@ -2,7 +2,10 @@
 
 const Fuse = require("fuse.js");
 const catalogIndex = require("./catalogs/index.json");
-const rules = require("./scripts/rules/catalog_rules.json"); // Pfad beachten
+let rules = [];
+try {
+  rules = require("./scripts/rules/catalog_rules.json"); // optional
+} catch { rules = []; }
 
 const express = require("express");
 const path = require("path");
@@ -15,9 +18,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET;
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
-  .split(",")
-  .map((s) => s.trim().toLowerCase())
-  .filter(Boolean);
+  .split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
 
 // Modell per ENV überschreibbar
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
@@ -28,8 +29,7 @@ app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
 // Static Frontend
-const publicDir = path.join(__dirname, "public");
-app.use(express.static(publicDir));
+app.use(express.static(path.join(__dirname, "public")));
 
 // kleine Log-Hilfe
 const log = (...a) => console.log("[APP]", ...a);
@@ -71,45 +71,43 @@ function requireAuth(req, res, next) {
   }
 }
 
-// === SYSTEM PROMPT ===
+// === SYSTEM PROMPT (Hintergrund + Regeln) ===
 const SYSTEM_PROMPT = `
-Du bist der „Abrechnungshelfer Medizin“ für Ärzt:innen in Österreich.
+Du bist der „Abrechnungshelfer Medizin“ für Ärzt:innen, die mit Innomed arbeiten.
+Deine Aufgabe:
+- Vorschläge ausschließlich aus den hochgeladenen Honorarkatalogen (ÖGK, BVAEB, SVS, Tarmed, GOÄ, Medrech, KUF usw.).
+- Keine Fantasie-Nummern oder fremde Kataloge.
+- IMMER angeben: exakte Positionsnummer, Original-Leistungstext, Punkte/€.
+- Ton: freundlich, präzise, medizinisch korrekt. Keine Patientendaten speichern.
+- Stelle gezielte Rückfragen bei Unsicherheit (z. B. EKG ja/nein, Gesprächsdauer, Labor vs. PoC, Technik).
 
-ZWECK
-- Unterstütze Allgemeinmediziner:innen (Innomed), Leistungen korrekt/ vollständig abzurechnen.
-- Nutze ausschließlich die hinterlegten Honorarkataloge (ÖGK, SVS, BVAEB, Medrech, KUF etc.).
+Immer beachten (sofern in Katalog vorhanden & kombinierbar):
+- Erstordination
+- Koordinationszuschlag
+- Befundbericht
+- Lokalanästhesie
+- Langer EKG-Streifen
+- Keine Doppelabrechnung. Fehlende Infos niemals raten, sondern nachfragen.
 
-REGELN
-- Vorschläge NUR aus den hinterlegten Katalogen.
-- IMMER nennen: exakte Positionsnummer, Original-Leistungstext, Punkte/€.
-- Stelle gezielte Rückfragen (z. B. EKG ja/nein, Gesprächsdauer, Labor, Träger).
-- Achte auf Kombinierbarkeit / Limitierungen (z. B. 1×/Quartal).
-- Keine Fantasie-Nummern, nichts „erraten“.
-- Keine Patientendaten speichern.
+WICHTIG bei unpräziser Anfrage („Harn“, „Streifen“, „Urin“, „Kontrolle“, „Check“):
+- ZUERST Rückfragen: z. B. Art der Untersuchung, Ort (Ordination vs. Labor), Dauer, Versicherungsträger.
+- NIE eine Position nennen, die nicht eindeutig im gültigen Katalog steht.
 
-DATENKONTEXT
-- ÖGK Gesamtvertrag & Honorarkatalog, BVAEB Honorarordnung (ab 05/2024),
-  SVS (Landw./Gewerbe), Sonderkataloge (Medrech, SVA-vertragslos, Tiroler KUF).
-
-FEHLERBEHANDLUNG
-- Unklare Diagnose/Träger: zuerst nachfragen.
-- Rechtlich unklar: „Bitte mit der Kasse abklären.“
-
-AUSGABEFORMAT
-1) Kompakte Tabelle:
-   Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
-2) Danach Copy-Paste-Liste der Positionsnummern (z. B. 1C; 1D; 300).
+Ausgabeformat:
+1) Tabelle „Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo“
+2) Danach „Copy-Paste-Liste: <PosNr; PosNr; …>“
 `;
 
-// === FEW-SHOT BEISPIELE ===
+// === FEW SHOTS (kurz) ===
 const FEW_SHOTS = [
   {
     role: "user",
-    content: "Männlich, 52 Jahre, Hypertonie, Erstordination",
+    content: "Männlich, 52 Jahre, Hypertonie, Erstordination"
   },
   {
     role: "assistant",
-    content: `Rückfrage: Wurde ein Ruhe-EKG gemacht?
+    content:
+`Rückfrage: Wurde ein Ruhe-EKG durchgeführt?
 
 Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
@@ -117,23 +115,8 @@ Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 1D | Koordinationszuschlag | 10 P | bei Erstordination
 300 | Blutdruckmessung | 5 P | Routine
 
-Copy-Paste-Liste: 1C; 1D; 300`,
-  },
-  {
-    role: "user",
-    content: "weibl. Patientin, 28 J., Juckreiz im Vaginalbereich, Verdacht auf Soor",
-  },
-  {
-    role: "assistant",
-    content: `Rückfrage: Wurde ein Abstrich gemacht?
-
-Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
-------- | ------------- | -------- | -----------
-200 | Mikroskopische Untersuchung | 5 P | Abstrich erforderlich
-201 | Pilznachweis | 8 P | bei Verdacht Soor
-
-Copy-Paste-Liste: 200; 201`,
-  },
+Copy-Paste-Liste: 1C; 1D; 300`
+  }
 ];
 
 // === Helper: Payer erkennen + Normalisierung + Kandidaten ===
@@ -147,30 +130,29 @@ function detectPayer(text) {
 }
 
 function norm(s = "") {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  return s.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
 }
 
+// Synonyme für freie Eingaben
 const SYNONYMS = {
   angehorigengesprach: ["gespraech mit angehoerigen", "angehoerigen-gespraech", "angehoerigen"],
   demenz: ["alzheimer", "kognitive stoerung", "gedaechtnisstoerung"],
-  blutabnahme: ["venenblut", "blutentnahme"],
+  blutabnahme: ["venenblut", "blutentnahme", "blut aus der vene"],
   injektion: ["spritze"],
+  ekg: ["ruhekardiogramm", "elektrokardiogramm"],
+  harn: ["urin", "harnstreifen", "urintest"]
 };
 
+// optionale Hart-Regeln
 function ruleMatches(text, r, payer) {
   if (r.payer && payer && r.payer !== payer) return false;
   const t = norm(text);
-  if (r.whenAll && !r.whenAll.every((k) => t.includes(norm(k)))) return false;
-  if (r.whenAny && !r.whenAny.some((k) => t.includes(norm(k)))) return false;
+  if (r.whenAll && !r.whenAll.every(k => t.includes(norm(k)))) return false;
+  if (r.whenAny && !r.whenAny.some(k => t.includes(norm(k)))) return false;
   return true;
 }
-
 function preferredByRules(userText, payer) {
   try {
     if (Array.isArray(rules)) {
@@ -180,55 +162,61 @@ function preferredByRules(userText, payer) {
   return [];
 }
 
+// Kandidaten finden (Fuse + Synonyme + Fallback)
 function findCandidates(userText, payer, limit = 12) {
-  const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
+  const items = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
-  // Regel-getriebene Favoriten
-  const preferCodes = preferredByRules(userText, payer);
+  const preferCodes = preferredByRules(userText, payer) || [];
 
-  // Query + Synonyme
   const q = norm(userText);
   const tokens = q.split(" ").filter(Boolean);
-  const expandedTokens = new Set(tokens);
-  for (const tok of tokens) {
-    if (SYNONYMS[tok]) SYNONYMS[tok].forEach((s) => expandedTokens.add(norm(s)));
-  }
-  const expandedQuery = Array.from(expandedTokens).join(" ");
+  const expanded = new Set(tokens);
+  for (const tok of tokens) if (SYNONYMS[tok]) SYNONYMS[tok].forEach(v => expanded.add(norm(v)));
+  const expandedQuery = Array.from(expanded).join(" ");
 
-  // Fuzzy
   const fuse = new Fuse(items, {
     includeScore: true,
     threshold: 0.6,
     distance: 200,
     ignoreLocation: true,
-    keys: ["title"],
+    keys: ["title"]
   });
-  let found = fuse.search(expandedQuery).map((r) => r.item);
+  let found = fuse.search(expandedQuery).map(r => r.item);
 
-  // Fallback: Token-Overlap
   if (!found.length) {
-    const toks = new Set(expandedQuery.split(" ").filter((t) => t.length > 2));
-    const scored = items
-      .map((it) => {
-        const nt = norm(it.title);
-        let overlap = 0;
-        for (const t of toks) if (nt.includes(t)) overlap++;
-        return { it, overlap };
-      })
-      .filter((x) => x.overlap > 0)
-      .sort((a, b) => b.overlap - a.overlap)
-      .map((x) => x.it);
+    const toks = new Set(expandedQuery.split(" ").filter(t => t.length > 2));
+    const scored = items.map(it => {
+      const nt = norm(it.title);
+      let overlap = 0; for (const t of toks) if (nt.includes(t)) overlap++;
+      return { it, overlap };
+    }).filter(x => x.overlap > 0)
+      .sort((a,b) => b.overlap - a.overlap)
+      .map(x => x.it);
     found = scored;
   }
 
-  // Favoriten nach vorne
   if (preferCodes.length) {
-    const pref = found.filter((x) => preferCodes.includes(String(x.pos)));
-    const rest = found.filter((x) => !preferCodes.includes(String(x.pos)));
+    const pref = found.filter(x => preferCodes.includes(String(x.pos)));
+    const rest = found.filter(x => !preferCodes.includes(String(x.pos)));
     found = [...pref, ...rest];
   }
 
   return found.slice(0, limit);
+}
+
+// Früh-Rückfragen-Heuristiken
+function earlyQuestion(userText) {
+  const t = norm(userText);
+  if (/(gespraech|angehorig)/.test(t)) {
+    return "Rückfrage: Wie lange hat das Angehörigengespräch gedauert? (bis 20 Minuten / über 20 Minuten)";
+  }
+  if (/(blut|blutabnahme|venenblut)/.test(t)) {
+    return "Rückfrage: War es eine Blutentnahme aus der Vene? Wenn ja, gib bitte auch den Träger an (z. B. ÖGK).";
+  }
+  if (/(harn|urin|streifen)/.test(t)) {
+    return "Rückfrage: Meinst du Harnstreifentest in der Ordination oder Laboruntersuchung? Bitte Träger nennen.";
+  }
+  return null;
 }
 
 // === API ENDPOINT ===
@@ -239,92 +227,66 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
 
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
-  // --- Frühzeitige Rückfragen erzwingen, wenn Eingabe unklar ---
-// Wir erkennen häufige Fälle heuristisch und fragen direkt nach,
-// statt sofort das Modell aufzurufen.
-const nt = norm(userInput);
-let preQuestion = null;
 
-// Beispiel-Heuristiken (erweiterbar):
-if (/(gespraech|gespräch|angehorig|angehörig)/i.test(nt)) {
-  preQuestion = "Rückfrage: Wie lange hat das Angehörigengespräch gedauert? (bis 20 Minuten / über 20 Minuten)";
-}
-if (/(blut|blutabnahme|venenblut)/i.test(nt)) {
-  preQuestion = "Rückfrage: War es eine Blutentnahme aus der Vene (ÖGK Pos 54) oder etwas anderes (z. B. Aderlass Pos 55)?";
-}
+  // evtl. vorgezogene Rückfrage
+  let preQ = earlyQuestion(userInput);
+  if (!preQ && candidates.length < 3) {
+    const v = candidates.slice(0,6).map(c => `${c.pos} – ${c.title}`).join("\n");
+    preQ = v
+      ? `Unklar. Meintest du eine der folgenden Leistungen?\n${v}\nWenn keine passt: Bitte genauer beschreiben.`
+      : "Unklar. Bitte genauer eingeben (z. B. Träger, Technik, Dauer, Art).";
+  }
+  if (preQ) return res.json({ output: preQ });
 
-// Wenn wir wenig/unsichere Kandidaten haben, lieber fragen
-if (!preQuestion && candidates.length < 3) {
-  const vorschlaege = candidates.slice(0, 6).map(c => `${c.pos} – ${c.title}`).join("\n");
-  preQuestion = vorschlaege
-    ? `Unklar. Meintest du eine der folgenden Leistungen?\n${vorschlaege}\nWenn keine passt: Bitte genauer beschreiben.`
-    : "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
-}
-
-if (preQuestion) {
-  // UI versteht 'output' – also liefern wir die Rückfrage hier schon als Antwort.
-  return res.json({ output: preQuestion });
-
-  // Fallback-Kandidaten, wenn gar nichts gefunden wurde
+  // Fallback-Kandidaten wenn leer
   if (!candidates.length) {
-    const pool = catalogIndex.items.filter((x) => !payer || x.payer === payer);
-    const common = ["gespraech", "beratung", "ordination", "demenz", "labor", "ekg", "injektion", "blut"];
-    const poolScored = pool
-      .map((it) => {
-        const nt = norm(it.title);
-        let score = 0;
-        common.forEach((c) => {
-          if (nt.includes(c)) score++;
-        });
-        return { it, score };
-      })
-      .sort((a, b) => b.score - a.score)
-      .map((x) => x.it);
-    candidates = poolScored.slice(0, 8);
+    const pool = catalogIndex.items.filter(x => !payer || x.payer === payer);
+    const common = ["gespraech","beratung","ordination","labor","ekg","injektion","blut"];
+    const poolScored = pool.map(it => {
+      const nt = norm(it.title); let score = 0; common.forEach(c => { if (nt.includes(c)) score++; });
+      return { it, score };
+    }).sort((a,b)=>b.score-a.score).map(x=>x.it);
+    candidates = poolScored.slice(0,8);
   }
 
-  // Ohne Kandidaten -> Fehlermeldung mit Hinweis
   if (!candidates.length) {
     return res.status(400).json({
-      error:
-        "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. 'ÖGK, Blutentnahme aus der Vene').",
+      error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. 'ÖGK, Blutentnahme aus der Vene')."
     });
   }
 
+  // Gate: Modell darf NUR aus Kandidaten wählen (oder Rückfragen stellen)
   const gatingRules = `
 DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
-${candidates
-  .map((c) => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points}${c.notes ? " | " + c.notes : ""}`)
-  .join("\n")}
-Wenn die Eingabe unklar ist, STELLE ZUERST GEZIELTE RÜCKFRAGEN (z. B. Gesprächsdauer, Träger, Technik).
-Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
+${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`).join("\n")}
+Wenn die Eingabe unklar ist, STELLE ZUERST GEZIELTE RÜCKFRAGEN (Dauer, Technik, Träger).
+Wenn du Vorschläge machst, NUR Pos.-Nrn. aus dieser Liste.
 `;
 
   const messages = [
     { role: "system", content: SYSTEM_PROMPT + "\n" + gatingRules },
     ...FEW_SHOTS,
-    { role: "user", content: userInput },
+    { role: "user", content: userInput }
   ];
 
   try {
     log("Starte OpenAI-Request", {
       model: OPENAI_MODEL,
       key: OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4) : "❌ kein Key",
-      user: req.user?.email || "unbekannt",
+      user: req.user?.email || "unbekannt"
     });
 
-    // Node 18+ hat global fetch
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: OPENAI_MODEL,
         temperature: 0.2,
-        max_completion_tokens: 1000, // neuer Param-Name
-        messages,
+        max_completion_tokens: 1000,
+        messages
       }),
     });
 
@@ -341,40 +303,27 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
     const output = data?.choices?.[0]?.message?.content?.trim() || "";
     if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
 
-// --- Validierung: nur erlaubte Nummern (soft) ---
-const allowedSet = new Set(candidates.map(c => String(c.pos).toLowerCase()));
-const usedCodes = Array.from(
-  new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase()))
-);
-const illegalCodes = usedCodes.filter(x => !allowedSet.has(x));
+    // --- Soft-Validierung: nur zugelassene PosNr zulassen; sonst Rückfrage ---
+    const allowedSet = new Set(candidates.map(c => String(c.pos).toLowerCase()));
+    const usedCodes = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
+    const illegalCodes = usedCodes.filter(x => !allowedSet.has(x));
 
-if (illegalCodes.length) {
-  // Statt 422: Rückfrage + Kandidaten anbieten
-  const rows = candidates.map(c =>
-    `${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`
-  ).join("\n");
-
-  const clarification =
-`Rückfrage: Welche Position ist gemeint? (Deine Eingabe enthielt: ${illegalCodes.join(", ")})
+    if (illegalCodes.length) {
+      const rows = candidates.map(c =>
+        `${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`
+      ).join("\n");
+      const clarification =
+`Rückfrage: Welche Position ist gemeint? (Deine Antwort enthielt: ${illegalCodes.join(", ")})
 
 Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
 ${rows}
 
 Copy-Paste-Liste: ${candidates.map(c => c.pos).join("; ")}`;
-
-  return res.json({ output: clarification, usage: data?.usage || null });
-}
-
-if (illegal.length) {
-  const options = candidates.slice(0, 6).map(c => `${c.pos} – ${c.title}`).join("\n");
-  const frage = options
-    ? `Unklar – nur folgende Positionen sind zugelassen:\n${options}\nWelche trifft zu?`
-    : "Unklar – bitte Eingabe präzisieren (Träger, Technik, Dauer, Art).";
-  return res.json({ output: frage });
-}
+      return res.json({ output: clarification, usage: data?.usage || null });
     }
 
+    // ok
     res.json({ output, usage: data?.usage || null });
   } catch (error) {
     log("Unhandled /api/abrechnen error:", error?.message || error);
