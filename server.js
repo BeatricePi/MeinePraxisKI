@@ -203,7 +203,58 @@ function findCandidates(userText, payer, limit = 12) {
 
   return found.slice(0, limit);
 }
+// --- AddOns: immer mitzudenkende Leistungen katalogsicher finden ---
+function findByTitleContains(payer, patterns = []) {
+  const pats = patterns.map((p) => norm(p));
+  const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
+  for (const it of items) {
+    const t = norm(it.title);
+    if (pats.some((p) => t.includes(p))) return it;
+  }
+  return null;
+}
 
+function ensureCandidate(candidates, item) {
+  if (!item) return candidates;
+  const has = candidates.some((c) => String(c.pos) === String(item.pos));
+  if (!has) candidates.push(item);
+  return candidates;
+}
+
+function deriveAddOns(userText, payer) {
+  const add = [];
+  const t = norm(userText);
+
+  if (/(erst|erstord|erstvorstellung|neu\b|neu-patient)/.test(t)) {
+    const eo = findByTitleContains(payer, ["erstordination"]);
+    const kz = findByTitleContains(payer, ["koordinationszuschlag", "koordination"]);
+    if (eo) add.push(eo);
+    if (kz) add.push(kz);
+  }
+
+  if (/(befund|bericht|arztbrief)/.test(t)) {
+    const bb = findByTitleContains(payer, ["befundbericht", "befund-bericht", "bericht"]);
+    if (bb) add.push(bb);
+  }
+
+  if (/(ekg)/.test(t) && /(lang|streifen|verl|minute|min|24|holter)/.test(t)) {
+    const ls = findByTitleContains(payer, ["langer ekg", "ekg lang", "langstreifen", "verlangerter ekg"]);
+    if (ls) add.push(ls);
+  }
+
+  return add;
+}
+
+function mergeCandidates(candidates, addOns) {
+  const seen = new Set(candidates.map((c) => String(c.pos)));
+  for (const it of addOns) {
+    if (it && !seen.has(String(it.pos))) {
+      candidates.push(it);
+      seen.add(String(it.pos));
+    }
+  }
+  return candidates;
+}
 // Früh-Rückfragen-Heuristiken
 function earlyQuestion(userText) {
   const t = norm(userText);
@@ -227,6 +278,10 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
 
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
+  
+// AddOns ergänzen (Erstordination, Koordinationszuschlag, Befundbericht, langer EKG-Streifen …)
+const addOns = deriveAddOns(userInput, payer);
+candidates = mergeCandidates(candidates, addOns);
 
   // evtl. vorgezogene Rückfrage
   let preQ = earlyQuestion(userInput);
