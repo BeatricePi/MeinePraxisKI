@@ -6,10 +6,21 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const Fuse = require("fuse.js");
 
+// Katalogindex
 const catalogIndex = require("./catalogs/index.json");
+
+// Synonyme ROBUST aus externer JSON laden (keine Inline-Objekte!)
+let SYNONYMS = {};
+try {
+  SYNONYMS = require("./catalogs/synonyms.json");
+} catch {
+  SYNONYMS = {};
+}
+
+// (optional) harte Regeln
 let rules = [];
 try {
-  rules = require("./scripts/rules/catalog_rules.json"); // optional
+  rules = require("./scripts/rules/catalog_rules.json");
 } catch { rules = []; }
 
 // === ENV ===
@@ -31,10 +42,10 @@ app.use(express.json({ limit: "1mb" }));
 // Static Frontend
 app.use(express.static(path.join(__dirname, "public")));
 
-// kleine Log-Hilfe
+// Log helper
 const log = (...a) => console.log("[APP]", ...a);
 
-// Health-Checks
+// Health checks
 app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
 app.get("/api/check", (_req, res) => {
   const keyPreview = OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4) : "❌ kein Key";
@@ -71,7 +82,7 @@ function requireAuth(req, res, next) {
   }
 }
 
-// === SYSTEM PROMPT (Hintergrund + Regeln) ===
+// === SYSTEM PROMPT ===
 const SYSTEM_PROMPT = `
 Du bist der „Abrechnungshelfer Medizin“ für Ärzt:innen, die mit Innomed arbeiten.
 Deine Aufgabe:
@@ -98,7 +109,7 @@ Ausgabeformat:
 2) Danach „Copy-Paste-Liste: <PosNr; PosNr; …>“
 `;
 
-// === FEW SHOTS (kurz) ===
+// === FEW SHOTS ===
 const FEW_SHOTS = [
   {
     role: "user",
@@ -119,13 +130,15 @@ Copy-Paste-Liste: 1C; 1D; 300`
   }
 ];
 
-// === Helper: Payer erkennen + Normalisierung + Kandidaten ===
+// === Helper ===
 function norm(s = "") {
   return String(s)
     .toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[ä]/g, "ae").replace(/[ö]/g, "oe").replace(/[ü]/g, "ue").replace(/[ß]/g, "ss")
-    .replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function detectPayer(text = "") {
@@ -138,7 +151,6 @@ function detectPayer(text = "") {
   return null;
 }
 
-// Eingaben, die nur eine Dauer ohne Kontext enthalten
 function isBareDurationQuery(text = "") {
   const t = norm(text);
   const hasDuration = /\b(min|minute|stunden?|std)\b/.test(t);
@@ -146,27 +158,6 @@ function isBareDurationQuery(text = "") {
   return hasDuration && !hasKeywords;
 }
 
-// === Synonyme für freie Eingaben (einziger Block!) ===
-const SYNONYMS = {
-  angehorigengespraech: ["gespraech mit angehoerigen", "angehoerigen-gespraech", "angehoerigen"],
-  demenz: ["alzheimer", "kognitive stoerung", "gedaechtnisstoerung"],
-
-  // Blutentnahme & Varianten
-  blutabnahme: [
-    "blutentnahme", "blut abnahme", "abnahme blut",
-    "venenblut", "blut aus der vene",
-    "venenpunktion", "venepunktion"
-  ],
-  vene: ["venose", "venenpunktion", "venepunktion", "venenblut"],
-  kapillar: ["kapillarblut", "kapillar", "fingerbeere", "ohrlaeppchen"],
-
-  // weitere Klassiker
-  injektion: ["spritze", "injek"],
-  ekg: ["ruhekardiogramm", "elektrokardiogramm"],
-  harn: ["urin", "harnstreifen", "urinstreifen", "urintest", "combi screen", "streifentest harn"]
-};
-
-// optionale Hart-Regeln
 function ruleMatches(text, r, payer) {
   if (r.payer && payer && r.payer !== payer) return false;
   const t = norm(text);
@@ -183,12 +174,21 @@ function preferredByRules(userText, payer) {
   return [];
 }
 
-// Kandidaten finden (Fuse + Synonyme + Fallback)
 function ntIncludes(it, needle) {
   return norm(it.title).includes(norm(needle));
 }
 
-// deterministische Treffer für Klassiker (venös/kapillar/Harnstreifen)
+function expandWithSynonyms(text) {
+  const tokens = norm(text).split(" ").filter(Boolean);
+  const expanded = new Set(tokens);
+  for (const tok of tokens) {
+    const syns = SYNONYMS[tok];
+    if (syns) for (const s of syns) expanded.add(norm(s));
+  }
+  return Array.from(expanded).join(" ");
+}
+
+// deterministische Klassiker (venös/kapillar/Harnstreifen)
 function pickExactItem(userText, payer) {
   const t = norm(userText);
   const items = catalogIndex.items.filter(x => (!payer || x.payer === payer));
@@ -212,38 +212,25 @@ function pickExactItem(userText, payer) {
   return null;
 }
 
-function expandWithSynonyms(text) {
-  const tokens = norm(text).split(" ").filter(Boolean);
-  const expanded = new Set(tokens);
-  for (const tok of tokens) {
-    const syns = SYNONYMS[tok];
-    if (syns) for (const s of syns) expanded.add(norm(s));
-  }
-  return Array.from(expanded).join(" ");
-}
-
 function findCandidates(userText, payer, limit = 12) {
   let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
   // Psych-GUARD
   const nt = norm(userText);
   const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
-  if (!looksPsych) {
-    items = items.filter(it => !/(psych|psychiatr|psychothera)/i.test(it.title));
-  }
+  if (!looksPsych) items = items.filter(it => !/(psych|psychiatr|psychothera)/i.test(it.title));
 
   const preferCodes = preferredByRules(userText, payer) || [];
 
-  // Intent-Erkennung Blutentnahme / Kapillar / Injektion
+  // Intent-Erkennung
   const mentionsBloodDraw = /\b(blutabnahme|blutentnahme|abnahme blut|venenpunktion|venepunktion)\b/.test(nt)
     || /\b(venenblut|kapillarblut)\b/.test(nt);
   const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(nt);
   const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
   const mentionsInjection = /\binjek|spritze\b/.test(nt);
 
-  // Wenn „Entnahme“ gemeint ist, Injektionen rausfiltern
   if (mentionsBloodDraw && !mentionsInjection) {
-    items = items.filter(it => !/injektion/i.test(it.title));
+    items = items.filter(it => !/injektion/i.test(it.title)); // „Entnahme“ ≠ Injektion
   }
 
   // Exact-First
@@ -256,7 +243,7 @@ function findCandidates(userText, payer, limit = 12) {
     if (exactKap) return [exactKap].slice(0, limit);
   }
 
-  // Fuzzy mit Synonym-Expansion
+  // Fuzzy über Synonym-Expansion
   const expandedQuery = expandWithSynonyms(userText);
   const fuse = new Fuse(items, {
     includeScore: true,
@@ -268,7 +255,6 @@ function findCandidates(userText, payer, limit = 12) {
   let found = fuse.search(expandedQuery).map(r => r.item);
 
   if (!found.length) {
-    // Token-Overlap fallback
     const toks = new Set(expandedQuery.split(" ").filter(t => t.length > 2));
     const scored = items.map(it => {
       const nt2 = norm(it.title);
@@ -285,11 +271,10 @@ function findCandidates(userText, payer, limit = 12) {
     const rest = found.filter(x => !preferCodes.includes(String(x.pos)));
     found = [...pref, ...rest];
   }
-
   return found.slice(0, limit);
 }
 
-// --- AddOns ---
+// AddOns
 function findByTitleContains(payer, patterns = []) {
   const pats = patterns.map((p) => norm(p));
   const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
@@ -299,22 +284,14 @@ function findByTitleContains(payer, patterns = []) {
   }
   return null;
 }
-
 function mergeCandidates(candidates, addOns) {
   const seen = new Set(candidates.map((c) => String(c.pos)));
-  for (const it of addOns) {
-    if (it && !seen.has(String(it.pos))) {
-      candidates.push(it);
-      seen.add(String(it.pos));
-    }
-  }
+  for (const it of addOns) if (it && !seen.has(String(it.pos))) { candidates.push(it); seen.add(String(it.pos)); }
   return candidates;
 }
-
 function deriveAddOns(userText, payer) {
   const add = [];
   const t = norm(userText);
-
   if (/(erst|erstord|erstvorstellung|neu\b|neu patient)/.test(t)) {
     const eo = findByTitleContains(payer, ["erstordination"]);
     const kz = findByTitleContains(payer, ["koordinationszuschlag", "koordination"]);
@@ -348,10 +325,8 @@ function earlyQuestion(userText = "") {
   const qs = [];
   if (mentionsBloodDraw && !hasVenous && !hasCapillary) qs.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
   if (mentionsBloodDraw && missingPayer) qs.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
-
   if (/\b(gespraech|angehoerig)\b/.test(n) && !/\b(min|minute|stunden?|std|ueber 20|bis 20)\b/.test(n))
     qs.push("Wie lange hat das Angehörigengespräch gedauert? (**bis 20 Minuten** / **über 20 Minuten**)");
-
   if (/\b(harn|urin|streifen)\b/.test(n) && !/\b(ord|ordination|labor)\b/.test(n)) {
     qs.push("Meinst du **Harnstreifentest in der Ordination** oder **Laboruntersuchung**?");
     if (missingPayer) qs.push("Bitte zusätzlich den **Versicherungsträger** angeben.");
@@ -365,18 +340,15 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
   if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
-  // Nur „Dauer“ ohne Kontext: sofortige Rückfrage
+  // Nur „Dauer“ ohne Kontext
   if (isBareDurationQuery(userInput)) {
-    return res.json({
-      output: "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion …) Bitte kurz präzisieren."
-    });
+    return res.json({ output: "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion …) Bitte kurz präzisieren." });
   }
 
-  // Payer erkennen & Kandidaten suchen
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
 
-  // deterministische Ausgabe ohne LLM, wenn exakter Treffer + Payer bekannt
+  // Deterministisch ohne LLM, wenn klar
   const exact = pickExactItem(userInput, payer);
   if (exact && payer) {
     const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
@@ -402,14 +374,13 @@ Copy-Paste-Liste: ${exact.pos}`;
   }
   if (preQ) return res.json({ output: preQ });
 
-  // Ohne Kandidaten -> freundlicher Fehler
   if (!candidates.length) {
     return res.status(400).json({
       error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“)."
     });
   }
 
-  // Gating-Regeln
+  // Gating für das Modell
   const gatingRules = `
 DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
 ${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`).join("\n")}
@@ -423,7 +394,7 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
     { role: "user", content: userInput }
   ];
 
-  // Modell anfragen
+  // Modell anfragen (Node 20 hat global fetch)
   try {
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -474,7 +445,6 @@ Copy-Paste-Liste: ${candidates.map(c => c.pos).join("; ")}`;
       return res.json({ output: clarification, usage: data?.usage || null });
     }
 
-    // Erfolg
     res.json({ output, usage: data?.usage || null });
   } catch (error) {
     log("Unhandled /api/abrechnen error:", error?.message || error);
