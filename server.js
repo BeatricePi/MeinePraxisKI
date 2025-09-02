@@ -144,7 +144,6 @@ function detectPayer(text = "") {
   return null;
 }
 
-
 function norm(s = "") {
   return s.toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -164,14 +163,12 @@ function isBareDurationQuery(text = "") {
 const SYNONYMS = {
   angehorigengesprach: ["gespraech mit angehoerigen", "angehoerigen-gespraech", "angehoerigen"],
   demenz: ["alzheimer", "kognitive stoerung", "gedaechtnisstoerung"],
-  blutabnahme: ["venenblut", "blutentnahme", "blut aus der vene"],
+  blutabnahme: ["venenblut", "blutentnahme", "blut aus der vene", "abnahme von blut", "venenpunktion", "venepunktion"],
+  vene: ["venoes", "venenpunktion", "venepunktion"],
+  kapillar: ["kapillarblut", "fingerbeere", "ohrlaeppchen"],
   injektion: ["spritze"],
   ekg: ["ruhekardiogramm", "elektrokardiogramm"],
   harn: ["urin", "harnstreifen", "urintest"]
-  blutabnahme: ["venenblut", "blutentnahme", "blut aus der vene", "abnahme von blut", "venenpunktion", "venepunktion"],
-vene: ["venoes", "venenpunktion", "venepunktion"],
-kapillar: ["kapillarblut", "fingerbeere", "ohrlaeppchen"]
-
 };
 
 // optionale Hart-Regeln
@@ -195,6 +192,7 @@ function preferredByRules(userText, payer) {
 function ntIncludes(it, needle) {
   return norm(it.title).includes(norm(needle));
 }
+
 function findCandidates(userText, payer, limit = 12) {
   let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
@@ -207,31 +205,29 @@ function findCandidates(userText, payer, limit = 12) {
 
   const preferCodes = preferredByRules(userText, payer) || [];
 
-  // --- NEU: Intent-Erkennung Blutentnahme / Kapillar / Injektion ---
+  // --- Intent-Erkennung Blutentnahme / Kapillar / Injektion ---
   const mentionsBloodDraw = /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(nt)
     || /\b(blut|venenblut)\b/.test(nt);
   const hasVenous = /\b(vene|venoes|venenpunktion|venepunktion)\b/.test(nt);
   const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
   const mentionsInjection = /\binjek|spritze\b/.test(nt);
 
-  // --- NEU: Wenn "Entnahme" gemeint ist, Injektionen rausfiltern ---
+  // Wenn "Entnahme" gemeint ist, Injektionen rausfiltern
   if (mentionsBloodDraw && !mentionsInjection) {
     items = items.filter(it => !/injektion/i.test(it.title));
   }
 
-  // --- NEU: Exact-First-Prio (bevor Fuse läuft) ---
-  // Vene
+  // Exact-First-Prio (bevor Fuse läuft)
   if (mentionsBloodDraw && hasVenous) {
     const exactVene = items.find(it => ntIncludes(it, "blutentnahme aus der vene"));
     if (exactVene) return [exactVene].slice(0, limit);
   }
-  // Kapillar
   if (mentionsBloodDraw && hasCapillary) {
     const exactKap = items.find(it => ntIncludes(it, "kapillar"));
     if (exactKap) return [exactKap].slice(0, limit);
   }
 
-  // Synonym-Expansion wie gehabt
+  // Synonym-Expansion
   const q = norm(userText);
   const tokens = q.split(" ").filter(Boolean);
   const expanded = new Set(tokens);
@@ -322,7 +318,6 @@ function mergeCandidates(candidates, addOns) {
 }
 
 // Früh-Rückfragen-Heuristiken
-// Früh-Rückfragen-Heuristiken
 function earlyQuestion(userText = "") {
   const n = normalizeInput(userText);
 
@@ -348,7 +343,7 @@ function earlyQuestion(userText = "") {
     questions.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
   }
 
-  // Weitere Heuristiken (Beispiele aus deinem ursprünglichen Code)
+  // Weitere Heuristiken
   if (/\b(gespraech|angehoerig)\b/.test(n) && !/\b(min|minute|stunden?|std|ueber 20|bis 20)\b/.test(n)) {
     questions.push("Wie lange hat das Angehörigengespräch gedauert? (**bis 20 Minuten** / **über 20 Minuten**)");
   }
@@ -379,18 +374,18 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
 
-  // 4) AddOns vorschlagen (Erstordination, Koordinationszuschlag, Befundbericht, langer EKG-Streifen …)
+  // 4) AddOns vorschlagen
   try {
     const addOns = deriveAddOns(userInput, payer);
     candidates = mergeCandidates(candidates, addOns);
   } catch { /* optional */ }
 
-// 5) Rückfragen NUR wenn earlyQuestion wirklich etwas vermisst ODER gar keine Kandidaten
-let preQ = earlyQuestion(userInput);
-if (!preQ && candidates.length === 0) {
-  preQ = "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
-}
-if (preQ) return res.json({ output: preQ });
+  // 5) Rückfragen NUR wenn earlyQuestion wirklich etwas vermisst ODER gar keine Kandidaten
+  let preQ = earlyQuestion(userInput);
+  if (!preQ && candidates.length === 0) {
+    preQ = "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
+  }
+  if (preQ) return res.json({ output: preQ });
 
   // 6) Ohne Kandidaten -> freundlicher Fehler
   if (!candidates.length) {
@@ -400,7 +395,7 @@ if (preQ) return res.json({ output: preQ });
     });
   }
 
-  // 7) Gating-Regeln für das Modell (nur aus diesen Kandidaten wählen ODER zuerst Rückfragen stellen)
+  // 7) Gating-Regeln für das Modell
   const gatingRules = `
 DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
 ${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`).join("\n")}
@@ -422,7 +417,7 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
       user: req.user?.email || "unbekannt"
     });
 
-    // Node 20: global fetch vorhanden
+    // Node 18/20: global fetch vorhanden; falls nicht, bitte node-fetch importieren
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
