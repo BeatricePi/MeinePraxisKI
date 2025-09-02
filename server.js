@@ -9,7 +9,7 @@ const Fuse = require("fuse.js");
 // Katalogindex
 const catalogIndex = require("./catalogs/index.json");
 
-// Synonyme ROBUST aus externer JSON laden (keine Inline-Objekte!)
+// Synonyme ROBUST aus externer JSON laden
 let SYNONYMS = {};
 try {
   SYNONYMS = require("./catalogs/synonyms.json");
@@ -423,7 +423,7 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
     const output = data?.choices?.[0]?.message?.content?.trim() || "";
     if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
 
-    // Soft-Validierung: nur erlaubte Positionen
+    // Soft-Validierung
     const allowedSet = new Set(candidates.map(c => String(c.pos).toLowerCase()));
     const usedCodes = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
     const illegalCodes = usedCodes.filter(x => !allowedSet.has(x));

@@ -1,7 +1,6 @@
 {
   "angehorigengespraech": ["gespraech mit angehoerigen", "angehoerigen-gespraech", "angehoerigen"],
   "demenz": ["alzheimer", "kognitive stoerung", "gedaechtnisstoerung"],
-
   "blutabnahme": [
     "blutentnahme",
     "blut abnahme",
@@ -13,7 +12,6 @@
   ],
   "vene": ["venose", "venenpunktion", "venepunktion", "venenblut"],
   "kapillar": ["kapillarblut", "kapillar", "fingerbeere", "ohrlaeppchen"],
-
   "injektion": ["spritze", "injek"],
   "ekg": ["ruhekardiogramm", "elektrokardiogramm"],
   "harn": ["urin", "harnstreifen", "urinstreifen", "urintest", "combi screen", "streifentest harn"]
