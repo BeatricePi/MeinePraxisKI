@@ -120,14 +120,30 @@ Copy-Paste-Liste: 1C; 1D; 300`
 ];
 
 // === Helper: Payer erkennen + Normalisierung + Kandidaten ===
-function detectPayer(text) {
-  const t = (text || "").toLowerCase();
-  if (/(ö\s*g\s*k|ögk|oegk|gesundheitskasse)/i.test(t)) return "ÖGK";
-  if (/bvaeb/i.test(t)) return "BVAEB";
-  if (/svs/i.test(t)) return "SVS";
-  if (/kuf/i.test(t)) return "KUF";
+// robustere Normalisierung für Benutzereingaben (Umlaute, Leerzeichen, etc.)
+function normalizeInput(s = "") {
+  return String(s)
+    .toLowerCase()
+    .replace(/[ä]/g, "ae")
+    .replace(/[ö]/g, "oe")
+    .replace(/[ü]/g, "ue")
+    .replace(/[ß]/g, "ss")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function detectPayer(text = "") {
+  const n = normalizeInput(text);
+
+  if (/\boegk\b/.test(n) || /\bgesundheitskasse\b/.test(n) || /\boe gk\b/.test(n)) return "ÖGK";
+  if (/\bbvaeb\b/.test(n) || /\bbva\b/.test(n)) return "BVAEB";
+  if (/\bsvs\b/.test(n)) return "SVS";
+  if (/\bkuf\b/.test(n)) return "KUF";
+  if (/\bmedrech\b/.test(n)) return "MEDRECH";
+
   return null;
 }
+
 
 function norm(s = "") {
   return s.toLowerCase()
@@ -274,18 +290,42 @@ function mergeCandidates(candidates, addOns) {
 }
 
 // Früh-Rückfragen-Heuristiken
-function earlyQuestion(userText) {
-  const t = norm(userText);
-  if (/(gespraech|angehorig)/.test(t)) {
-    return "Rückfrage: Wie lange hat das Angehörigengespräch gedauert? (bis 20 Minuten / über 20 Minuten)";
+// Früh-Rückfragen-Heuristiken
+function earlyQuestion(userText = "") {
+  const n = normalizeInput(userText);
+
+  // Erkennung Blutentnahme
+  const mentionsBloodDraw = /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(n)
+    || /\b(blut|venenblut)\b/.test(n);
+
+  // Spezifität vorhanden?
+  const hasVenous = /\b(vene|venoes|venenpunktion|venepunktion)\b/.test(n);
+  const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
+
+  // Träger vorhanden?
+  const payer = detectPayer(userText);
+  const missingPayer = !payer;
+
+  const questions = [];
+
+  // Nur fragen, was wirklich fehlt:
+  if (mentionsBloodDraw && !hasVenous && !hasCapillary) {
+    questions.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
   }
-  if (/(blut|blutabnahme|venenblut)/.test(t)) {
-    return "Rückfrage: War es eine Blutentnahme aus der Vene? Wenn ja, gib bitte auch den Träger an (z. B. ÖGK).";
+  if (mentionsBloodDraw && missingPayer) {
+    questions.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
   }
-  if (/(harn|urin|streifen)/.test(t)) {
-    return "Rückfrage: Meinst du Harnstreifentest in der Ordination oder Laboruntersuchung? Bitte Träger nennen.";
+
+  // Weitere Heuristiken (Beispiele aus deinem ursprünglichen Code)
+  if (/\b(gespraech|angehoerig)\b/.test(n) && !/\b(min|minute|stunden?|std|ueber 20|bis 20)\b/.test(n)) {
+    questions.push("Wie lange hat das Angehörigengespräch gedauert? (**bis 20 Minuten** / **über 20 Minuten**)");
   }
-  return null;
+  if (/\b(harn|urin|streifen)\b/.test(n) && !/\b(ord|ordination|labor)\b/.test(n)) {
+    questions.push("Meinst du **Harnstreifentest in der Ordination** oder **Laboruntersuchung**?");
+    if (missingPayer) questions.push("Bitte zusätzlich den **Versicherungsträger** angeben.");
+  }
+
+  return questions.length ? questions.join(" ") : null;
 }
 
 // === API ENDPOINT ===
