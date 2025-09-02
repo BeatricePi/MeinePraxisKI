@@ -192,6 +192,28 @@ function preferredByRules(userText, payer) {
 function ntIncludes(it, needle) {
   return norm(it.title).includes(norm(needle));
 }
+// Exakte Treffer vor dem LLM nutzen (deterministisch)
+function pickExactItem(userText, payer) {
+  const nt = norm(userText);
+  const items = catalogIndex.items.filter(x => (!payer || x.payer === payer));
+
+  const hasVenous = /\b(vene|venoes|venenpunktion|venepunktion)\b/.test(nt);
+  const hasCap = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
+
+  // Vene
+  if (hasVenous) {
+    const exactVene = items.find(it => ntIncludes(it, "blutentnahme aus der vene"));
+    if (exactVene) return exactVene;
+  }
+
+  // Kapillar (wenn dein Katalog anders heißt, hier anpassen)
+  if (hasCap) {
+    const exactKap = items.find(it => ntIncludes(it, "kapillar"));
+    if (exactKap) return exactKap;
+  }
+
+  return null;
+}
 
 function findCandidates(userText, payer, limit = 12) {
   let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
@@ -373,6 +395,18 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   // 3) Payer erkennen & Kandidaten suchen
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
+// Wenn exakter Katalogtreffer vorhanden + Träger erkannt → LLM überspringen
+const exact = pickExactItem(userInput, payer);
+if (exact && payer) {
+  const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
+  const deterministic =
+`Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+------- | ------------- | -------- | -----------
+${rows}
+
+Copy-Paste-Liste: ${exact.pos}`;
+  return res.json({ output: deterministic });
+}
 
   // 4) AddOns vorschlagen
   try {
