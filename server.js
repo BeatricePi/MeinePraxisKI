@@ -168,6 +168,10 @@ const SYNONYMS = {
   injektion: ["spritze"],
   ekg: ["ruhekardiogramm", "elektrokardiogramm"],
   harn: ["urin", "harnstreifen", "urintest"]
+  blutabnahme: ["venenblut", "blutentnahme", "blut aus der vene", "abnahme von blut", "venenpunktion", "venepunktion"],
+vene: ["venoes", "venenpunktion", "venepunktion"],
+kapillar: ["kapillarblut", "fingerbeere", "ohrlaeppchen"]
+
 };
 
 // optionale Hart-Regeln
@@ -188,10 +192,13 @@ function preferredByRules(userText, payer) {
 }
 
 // Kandidaten finden (Fuse + Synonyme + Fallback)
+function ntIncludes(it, needle) {
+  return norm(it.title).includes(norm(needle));
+}
 function findCandidates(userText, payer, limit = 12) {
   let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
-  // Psych-GUARD: Psych-Leistungen nur zeigen, wenn der Usertext das nahelegt
+  // Psych-GUARD wie gehabt
   const nt = norm(userText);
   const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
   if (!looksPsych) {
@@ -200,6 +207,31 @@ function findCandidates(userText, payer, limit = 12) {
 
   const preferCodes = preferredByRules(userText, payer) || [];
 
+  // --- NEU: Intent-Erkennung Blutentnahme / Kapillar / Injektion ---
+  const mentionsBloodDraw = /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(nt)
+    || /\b(blut|venenblut)\b/.test(nt);
+  const hasVenous = /\b(vene|venoes|venenpunktion|venepunktion)\b/.test(nt);
+  const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
+  const mentionsInjection = /\binjek|spritze\b/.test(nt);
+
+  // --- NEU: Wenn "Entnahme" gemeint ist, Injektionen rausfiltern ---
+  if (mentionsBloodDraw && !mentionsInjection) {
+    items = items.filter(it => !/injektion/i.test(it.title));
+  }
+
+  // --- NEU: Exact-First-Prio (bevor Fuse läuft) ---
+  // Vene
+  if (mentionsBloodDraw && hasVenous) {
+    const exactVene = items.find(it => ntIncludes(it, "blutentnahme aus der vene"));
+    if (exactVene) return [exactVene].slice(0, limit);
+  }
+  // Kapillar
+  if (mentionsBloodDraw && hasCapillary) {
+    const exactKap = items.find(it => ntIncludes(it, "kapillar"));
+    if (exactKap) return [exactKap].slice(0, limit);
+  }
+
+  // Synonym-Expansion wie gehabt
   const q = norm(userText);
   const tokens = q.split(" ").filter(Boolean);
   const expanded = new Set(tokens);
@@ -353,15 +385,12 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
     candidates = mergeCandidates(candidates, addOns);
   } catch { /* optional */ }
 
-  // 5) Frühzeitige Rückfrage erzwingen, wenn unklar / zu wenig Treffer
-  let preQ = earlyQuestion(userInput);
-  if (!preQ && candidates.length < 3) {
-    const v = candidates.slice(0, 6).map(c => `${c.pos} — ${c.title}`).join("\n");
-    preQ = v
-      ? `Unklar. Meintest du eine der folgenden Leistungen?\n${v}\nWenn keine passt: Bitte genauer eingeben (z. B. Träger, Technik, Dauer, Art).`
-      : "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
-  }
-  if (preQ) return res.json({ output: preQ });
+// 5) Rückfragen NUR wenn earlyQuestion wirklich etwas vermisst ODER gar keine Kandidaten
+let preQ = earlyQuestion(userInput);
+if (!preQ && candidates.length === 0) {
+  preQ = "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
+}
+if (preQ) return res.json({ output: preQ });
 
   // 6) Ohne Kandidaten -> freundlicher Fehler
   if (!candidates.length) {
