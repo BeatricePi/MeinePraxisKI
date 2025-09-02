@@ -135,6 +135,15 @@ function norm(s = "") {
     .replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
 }
 
+// Eingaben, die nur eine Dauer ohne Kontext enthalten (z.B. "über 20 Minuten")
+function isBareDurationQuery(text = "") {
+  const t = norm(text);
+  // enthält Minuten/Stunden, aber keine typischen Leistungswörter
+  const hasDuration = /(min|minute|stunden?|std)/.test(t);
+  const hasKeywords = /(gespraech|angehorig|blut|harn|urin|ekg|labor|injek|sonogr|abstrich|check|vorsorge|ordination)/.test(t);
+  return hasDuration && !hasKeywords;
+}
+
 // Synonyme für freie Eingaben
 const SYNONYMS = {
   angehorigengesprach: ["gespraech mit angehoerigen", "angehoerigen-gespraech", "angehoerigen"],
@@ -164,14 +173,15 @@ function preferredByRules(userText, payer) {
 
 // Kandidaten finden (Fuse + Synonyme + Fallback)
 function findCandidates(userText, payer, limit = 12) {
-let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
+  let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
 
-// Psych-GUARD: Psych-Leistungen nur zeigen, wenn der Usertext das nahelegt
-const nt = norm(userText);
-const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
-if (!looksPsych) {
-  items = items.filter(it => !/(psych|psychiatr|psychothera)/i.test(it.title));
-}
+  // Psych-GUARD: Psych-Leistungen nur zeigen, wenn der Usertext das nahelegt
+  const nt = norm(userText);
+  const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
+  if (!looksPsych) {
+    items = items.filter(it => !/(psych|psychiatr|psychothera)/i.test(it.title));
+  }
+
   const preferCodes = preferredByRules(userText, payer) || [];
 
   const q = norm(userText);
@@ -192,8 +202,8 @@ if (!looksPsych) {
   if (!found.length) {
     const toks = new Set(expandedQuery.split(" ").filter(t => t.length > 2));
     const scored = items.map(it => {
-      const nt = norm(it.title);
-      let overlap = 0; for (const t of toks) if (nt.includes(t)) overlap++;
+      const nt2 = norm(it.title);
+      let overlap = 0; for (const t of toks) if (nt2.includes(t)) overlap++;
       return { it, overlap };
     }).filter(x => x.overlap > 0)
       .sort((a,b) => b.overlap - a.overlap)
@@ -209,6 +219,7 @@ if (!looksPsych) {
 
   return found.slice(0, limit);
 }
+
 // --- AddOns: immer mitzudenkende Leistungen katalogsicher finden ---
 function findByTitleContains(payer, patterns = []) {
   const pats = patterns.map((p) => norm(p));
@@ -261,6 +272,7 @@ function mergeCandidates(candidates, addOns) {
   }
   return candidates;
 }
+
 // Früh-Rückfragen-Heuristiken
 function earlyQuestion(userText) {
   const t = norm(userText);
@@ -275,22 +287,19 @@ function earlyQuestion(userText) {
   }
   return null;
 }
+
 // === API ENDPOINT ===
 app.post("/api/abrechnen", requireAuth, async (req, res) => {
   // 1) Eingabe & Basics prüfen
   const userInput = (req.body?.prompt || "").toString().trim();
-  if (!userInput) {
-    return res.status(400).json({ error: "Fehlendes Feld: prompt" });
-  }
-  if (!OPENAI_API_KEY) {
-    return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
-  }
+  if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
+  if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
   // 2) Guard: Nur „Dauer“-Angaben ohne Kontext -> Rückfrage (KEIN Modell-Call)
   if (isBareDurationQuery(userInput)) {
     return res.json({
       output:
-        "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion, …) Bitte kurz präzisieren."
+        "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion …) Bitte kurz präzisieren."
     });
   }
 
@@ -299,23 +308,20 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   let candidates = findCandidates(userInput, payer);
 
   // 4) AddOns vorschlagen (Erstordination, Koordinationszuschlag, Befundbericht, langer EKG-Streifen …)
-  //    → nur ergänzen, keine Duplikate
   try {
-    const addOns = deriveAddOns(userInput, payer);           // erwartet Array im gleichen Format wie catalogIndex.items
-    candidates = mergeCandidates(candidates, addOns);        // fügt addOns ans Ende, entfernt Duplikate nach pos
+    const addOns = deriveAddOns(userInput, payer);
+    candidates = mergeCandidates(candidates, addOns);
   } catch { /* optional */ }
 
   // 5) Frühzeitige Rückfrage erzwingen, wenn unklar / zu wenig Treffer
-  let preQ = earlyQuestion(userInput); // deine Heuristiken (z. B. Gesprächsdauer bei Angehörigengespräch, Labor-Art …)
+  let preQ = earlyQuestion(userInput);
   if (!preQ && candidates.length < 3) {
     const v = candidates.slice(0, 6).map(c => `${c.pos} — ${c.title}`).join("\n");
     preQ = v
       ? `Unklar. Meintest du eine der folgenden Leistungen?\n${v}\nWenn keine passt: Bitte genauer eingeben (z. B. Träger, Technik, Dauer, Art).`
       : "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
   }
-  if (preQ) {
-    return res.json({ output: preQ });
-  }
+  if (preQ) return res.json({ output: preQ });
 
   // 6) Ohne Kandidaten -> freundlicher Fehler
   if (!candidates.length) {
@@ -347,6 +353,7 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
       user: req.user?.email || "unbekannt"
     });
 
+    // Node 20: global fetch vorhanden
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -398,113 +405,6 @@ Copy-Paste-Liste: ${candidates.map(c => c.pos).join("; ")}`;
     }
 
     // 10) Erfolg
-    res.json({ output, usage: data?.usage || null });
-  } catch (error) {
-    log("Unhandled /api/abrechnen error:", error?.message || error);
-    res.status(500).json({ error: error?.message || "Unbekannter Serverfehler" });
-  }
-});
-
-// AddOns ergänzen (Erstordination, Koordinationszuschlag, Befundbericht, langer EKG-Streifen …)
-const addOns = deriveAddOns(userInput, payer);
-candidates = mergeCandidates(candidates, addOns);
-
-  // evtl. vorgezogene Rückfrage
-  let preQ = earlyQuestion(userInput);
-  if (!preQ && candidates.length < 3) {
-    const v = candidates.slice(0,6).map(c => `${c.pos} – ${c.title}`).join("\n");
-    preQ = v
-      ? `Unklar. Meintest du eine der folgenden Leistungen?\n${v}\nWenn keine passt: Bitte genauer beschreiben.`
-      : "Unklar. Bitte genauer eingeben (z. B. Träger, Technik, Dauer, Art).";
-  }
-  if (preQ) return res.json({ output: preQ });
-
-  // Fallback-Kandidaten wenn leer
-  if (!candidates.length) {
-    const pool = catalogIndex.items.filter(x => !payer || x.payer === payer);
-    const common = ["gespraech","beratung","ordination","labor","ekg","injektion","blut"];
-    const poolScored = pool.map(it => {
-      const nt = norm(it.title); let score = 0; common.forEach(c => { if (nt.includes(c)) score++; });
-      return { it, score };
-    }).sort((a,b)=>b.score-a.score).map(x=>x.it);
-    candidates = poolScored.slice(0,8);
-  }
-
-  if (!candidates.length) {
-    return res.status(400).json({
-      error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. 'ÖGK, Blutentnahme aus der Vene')."
-    });
-  }
-
-  // Gate: Modell darf NUR aus Kandidaten wählen (oder Rückfragen stellen)
-  const gatingRules = `
-DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
-${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`).join("\n")}
-Wenn die Eingabe unklar ist, STELLE ZUERST GEZIELTE RÜCKFRAGEN (Dauer, Technik, Träger).
-Wenn du Vorschläge machst, NUR Pos.-Nrn. aus dieser Liste.
-`;
-
-  const messages = [
-    { role: "system", content: SYSTEM_PROMPT + "\n" + gatingRules },
-    ...FEW_SHOTS,
-    { role: "user", content: userInput }
-  ];
-
-  try {
-    log("Starte OpenAI-Request", {
-      model: OPENAI_MODEL,
-      key: OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4) : "❌ kein Key",
-      user: req.user?.email || "unbekannt"
-    });
-
-    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: OPENAI_MODEL,
-        temperature: 0.2,
-        max_completion_tokens: 1000,
-        messages
-      }),
-    });
-
-    if (!openaiRes.ok) {
-      const errBody = await openaiRes.text().catch(() => "");
-      log("OpenAI-Fehler", openaiRes.status, errBody);
-      if (openaiRes.status === 429 && /insufficient_quota/i.test(errBody)) {
-        return res.status(502).json({ error: "OpenAI-Kontingent erschöpft (API-Billing prüfen)." });
-      }
-      return res.status(502).json({ error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}` });
-    }
-
-    const data = await openaiRes.json();
-    const output = data?.choices?.[0]?.message?.content?.trim() || "";
-    if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
-
-    // --- Soft-Validierung: nur zugelassene PosNr zulassen; sonst Rückfrage ---
-    const allowedSet = new Set(candidates.map(c => String(c.pos).toLowerCase()));
-    const usedCodes = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
-    const illegalCodes = usedCodes.filter(x => !allowedSet.has(x));
-
-    if (illegalCodes.length) {
-      const rows = candidates.map(c =>
-        `${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`
-      ).join("\n");
-      const clarification =
-`Rückfrage: Welche Position ist gemeint? (Deine Antwort enthielt: ${illegalCodes.join(", ")})
-
-Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
-------- | ------------- | -------- | -----------
-${rows}
-
-Copy-Paste-Liste: ${candidates.map(c => c.pos).join("; ")}`;
-      return res.json({ output: clarification, usage: data?.usage || null });
-    }
-
-    // ok
     res.json({ output, usage: data?.usage || null });
   } catch (error) {
     log("Unhandled /api/abrechnen error:", error?.message || error);
