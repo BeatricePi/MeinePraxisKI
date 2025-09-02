@@ -1,15 +1,17 @@
 // server.js — Abrechnungshelfer Medizin (Express + Supabase-Auth + OpenAI chat.completions)
 
-const express = require("express");
-const path = require("path");
-const jwt = require("jsonwebtoken");
-const cors = require("cors");
 const Fuse = require("fuse.js");
-
-// Katalogindex
 const catalogIndex = require("./catalogs/index.json");
 
-// Synonyme ROBUST aus externer JSON laden
+// optionale Regeln
+let rules = [];
+try {
+  rules = require("./scripts/rules/catalog_rules.json");
+} catch {
+  rules = [];
+}
+
+// Synonyme extern laden (fallback leer)
 let SYNONYMS = {};
 try {
   SYNONYMS = require("./catalogs/synonyms.json");
@@ -17,11 +19,10 @@ try {
   SYNONYMS = {};
 }
 
-// (optional) harte Regeln
-let rules = [];
-try {
-  rules = require("./scripts/rules/catalog_rules.json");
-} catch { rules = []; }
+const express = require("express");
+const path = require("path");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 // === ENV ===
 const PORT = process.env.PORT || 3000;
@@ -29,7 +30,9 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET;
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "")
-  .split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+  .split(",")
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean);
 
 // Modell per ENV überschreibbar
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
@@ -42,13 +45,17 @@ app.use(express.json({ limit: "1mb" }));
 // Static Frontend
 app.use(express.static(path.join(__dirname, "public")));
 
-// Log helper
+// kleine Log-Hilfe
 const log = (...a) => console.log("[APP]", ...a);
 
-// Health checks
-app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
+// Health-Checks
+app.get("/health", (_req, res) =>
+  res.json({ status: "ok", uptime: process.uptime() })
+);
 app.get("/api/check", (_req, res) => {
-  const keyPreview = OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4) : "❌ kein Key";
+  const keyPreview = OPENAI_API_KEY
+    ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4)
+    : "❌ kein Key";
   res.json({
     databaseUrl: process.env.DATABASE_URL ? "✅ vorhanden" : "❌ fehlt",
     openAiKey: OPENAI_API_KEY ? `✅ ${keyPreview}` : "❌ fehlt",
@@ -65,7 +72,10 @@ function requireAuth(req, res, next) {
     const auth = req.headers.authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
     if (!token) return res.status(401).json({ error: "Kein Token" });
-    if (!SUPABASE_JWT_SECRET) return res.status(500).json({ error: "Serverfehler: SUPABASE_JWT_SECRET fehlt" });
+    if (!SUPABASE_JWT_SECRET)
+      return res
+        .status(500)
+        .json({ error: "Serverfehler: SUPABASE_JWT_SECRET fehlt" });
 
     const payload = jwt.verify(token, SUPABASE_JWT_SECRET);
     req.user = { id: payload.sub, email: payload.email, role: payload.role };
@@ -82,11 +92,11 @@ function requireAuth(req, res, next) {
   }
 }
 
-// === SYSTEM PROMPT ===
+// === SYSTEM PROMPT (Hintergrund + Regeln) ===
 const SYSTEM_PROMPT = `
 Du bist der „Abrechnungshelfer Medizin“ für Ärzt:innen, die mit Innomed arbeiten.
 Deine Aufgabe:
-- Vorschläge ausschließlich aus den hochgeladenen Honorarkatalogen (ÖGK, BVAEB, SVS, Medrech, KUF usw.).
+- Vorschläge ausschließlich aus den hochgeladenen Honorarkatalogen (ÖGK, BVAEB, SVS, Tarmed, GOÄ, Medrech, KUF usw.).
 - Keine Fantasie-Nummern oder fremde Kataloge.
 - IMMER angeben: exakte Positionsnummer, Original-Leistungstext, Punkte/€.
 - Ton: freundlich, präzise, medizinisch korrekt. Keine Patientendaten speichern.
@@ -109,16 +119,15 @@ Ausgabeformat:
 2) Danach „Copy-Paste-Liste: <PosNr; PosNr; …>“
 `;
 
-// === FEW SHOTS ===
+// === FEW SHOTS (kurz) ===
 const FEW_SHOTS = [
   {
     role: "user",
-    content: "Männlich, 52 Jahre, Hypertonie, Erstordination"
+    content: "Männlich, 52 Jahre, Hypertonie, Erstordination",
   },
   {
     role: "assistant",
-    content:
-`Rückfrage: Wurde ein Ruhe-EKG durchgeführt?
+    content: `Rückfrage: Wurde ein Ruhe-EKG durchgeführt?
 
 Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
@@ -126,24 +135,28 @@ Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 1D | Koordinationszuschlag | 10 P | bei Erstordination
 300 | Blutdruckmessung | 5 P | Routine
 
-Copy-Paste-Liste: 1C; 1D; 300`
-  }
+Copy-Paste-Liste: 1C; 1D; 300`,
+  },
 ];
 
-// === Helper ===
+// === Helper: Normalisierung, Payer, Synonyme ===
 function norm(s = "") {
   return String(s)
     .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[ä]/g, "ae").replace(/[ö]/g, "oe").replace(/[ü]/g, "ue").replace(/[ß]/g, "ss")
-    .replace(/[^a-z0-9]+/g, " ")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Diakritika
+    .replace(/[ä]/g, "ae")
+    .replace(/[ö]/g, "oe")
+    .replace(/[ü]/g, "ue")
+    .replace(/[ß]/g, "ss")
+    .replace(/[^\w\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
 function detectPayer(text = "") {
   const n = norm(text);
-  if (/\boegk\b|\bgesundheitskasse\b/.test(n)) return "ÖGK";
+  if (/\boegk\b|\bgesundheitskasse\b|\boe gk\b/.test(n)) return "ÖGK";
   if (/\bbvaeb\b|\bbva\b/.test(n)) return "BVAEB";
   if (/\bsvs\b/.test(n)) return "SVS";
   if (/\bkuf\b/.test(n)) return "KUF";
@@ -151,130 +164,147 @@ function detectPayer(text = "") {
   return null;
 }
 
+// Eingaben, die nur eine Dauer ohne Kontext enthalten (z.B. "über 20 Minuten")
 function isBareDurationQuery(text = "") {
   const t = norm(text);
   const hasDuration = /\b(min|minute|stunden?|std)\b/.test(t);
-  const hasKeywords = /\b(gespraech|angehoerig|blut|harn|urin|ekg|labor|injek|sonogr|abstrich|check|vorsorge|ordination)\b/.test(t);
+  const hasKeywords =
+    /\b(gespraech|angehorig|blut|harn|urin|ekg|labor|injek|sonogr|abstrich|check|vorsorge|ordination)\b/.test(
+      t
+    );
   return hasDuration && !hasKeywords;
 }
 
+function getSynonymsFor(token = "") {
+  const key = norm(token);
+  const arr = SYNONYMS[key];
+  return Array.isArray(arr) ? arr : [];
+}
+
+function expandQueryWithSynonyms(q = "") {
+  const toks = norm(q).split(" ").filter(Boolean);
+  const expanded = new Set(toks);
+  for (const tok of toks) {
+    const syns = getSynonymsFor(tok);
+    for (const s of syns) expanded.add(norm(s));
+  }
+  return Array.from(expanded).join(" ");
+}
+
+// optionale Hart-Regeln
 function ruleMatches(text, r, payer) {
   if (r.payer && payer && r.payer !== payer) return false;
   const t = norm(text);
-  if (r.whenAll && !r.whenAll.every(k => t.includes(norm(k)))) return false;
-  if (r.whenAny && !r.whenAny.some(k => t.includes(norm(k)))) return false;
+  if (r.whenAll && !r.whenAll.every((k) => t.includes(norm(k)))) return false;
+  if (r.whenAny && !r.whenAny.some((k) => t.includes(norm(k)))) return false;
   return true;
 }
 function preferredByRules(userText, payer) {
   try {
     if (Array.isArray(rules)) {
-      for (const r of rules) if (ruleMatches(userText, r, payer)) return (r.prefer || []).map(String);
+      for (const r of rules)
+        if (ruleMatches(userText, r, payer)) return (r.prefer || []).map(String);
     }
   } catch {}
   return [];
 }
 
+// --- Kandidaten finden (Fuse + Synonyme + Fallback) ---
 function ntIncludes(it, needle) {
   return norm(it.title).includes(norm(needle));
 }
 
-function expandWithSynonyms(text) {
-  const tokens = norm(text).split(" ").filter(Boolean);
-  const expanded = new Set(tokens);
-  for (const tok of tokens) {
-    const syns = SYNONYMS[tok];
-    if (syns) for (const s of syns) expanded.add(norm(s));
-  }
-  return Array.from(expanded).join(" ");
-}
-
-// deterministische Klassiker (venös/kapillar/Harnstreifen)
+// exact-First Heuristik für häufige Fälle
 function pickExactItem(userText, payer) {
-  const t = norm(userText);
-  const items = catalogIndex.items.filter(x => (!payer || x.payer === payer));
+  const nt = norm(userText);
+  const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
 
-  const mentionsBlood = /\b(blutabnahme|blutentnahme|abnahme blut|venenpunktion|venepunktion|venenblut|kapillarblut|kapillar)\b/.test(t);
-  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion|venenblut)\b/.test(t);
-  const hasCap = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(t);
+  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(nt);
+  const hasCap = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
 
-  if (mentionsBlood && hasVenous) {
-    const exactVene = items.find(it => ntIncludes(it, "blutentnahme aus der vene"));
-    if (exactVene) return exactVene;
+  if (hasVenous) {
+    const exactV = items.find((it) => ntIncludes(it, "blutentnahme aus der vene"));
+    if (exactV) return exactV;
   }
-  if (mentionsBlood && hasCap) {
-    const exactKap = items.find(it => /kapillar/.test(norm(it.title)));
-    if (exactKap) return exactKap;
-  }
-  if (/\b(harn|urin)\b/.test(t)) {
-    const hs = items.find(it => /harnstreifen|harnstreifentest/.test(norm(it.title)));
-    if (hs) return hs;
+  if (hasCap) {
+    const exactK = items.find((it) => ntIncludes(it, "kapillar"));
+    if (exactK) return exactK;
   }
   return null;
 }
 
 function findCandidates(userText, payer, limit = 12) {
-  let items = catalogIndex.items.filter(x => !payer || x.payer === payer);
+  let items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
 
   // Psych-GUARD
   const nt = norm(userText);
-  const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
-  if (!looksPsych) items = items.filter(it => !/(psych|psychiatr|psychothera)/i.test(it.title));
+  const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(
+    nt
+  );
+  if (!looksPsych) {
+    items = items.filter((it) => !/(psych|psychiatr|psychothera)/i.test(it.title));
+  }
 
   const preferCodes = preferredByRules(userText, payer) || [];
 
-  // Intent-Erkennung
-  const mentionsBloodDraw = /\b(blutabnahme|blutentnahme|abnahme blut|venenpunktion|venepunktion)\b/.test(nt)
-    || /\b(venenblut|kapillarblut)\b/.test(nt);
+  // Intent Blutentnahme / Injektion
+  const mentionsBloodDraw =
+    /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(
+      nt
+    ) || /\b(blut|venenblut)\b/.test(nt);
   const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(nt);
   const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
   const mentionsInjection = /\binjek|spritze\b/.test(nt);
 
   if (mentionsBloodDraw && !mentionsInjection) {
-    items = items.filter(it => !/injektion/i.test(it.title)); // „Entnahme“ ≠ Injektion
+    items = items.filter((it) => !/injektion/i.test(it.title));
   }
 
-  // Exact-First
   if (mentionsBloodDraw && hasVenous) {
-    const exactVene = items.find(it => ntIncludes(it, "blutentnahme aus der vene"));
+    const exactVene = items.find((it) => ntIncludes(it, "blutentnahme aus der vene"));
     if (exactVene) return [exactVene].slice(0, limit);
   }
   if (mentionsBloodDraw && hasCapillary) {
-    const exactKap = items.find(it => ntIncludes(it, "kapillar"));
+    const exactKap = items.find((it) => ntIncludes(it, "kapillar"));
     if (exactKap) return [exactKap].slice(0, limit);
   }
 
-  // Fuzzy über Synonym-Expansion
-  const expandedQuery = expandWithSynonyms(userText);
+  // Synonym-Expansion für fuzzy Suche
+  const expandedQuery = expandQueryWithSynonyms(userText);
   const fuse = new Fuse(items, {
     includeScore: true,
-    threshold: 0.55,
+    threshold: 0.6,
     distance: 200,
     ignoreLocation: true,
-    keys: ["title"]
+    keys: ["title"],
   });
-  let found = fuse.search(expandedQuery).map(r => r.item);
+  let found = fuse.search(expandedQuery).map((r) => r.item);
 
   if (!found.length) {
-    const toks = new Set(expandedQuery.split(" ").filter(t => t.length > 2));
-    const scored = items.map(it => {
-      const nt2 = norm(it.title);
-      let overlap = 0; for (const t of toks) if (nt2.includes(t)) overlap++;
-      return { it, overlap };
-    }).filter(x => x.overlap > 0)
-      .sort((a,b) => b.overlap - a.overlap)
-      .map(x => x.it);
+    const toks = new Set(expandedQuery.split(" ").filter((t) => t.length > 2));
+    const scored = items
+      .map((it) => {
+        const nt2 = norm(it.title);
+        let overlap = 0;
+        for (const t of toks) if (nt2.includes(t)) overlap++;
+        return { it, overlap };
+      })
+      .filter((x) => x.overlap > 0)
+      .sort((a, b) => b.overlap - a.overlap)
+      .map((x) => x.it);
     found = scored;
   }
 
   if (preferCodes.length) {
-    const pref = found.filter(x => preferCodes.includes(String(x.pos)));
-    const rest = found.filter(x => !preferCodes.includes(String(x.pos)));
+    const pref = found.filter((x) => preferCodes.includes(String(x.pos)));
+    const rest = found.filter((x) => !preferCodes.includes(String(x.pos)));
     found = [...pref, ...rest];
   }
+
   return found.slice(0, limit);
 }
 
-// AddOns
+// --- AddOns: immer mitzudenkende Leistungen katalogsicher finden ---
 function findByTitleContains(payer, patterns = []) {
   const pats = patterns.map((p) => norm(p));
   const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
@@ -284,106 +314,188 @@ function findByTitleContains(payer, patterns = []) {
   }
   return null;
 }
-function mergeCandidates(candidates, addOns) {
-  const seen = new Set(candidates.map((c) => String(c.pos)));
-  for (const it of addOns) if (it && !seen.has(String(it.pos))) { candidates.push(it); seen.add(String(it.pos)); }
-  return candidates;
-}
+
 function deriveAddOns(userText, payer) {
   const add = [];
   const t = norm(userText);
-  if (/(erst|erstord|erstvorstellung|neu\b|neu patient)/.test(t)) {
+
+  if (/(erst|erstord|erstvorstellung|neu\b|neu-patient)/.test(t)) {
     const eo = findByTitleContains(payer, ["erstordination"]);
     const kz = findByTitleContains(payer, ["koordinationszuschlag", "koordination"]);
     if (eo) add.push(eo);
     if (kz) add.push(kz);
   }
+
   if (/(befund|bericht|arztbrief)/.test(t)) {
-    const bb = findByTitleContains(payer, ["befundbericht", "bericht"]);
+    const bb = findByTitleContains(payer, ["befundbericht", "befund-bericht", "bericht"]);
     if (bb) add.push(bb);
   }
+
   if (/(ekg)/.test(t) && /(lang|streifen|verl|minute|min|24|holter)/.test(t)) {
-    const ls = findByTitleContains(payer, ["langer ekg", "langstreifen", "verlaengerter ekg"]);
+    const ls = findByTitleContains(payer, [
+      "langer ekg",
+      "ekg lang",
+      "langstreifen",
+      "verlangerter ekg",
+    ]);
     if (ls) add.push(ls);
   }
+
   return add;
 }
 
-// Früh-Rückfragen – nur wenn zwingend
+function mergeCandidates(candidates, addOns) {
+  const seen = new Set(candidates.map((c) => String(c.pos)));
+  for (const it of addOns) {
+    if (it && !seen.has(String(it.pos))) {
+      candidates.push(it);
+      seen.add(String(it.pos));
+    }
+  }
+  return candidates;
+}
+
+// Früh-Rückfragen-Heuristiken
 function earlyQuestion(userText = "") {
   const n = norm(userText);
+
+  // Blutentnahme?
+  const mentionsBloodDraw =
+    /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(
+      n
+    ) || /\b(blut|venenblut)\b/.test(n);
+
+  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(n);
+  const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
+
   const payer = detectPayer(userText);
   const missingPayer = !payer;
 
-  const mentionsBloodDraw =
-    /\b(blutabnahme|blutentnahme|abnahme blut|venenpunktion|venepunktion)\b/.test(n) ||
-    /\b(venenblut|kapillarblut)\b/.test(n);
-
-  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion|venenblut)\b/.test(n);
-  const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
-
-  const qs = [];
-  if (mentionsBloodDraw && !hasVenous && !hasCapillary) qs.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
-  if (mentionsBloodDraw && missingPayer) qs.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
-  if (/\b(gespraech|angehoerig)\b/.test(n) && !/\b(min|minute|stunden?|std|ueber 20|bis 20)\b/.test(n))
-    qs.push("Wie lange hat das Angehörigengespräch gedauert? (**bis 20 Minuten** / **über 20 Minuten**)");
-  if (/\b(harn|urin|streifen)\b/.test(n) && !/\b(ord|ordination|labor)\b/.test(n)) {
-    qs.push("Meinst du **Harnstreifentest in der Ordination** oder **Laboruntersuchung**?");
-    if (missingPayer) qs.push("Bitte zusätzlich den **Versicherungsträger** angeben.");
+  const questions = [];
+  if (mentionsBloodDraw && !hasVenous && !hasCapillary) {
+    questions.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
   }
-  return qs.length ? qs.join(" ") : null;
+  if (mentionsBloodDraw && missingPayer) {
+    questions.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
+  }
+
+  if (/\b(gespraech|angehoerig)\b/.test(n) && !/\b(min|minute|stunden?|std|ueber 20|bis 20)\b/.test(n)) {
+    questions.push(
+      "Wie lange hat das Angehörigengespräch gedauert? (**bis 20 Minuten** / **über 20 Minuten**)"
+    );
+  }
+  if (/\b(harn|urin|streifen)\b/.test(n) && !/\b(ord|ordination|labor)\b/.test(n)) {
+    questions.push(
+      "Meinst du **Harnstreifentest in der Ordination** oder **Laboruntersuchung**?"
+    );
+    if (missingPayer) questions.push("Bitte zusätzlich den **Versicherungsträger** angeben.");
+  }
+
+  return questions.length ? questions.join(" ") : null;
 }
+
+// ------------------ Follow-up Kontext (5 Minuten) ------------------
+const FOLLOWUP_TTL_MS = 5 * 60 * 1000;
+const sessionStore = new Map(); // key -> { prompt, ts }
+
+function sessionKey(req) {
+  return req?.user?.id || req?.user?.email || req.ip;
+}
+function getPendingPrompt(req) {
+  const k = sessionKey(req);
+  const s = sessionStore.get(k);
+  if (s && Date.now() - s.ts < FOLLOWUP_TTL_MS) return s.prompt;
+  sessionStore.delete(k);
+  return null;
+}
+function setPendingPrompt(req, prompt) {
+  sessionStore.set(sessionKey(req), { prompt, ts: Date.now() });
+}
+function clearPendingPrompt(req) {
+  sessionStore.delete(sessionKey(req));
+}
+// -------------------------------------------------------------------
 
 // === API ENDPOINT ===
 app.post("/api/abrechnen", requireAuth, async (req, res) => {
-  const userInput = (req.body?.prompt || "").toString().trim();
+  // 1) Eingabe & Basics prüfen
+  let userInput = (req.body?.prompt || "").toString().trim();
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
-  if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
+  if (!OPENAI_API_KEY)
+    return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
-  // Nur „Dauer“ ohne Kontext
-  if (isBareDurationQuery(userInput)) {
-    return res.json({ output: "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion …) Bitte kurz präzisieren." });
+  // Follow-up: vorherige offene Frage + neue Kurzantwort mergen
+  const pending = getPendingPrompt(req);
+  if (pending) {
+    userInput = `${pending} ${userInput}`.trim();
+    clearPendingPrompt(req);
   }
 
+  // 2) Guard: Nur „Dauer“-Angaben ohne Kontext -> Rückfrage (KEIN Modell-Call)
+  if (isBareDurationQuery(userInput)) {
+    setPendingPrompt(req, userInput);
+    return res.json({
+      output:
+        "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion …) Bitte kurz präzisieren.",
+    });
+  }
+
+  // 3) Payer erkennen & Kandidaten suchen
   const payer = detectPayer(userInput);
   let candidates = findCandidates(userInput, payer);
 
-  // Deterministisch ohne LLM, wenn klar
+  // deterministischer Exact-Hit (ohne LLM) falls Träger erkennbar
   const exact = pickExactItem(userInput, payer);
   if (exact && payer) {
-    const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
-    const deterministic =
-`Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+    const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${
+      exact.notes ? " | " + exact.notes : ""
+    }`;
+    const deterministic = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
 ${rows}
 
 Copy-Paste-Liste: ${exact.pos}`;
+    clearPendingPrompt(req);
     return res.json({ output: deterministic });
   }
 
-  // AddOns
+  // 4) AddOns vorschlagen
   try {
     const addOns = deriveAddOns(userInput, payer);
     candidates = mergeCandidates(candidates, addOns);
   } catch {}
 
-  // Rückfragen nur wenn nötig
+  // 5) Rückfragen NUR wenn earlyQuestion wirklich etwas vermisst ODER gar keine Kandidaten
   let preQ = earlyQuestion(userInput);
   if (!preQ && candidates.length === 0) {
-    preQ = "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
+    preQ =
+      "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
   }
-  if (preQ) return res.json({ output: preQ });
+  if (preQ) {
+    setPendingPrompt(req, userInput);
+    return res.json({ output: preQ });
+  }
 
+  // 6) Ohne Kandidaten -> freundlicher Fehler
   if (!candidates.length) {
+    setPendingPrompt(req, userInput);
     return res.status(400).json({
-      error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“)."
+      error:
+        "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“).",
     });
   }
 
-  // Gating für das Modell
+  // 7) Gating-Regeln für das Modell
   const gatingRules = `
 DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
-${candidates.map(c => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`).join("\n")}
+${candidates
+  .map(
+    (c) =>
+      `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${
+        c.notes ? " | " + c.notes : ""
+      }`
+  )
+  .join("\n")}
 Wenn die Eingabe unklar ist, STELLE ZUERST GEZIELTE RÜCKFRAGEN (z. B. Gesprächsdauer, Träger, Technik).
 Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
 `;
@@ -391,63 +503,82 @@ Gib IMMER nur Pos.-Nrn. aus dieser Liste zurück, wenn du vorschlägst.
   const messages = [
     { role: "system", content: SYSTEM_PROMPT + "\n" + gatingRules },
     ...FEW_SHOTS,
-    { role: "user", content: userInput }
+    { role: "user", content: userInput },
   ];
 
-  // Modell anfragen (Node 20 hat global fetch)
+  // 8) Modell anfragen
   try {
+    log("Starte OpenAI-Request", {
+      model: OPENAI_MODEL,
+      key: OPENAI_API_KEY
+        ? OPENAI_API_KEY.slice(0, 7) + "…" + OPENAI_API_KEY.slice(-4)
+        : "❌ kein Key",
+      user: req.user?.email || "unbekannt",
+    });
+
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: OPENAI_MODEL,
         temperature: 0.2,
         max_completion_tokens: 1000,
-        messages
-      })
+        messages,
+      }),
     });
 
     if (!openaiRes.ok) {
       const errBody = await openaiRes.text().catch(() => "");
       log("OpenAI-Fehler", openaiRes.status, errBody);
       if (openaiRes.status === 429 && /insufficient_quota/i.test(errBody)) {
-        return res.status(502).json({ error: "OpenAI-Kontingent erschöpft (API-Billing prüfen)." });
+        return res
+          .status(502)
+          .json({ error: "OpenAI-Kontingent erschöpft (API-Billing prüfen)." });
       }
-      return res.status(502).json({ error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}` });
+      return res
+        .status(502)
+        .json({ error: `OpenAI-Fehler ${openaiRes.status}: ${errBody || "keine Details"}` });
     }
 
     const data = await openaiRes.json();
     const output = data?.choices?.[0]?.message?.content?.trim() || "";
     if (!output) return res.status(502).json({ error: "Leere Antwort vom Modell." });
 
-    // Soft-Validierung
-    const allowedSet = new Set(candidates.map(c => String(c.pos).toLowerCase()));
-    const usedCodes = Array.from(new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map(s => s.toLowerCase())));
-    const illegalCodes = usedCodes.filter(x => !allowedSet.has(x));
+    // 9) Soft-Validierung
+    const allowedSet = new Set(candidates.map((c) => String(c.pos).toLowerCase()));
+    const usedCodes = Array.from(
+      new Set((output.match(/\b\d+[a-z]?\b/gi) || []).map((s) => s.toLowerCase()))
+    );
+    const illegalCodes = usedCodes.filter((x) => !allowedSet.has(x));
 
     if (illegalCodes.length) {
-      const rows = candidates.map(c =>
-        `${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`
-      ).join("\n");
+      const rows = candidates
+        .map((c) => `${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`)
+        .join("\n");
 
-      const clarification =
-`Rückfrage: Welche Position ist gemeint? (Deine Antwort enthielt: ${illegalCodes.join(", ")})
+      const clarification = `Rückfrage: Welche Position ist gemeint? (Deine Antwort enthielt: ${illegalCodes.join(
+        ", "
+      )})
 
 Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
 ${rows}
 
-Copy-Paste-Liste: ${candidates.map(c => c.pos).join("; ")}`;
+Copy-Paste-Liste: ${candidates.map((c) => c.pos).join("; ")}`;
 
+      setPendingPrompt(req, userInput);
       return res.json({ output: clarification, usage: data?.usage || null });
     }
 
+    // 10) Erfolg
+    clearPendingPrompt(req);
     res.json({ output, usage: data?.usage || null });
   } catch (error) {
     log("Unhandled /api/abrechnen error:", error?.message || error);
+    setPendingPrompt(req, userInput);
     res.status(500).json({ error: error?.message || "Unbekannter Serverfehler" });
   }
 });
