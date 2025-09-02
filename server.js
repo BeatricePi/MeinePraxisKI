@@ -169,6 +169,7 @@ const SYNONYMS = {
   injektion: ["spritze"],
   ekg: ["ruhekardiogramm", "elektrokardiogramm"],
   harn: ["urin", "harnstreifen", "urintest"]
+  vene: ["venose", "venenpunktion", "venepunktion"],
 };
 
 // optionale Hart-Regeln
@@ -197,7 +198,7 @@ function pickExactItem(userText, payer) {
   const nt = norm(userText);
   const items = catalogIndex.items.filter(x => (!payer || x.payer === payer));
 
-  const hasVenous = /\b(vene|venoes|venenpunktion|venepunktion)\b/.test(nt);
+ const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(nt);
   const hasCap = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
 
   // Vene
@@ -341,14 +342,17 @@ function mergeCandidates(candidates, addOns) {
 
 // Früh-Rückfragen-Heuristiken
 function earlyQuestion(userText = "") {
-  const n = normalizeInput(userText);
+  // WICHTIG: hier norm() verwenden (entfernt Satzzeichen + Umlaute)
+  const n = norm(userText);
 
-  // Erkennung Blutentnahme
-  const mentionsBloodDraw = /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(n)
-    || /\b(blut|venenblut)\b/.test(n);
+  // Blutentnahme erkannt?
+  const mentionsBloodDraw =
+    /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(n) ||
+    /\b(blut|venenblut)\b/.test(n);
 
   // Spezifität vorhanden?
-  const hasVenous = /\b(vene|venoes|venenpunktion|venepunktion)\b/.test(n);
+  // FIX: "venöse" wird zu "venose" → darauf prüfen!
+  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(n);
   const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
 
   // Träger vorhanden?
@@ -357,7 +361,7 @@ function earlyQuestion(userText = "") {
 
   const questions = [];
 
-  // Nur fragen, was wirklich fehlt:
+  // Nur fragen, was wirklich fehlt
   if (mentionsBloodDraw && !hasVenous && !hasCapillary) {
     questions.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
   }
