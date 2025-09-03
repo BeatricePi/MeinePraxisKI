@@ -208,7 +208,7 @@ function bloodIntent(n) {
   );
 }
 function hasVenousFlag(n) {
-  // akzeptiert "venös", "venoese", "venose", "venos", "Venenpunktion", "Vene"
+  // akzeptiert "venös","venöse", "venoese", "venose", "venos", "Venenpunktion", "Vene"
   return /\b(venose|venoese|venos|venenpunktion|venepunktion|vene)\b/.test(n);
 }
 function hasCapillaryFlag(n) {
