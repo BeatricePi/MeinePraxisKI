@@ -209,6 +209,21 @@ function preferredByRules(userText, payer) {
   return [];
 }
 
+// --- Blutabnahme-Intent & Flags (arbeiten auf norm()-Text) ---
+function bloodIntent(n) {
+  return (
+    /\b(blutabnahme|blutentnahme|abnahme\s+.*\s+blut|venenpunktion|venepunktion|kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(
+      n
+    ) || /\b(venos|venose|vene)\b/.test(n)
+  );
+}
+function hasVenousFlag(n) {
+  return /\b(venos|venose|vene|venenpunktion|venepunktion)\b/.test(n);
+}
+function hasCapillaryFlag(n) {
+  return /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
+}
+
 // --- Kandidaten finden (Fuse + Synonyme + Fallback) ---
 function ntIncludes(it, needle) {
   return norm(it.title).includes(norm(needle));
@@ -219,14 +234,14 @@ function pickExactItem(userText, payer) {
   const nt = norm(userText);
   const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
 
-  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(nt);
-  const hasCap = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
+  const vFlag = hasVenousFlag(nt);
+  const kFlag = hasCapillaryFlag(nt);
 
-  if (hasVenous) {
+  if (vFlag) {
     const exactV = items.find((it) => ntIncludes(it, "blutentnahme aus der vene"));
     if (exactV) return exactV;
   }
-  if (hasCap) {
+  if (kFlag) {
     const exactK = items.find((it) => ntIncludes(it, "kapillar"));
     if (exactK) return exactK;
   }
@@ -248,23 +263,21 @@ function findCandidates(userText, payer, limit = 12) {
   const preferCodes = preferredByRules(userText, payer) || [];
 
   // Intent Blutentnahme / Injektion
-  const mentionsBloodDraw =
-    /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(
-      nt
-    ) || /\b(blut|venenblut)\b/.test(nt);
-  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(nt);
-  const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(nt);
+  const intent = bloodIntent(nt);
+  const vFlag = hasVenousFlag(nt);
+  const kFlag = hasCapillaryFlag(nt);
   const mentionsInjection = /\binjek|spritze\b/.test(nt);
 
-  if (mentionsBloodDraw && !mentionsInjection) {
+  if (intent && !mentionsInjection) {
     items = items.filter((it) => !/injektion/i.test(it.title));
   }
 
-  if (mentionsBloodDraw && hasVenous) {
+  // Exact-First-Prio
+  if (intent && vFlag) {
     const exactVene = items.find((it) => ntIncludes(it, "blutentnahme aus der vene"));
     if (exactVene) return [exactVene].slice(0, limit);
   }
-  if (mentionsBloodDraw && hasCapillary) {
+  if (intent && kFlag) {
     const exactKap = items.find((it) => ntIncludes(it, "kapillar"));
     if (exactKap) return [exactKap].slice(0, limit);
   }
@@ -355,27 +368,22 @@ function mergeCandidates(candidates, addOns) {
   return candidates;
 }
 
-// Früh-Rückfragen-Heuristiken
+// Früh-Rückfragen-Heuristiken (nur fragen, wenn wirklich Infos fehlen)
 function earlyQuestion(userText = "") {
   const n = norm(userText);
 
-  // Blutentnahme?
-  const mentionsBloodDraw =
-    /\b(blutabnahme|blutentnahme|abnahme .* blut|venenpunktion|venepunktion)\b/.test(
-      n
-    ) || /\b(blut|venenblut)\b/.test(n);
-
-  const hasVenous = /\b(vene|venose|venenpunktion|venepunktion)\b/.test(n);
-  const hasCapillary = /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
+  const intent = bloodIntent(n);
+  const vFlag = hasVenousFlag(n);
+  const kFlag = hasCapillaryFlag(n);
 
   const payer = detectPayer(userText);
   const missingPayer = !payer;
 
   const questions = [];
-  if (mentionsBloodDraw && !hasVenous && !hasCapillary) {
+  if (intent && !vFlag && !kFlag) {
     questions.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
   }
-  if (mentionsBloodDraw && missingPayer) {
+  if (intent && missingPayer) {
     questions.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
   }
 
@@ -442,22 +450,38 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
 
   // 3) Payer erkennen & Kandidaten suchen
   const payer = detectPayer(userInput);
-  let candidates = findCandidates(userInput, payer);
 
-  // deterministischer Exact-Hit (ohne LLM) falls Träger erkennbar
-  const exact = pickExactItem(userInput, payer);
-  if (exact && payer) {
-    const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${
-      exact.notes ? " | " + exact.notes : ""
-    }`;
-    const deterministic = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+  // 3a) Deterministisch: exakter Treffer "Vene/Kapillar" VOR jeder Rückfrage
+  {
+    const nt = norm(userInput);
+    const intent = bloodIntent(nt);
+    const vFlag = hasVenousFlag(nt);
+    const kFlag = hasCapillaryFlag(nt);
+
+    if (intent && payer) {
+      let items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
+      const byTitle = (t) => items.find((it) => ntIncludes(it, t));
+
+      const exactVene = vFlag ? byTitle("blutentnahme aus der vene") : null;
+      const exactKap = kFlag ? byTitle("kapillar") : null;
+      const exact = exactVene || exactKap;
+
+      if (exact) {
+        const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${
+          exact.notes ? " | " + exact.notes : ""
+        }`;
+        const out = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
 ${rows}
 
 Copy-Paste-Liste: ${exact.pos}`;
-    clearPendingPrompt(req);
-    return res.json({ output: deterministic });
+        return res.json({ output: out });
+      }
+    }
   }
+
+  // 3b) Kandidaten für LLM/Validierung
+  let candidates = findCandidates(userInput, payer);
 
   // 4) AddOns vorschlagen
   try {
