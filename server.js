@@ -120,11 +120,20 @@ Copy-Paste-Liste: 1C; 1D; 300`},
 
 // === Helper: Normalisierung, Payer, Synonyme ===
 function mapToCanonicalPayer(raw = "") {
-  const t = norm(raw);
+  // eigene, lokale Normalisierung (keine Abhängigkeit von norm())
+  const t = String(raw)
+    .toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
   if (/\boegk\b|\bgesundheitskasse\b|\boe gk\b|\boesterreichische gesundheitskasse\b/.test(t)) return "ÖGK";
   if (/\bbvaeb\b|\bbva\b|\bbeamten\b|\beisenbahn\b|\bbergbau\b/.test(t)) return "BVAEB";
   if (/\bsvs\b|\bselbststaendigen\b|\bbauern\b|\bgewerbe\b/.test(t)) return "SVS";
-  if (/\bkfa\b|\bkrankenfuer[s|o]rge\b|\bwiener kfa\b/.test(t)) return "KFA";
+  // korrigiert: "krankenfuersorge" (ohne Tippfehler/CharClass)
+  if (/\bkfa\b|\bkrankenfuersorge\b|\bwiener kfa\b/.test(t)) return "KFA";
   if (/\bkuf\b/.test(t)) return "KUF";
   if (/\bmedrech\b/.test(t)) return "MEDRECH";
   return raw || null;
@@ -343,7 +352,7 @@ if (inOrd && !inLab) {
 // --- AddOns: immer mitzudenkende Leistungen katalogsicher finden ---
 function findByTitleContains(payer, patterns = []) {
   const pats = patterns.map((p) => norm(p));
-const items = catalogIndex.items.filter((x) => samePayer(x.payer, payer));
+const items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
   for (const it of items) {
     const t = norm(it.title);
     if (pats.some((p) => t.includes(p))) return it;
@@ -512,10 +521,13 @@ Copy-Paste-Liste: ${exact.pos}`;
   }
 
   // 6) Ohne Kandidaten -> freundlicher Fehler
-  if (!candidates.length) {
-    setPendingPrompt(req, userInput);
-    return res.status(400).json({ error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“)." });
-  }
+ if (!candidates.length) {
+  setPendingPrompt(req, userInput);
+  return res.status(400).json({
+    error:
+      "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“).",
+  });
+}
 
   // 7) Gating-Regeln für das Modell
   const gatingRules = `
