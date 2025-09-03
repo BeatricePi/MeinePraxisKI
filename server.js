@@ -117,6 +117,12 @@ Copy-Paste-Liste: 1C; 1D; 300`},
 ];
 
 // === Helper: Normalisierung, Payer, Synonyme ===
+function detectSetting(n) {
+  // n = norm(userText)
+  const inOrd = /\b(ordination|praxis|ambulanz|im haus|in der ordination)\b/.test(n);
+  const inLab = /\b(labor|labordiagnostik|externes labor|im labor)\b/.test(n);
+  return { inOrd, inLab };
+}
 const stripDiacritics = (s = "") => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
 function norm(s = "") {
   return String(s)
@@ -201,15 +207,15 @@ function preferredByRules(userText, payer) {
 
 // --- Blutabnahme-Intent & Flags (arbeiten auf norm()-Text) ---
 function bloodIntent(n) {
-  // erkennt venöse/kapillare Begriffe, inkl. "venoese" (ö->oe)
+  // erkennt Singular + Plural + Varianten
   return (
-    /\b(blutabnahme|blutentnahme|abnahme\s+.*\s+blut|venenpunktion|venepunktion|kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n) ||
-    /\b(venose|venoese|venos|vene)\b/.test(n)
+    /\b(blutabnahme(n)?|blutentnahme(n)?)\b/.test(n) ||
+    /\b(venose|venoese|venos|vene|venenpunktion|venepunktion)\b/.test(n) ||
+    /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n)
   );
 }
 function hasVenousFlag(n) {
-  // akzeptiert "venös","venöse", "venoese", "venose", "venos", "Venenpunktion", "Vene"
-  return /\b(venose|venoese|venos|venenpunktion|venepunktion|vene)\b/.test(n);
+  return /\b(venose|venoese|venos|vene|venenpunktion|venepunktion)\b/.test(n);
 }
 function hasCapillaryFlag(n) {
   return /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
@@ -220,8 +226,9 @@ function ntIncludes(it, needle) { return norm(it.title).includes(norm(needle)); 
 // **Enges Blutabnahme-Filterset**, damit keine fachfremden Treffer auftauchen
 function restrictToBloodDraw(items) {
   const BLOOD_PATTERNS = [
-    "blutabnahme", "blutentnahme", "blut abnahme", "entnahme von blut",
-    "vene", "venoes", "kapillar", "kapillarblut", "fingerbeere", "ohrlaeppchen"
+    "blutabnahme","blutabnahmen","blutentnahme","blutentnahmen",
+    "entnahme von blut","vene","venoes","venose","venoese",
+    "kapillar","kapillarblut","fingerbeere","ohrlaeppchen"
   ].map(norm);
   return items.filter((it) => {
     const t = norm(it.title);
@@ -232,7 +239,13 @@ function restrictToBloodDraw(items) {
 // --- Kandidaten finden (Fuse + Synonyme + Fallback) ---
 function findCandidates(userText, payer, limit = 12) {
   let items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
-
+// Setting-Filter (Ordination vs. Labor)
+const { inOrd, inLab } = detectSetting(norm(userText));
+if (inOrd && !inLab) {
+  items = items.filter((it) => !/\blabor\b/i.test(it.title));
+} else if (inLab && !inOrd) {
+  items = items.filter((it) => /\blabor\b/i.test(it.title));
+}
   // Psych-GUARD
   const nt = norm(userText);
   const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
@@ -410,30 +423,47 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
 
   // 3b) Deterministisch: Blutabnahme (venös/kapillar) VOR jeder breiten Suche
   {
-    const nt = norm(userInput);
-    const intent = bloodIntent(nt);
-    const vFlag = hasVenousFlag(nt);
-    const kFlag = hasCapillaryFlag(nt);
+  const nt = norm(userInput);
+  const intent = bloodIntent(nt);
+  const vFlag = hasVenousFlag(nt);
+  const kFlag = hasCapillaryFlag(nt);
+  const { inOrd, inLab } = detectSetting(nt);
 
-    if (intent && payer) {
-      const items = catalogIndex.items.filter((x) => x.payer === payer);
-      const byTitle = (t) => items.find((it) => ntIncludes(it, t));
+  if (intent && payer) {
+    let items = catalogIndex.items.filter((x) => x.payer === payer);
 
-      const exactVene = vFlag ? byTitle("blutentnahme aus der vene") : null;
-      const exactKap  = kFlag ? byTitle("kapillar") : null;
-      const exact = exactVene || exactKap;
+    // Ordination vs. Labor strikt trennen
+    if (inOrd && !inLab) {
+      items = items.filter((it) => !/\blabor\b/i.test(it.title));
+    } else if (inLab && !inOrd) {
+      items = items.filter((it) => /\blabor\b/i.test(it.title));
+    }
 
-      if (exact) {
-        const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
-        const out = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+    // Exakt „Blutentnahme aus der Vene“ bzw. Kapillar bevorzugen
+    const matchVene = (t) => /(^|\b)blutentnahme aus der vene(\b|$)/i.test(t);
+    const matchKap  = (t) => /\b(kapillar|kapillarblut)\b/i.test(t);
+
+    const exactVene = vFlag ? items.find((it) => matchVene(it.title)) : null;
+    const exactKap  = kFlag ? items.find((it) => matchKap(it.title))  : null;
+
+    // Fallback: Ordination + Blut → Vene bevorzugen
+    let exact = exactVene || exactKap;
+    if (!exact && intent && inOrd && !inLab) {
+      exact = items.find((it) => matchVene(it.title));
+    }
+
+    if (exact) {
+      const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
+      const out = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
 ${rows}
 
 Copy-Paste-Liste: ${exact.pos}`;
-        return res.json({ output: out });
-      }
+      return res.json({ output: out });
     }
   }
+}
+
 
   // 3c) Kandidaten für LLM/Validierung (stark eingegrenzt bei Blut-Intent)
   let candidates = findCandidates(userInput, payer);
