@@ -170,15 +170,21 @@ const PAYER_SYNONYMS = {
   "MEDRECH": ["medrech"]
 };
 function extractPayerFromText(text = "") {
-  const n = ` ${norm(text)} `;
-  for (const [canon, syns] of Object.entries(PAYER_SYNONYMS)) {
-    for (const raw of [canon, ...syns]) {
-      const token = ` ${norm(raw)} `;
-      if (n.includes(token)) return canon;
-    }
+  const t = norm(text);
+  const MAP = {
+    "ÖGK": [/\\boegk\\b/, /\\bogk\\b/, /\\boe\\s*gk\\b/, /\\bgesundheitskasse\\b/, /\\boesterreichische\\s+gesundheitskasse\\b/, /\\bkrankenkasse\\b/],
+    "BVAEB": [/\\bbvaeb\\b/, /\\bbva\\b/, /\\bbeamten\\b/, /\\beisenbahn\\b/, /\\bbergbau\\b/],
+    "SVS": [/\\bsvs\\b/, /\\bselbststaendigen\\b/, /\\bbauern\\b/, /\\bgewerbe\\b/],
+    "KFA": [/\\bkfa\\b/, /\\bkrankenfuersorge\\b/, /\\bwiener\\s+kfa\\b/],
+    "KUF": [/\\bkuf\\b/],
+    "MEDRECH": [/\\bmedrech\\b/],
+  };
+  for (const [canon, regs] of Object.entries(MAP)) {
+    if (regs.some(r => r.test(t))) return canon;
   }
   return null;
 }
+
 function extractCanonicalPayer(text = "") {
   const p = extractPayerFromText(text);
   return p ? mapToCanonicalPayer(p) : null;
@@ -414,6 +420,16 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   dbg("payer=", payer, "indexPayers=", Array.from(new Set(
     catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))
   )));
+// Harte Schranke: wenn Payer erkannt, dürfen nur genau diese Items weiterleben
+const canonicalPayer = payer ? mapToCanonicalPayer(payer) : null;
+const allIndexPayers = Array.from(new Set(catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))));
+dbg({ canonicalPayer, allIndexPayers });
+
+// Wenn wir den Payer aus dem Text NICHT sicher erkennen konnten, lieber nachfragen
+if (!canonicalPayer) {
+  setPendingPrompt(req, userInput);
+  return res.json({ output: "Rückfrage: Welcher **Versicherungsträger**? (z. B. ÖGK, BVAEB, SVS) – sonst kann ich nicht den richtigen Katalog wählen." });
+}
 
   // 3a) Nur-Payer-Eingaben
   if (payer && isPayerOnlyQuery(userInput)) {
