@@ -120,7 +120,7 @@ Copy-Paste-Liste: 1C; 1D; 300`},
 
 // === Helper: Normalisierung, Payer, Synonyme ===
 function mapToCanonicalPayer(raw = "") {
-  // eigene, lokale Normalisierung (keine Abhängigkeit von norm())
+  // lokale Normalisierung
   const t = String(raw)
     .toLowerCase()
     .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
@@ -132,13 +132,11 @@ function mapToCanonicalPayer(raw = "") {
   if (/\boegk\b|\bgesundheitskasse\b|\boe gk\b|\boesterreichische gesundheitskasse\b/.test(t)) return "ÖGK";
   if (/\bbvaeb\b|\bbva\b|\bbeamten\b|\beisenbahn\b|\bbergbau\b/.test(t)) return "BVAEB";
   if (/\bsvs\b|\bselbststaendigen\b|\bbauern\b|\bgewerbe\b/.test(t)) return "SVS";
-  // korrigiert: "krankenfuersorge" (ohne Tippfehler/CharClass)
   if (/\bkfa\b|\bkrankenfuersorge\b|\bwiener kfa\b/.test(t)) return "KFA";
   if (/\bkuf\b/.test(t)) return "KUF";
   if (/\bmedrech\b/.test(t)) return "MEDRECH";
   return raw || null;
 }
-
 function samePayer(a, b) {
   if (!a || !b) return false;
   return mapToCanonicalPayer(a) === mapToCanonicalPayer(b);
@@ -155,12 +153,19 @@ function norm(s = "") {
     .trim();
 }
 
+// Setting-Erkennung (Ordination vs. Labor)
+function detectSetting(n) {
+  const inOrd = /\b(ordination|praxis|ambulanz|im haus|in der ordination)\b/.test(n);
+  const inLab = /\b(labor|labordiagnostik|externes labor|im labor)\b/.test(n);
+  return { inOrd, inLab };
+}
+
 // **Robuste Payer-Erkennung (inkl. Synonyme)**
 const PAYER_SYNONYMS = {
   "ÖGK": ["oegk", "ogk", "oe gk", "gesundheitskasse", "oesterreichische gesundheitskasse", "krankenkasse"],
   "BVAEB": ["bvaeb", "bva", "beamten", "eisenbahn", "bergbau"],
   "SVS": ["svs", "selbststaendigen", "bauern", "gewerbe"],
-  "KFA": ["kfa", "krankenfuerorge", "krankenfuerorgeanstalt", "wiener kfa", "krankenfürsorge", "krankenfürsorgeanstalt"],
+  "KFA": ["kfa", "krankenfuersorge", "krankenfuersorgeanstalt", "wiener kfa"],
   "KUF": ["kuf"],
   "MEDRECH": ["medrech"]
 };
@@ -174,18 +179,12 @@ function extractPayerFromText(text = "") {
   }
   return null;
 }
-
 function extractCanonicalPayer(text = "") {
   const p = extractPayerFromText(text);
   return p ? mapToCanonicalPayer(p) : null;
 }
 
-function extractCanonicalPayer(text = "") {
-  const p = extractPayerFromText(text);
-  return p ? mapToCanonicalPayer(p) : null;
-}
-
-// Eingaben, die nur eine Dauer ohne Kontext enthalten (z.B. "über 20 Minuten")
+// Eingaben, die nur eine Dauer ohne Kontext enthalten
 function isBareDurationQuery(text = "") {
   const t = norm(text);
   const hasDuration = /\b(min|minute|stunden?|std)\b/.test(t);
@@ -193,17 +192,15 @@ function isBareDurationQuery(text = "") {
   return hasDuration && !hasKeywords;
 }
 
-// „Nur Payer“-Eingaben (z. B. nur „ÖGK“ / „oegk“)
+// „Nur Payer“-Eingaben
 function isPayerOnlyQuery(text = "") {
   const t = norm(text);
-  // alles außer payer-wörtern raus
   const withoutPayerWords = Object.values(PAYER_SYNONYMS).flat()
     .concat(Object.keys(PAYER_SYNONYMS))
     .map(norm)
     .reduce((acc, w) => acc.replace(new RegExp(`\\b${w}\\b`, "g"), " "), ` ${t} `)
     .replace(/\s+/g, " ")
     .trim();
-  // wenn danach nichts Sinnvolles übrig bleibt → Payer-only
   return withoutPayerWords.length === 0;
 }
 
@@ -221,7 +218,7 @@ function expandQueryWithSynonyms(q = "") {
 
 // optionale Hart-Regeln
 function ruleMatches(text, r, payer) {
-  if (r.payer && payer && r.payer !== payer) return false;
+  if (r.payer && payer && mapToCanonicalPayer(r.payer) !== payer) return false;
   const t = norm(text);
   if (r.whenAll && !r.whenAll.every((k) => t.includes(norm(k)))) return false;
   if (r.whenAny && !r.whenAny.some((k) => t.includes(norm(k)))) return false;
@@ -236,47 +233,38 @@ function preferredByRules(userText, payer) {
   return [];
 }
 
-// --- Blutabnahme-Intent & Flags (arbeiten auf norm()-Text) ---
+// --- Blutabnahme-Intent & Flags ---
 function bloodIntent(n) {
-  // erkennt Singular + Plural + Varianten
   return (
     /\b(blutabnahme(n)?|blutentnahme(n)?)\b/.test(n) ||
     /\b(venose|venoese|venos|vene|venenpunktion|venepunktion)\b/.test(n) ||
     /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n)
   );
 }
-function hasVenousFlag(n) {
-  return /\b(venose|venoese|venos|vene|venenpunktion|venepunktion)\b/.test(n);
-}
-function hasCapillaryFlag(n) {
-  return /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
-}
+function hasVenousFlag(n) { return /\b(venose|venoese|venos|vene|venenpunktion|venepunktion)\b/.test(n); }
+function hasCapillaryFlag(n) { return /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n); }
 
 function ntIncludes(it, needle) { return norm(it.title).includes(norm(needle)); }
 
-// **Enges Blutabnahme-Filterset**, damit keine fachfremden Treffer auftauchen
+// enger Blut-Filter
 function restrictToBloodDraw(items) {
   const BLOOD_PATTERNS = [
     "blutabnahme","blutabnahmen","blutentnahme","blutentnahmen",
     "entnahme von blut","vene","venoes","venose","venoese",
     "kapillar","kapillarblut","fingerbeere","ohrlaeppchen"
   ].map(norm);
-  return items.filter((it) => {
-    const t = norm(it.title);
-    return BLOOD_PATTERNS.some((p) => t.includes(p));
-  });
+  return items.filter((it) => BLOOD_PATTERNS.some((p) => norm(it.title).includes(p)));
 }
 
 // --- Kandidaten finden (Fuse + Synonyme + Fallback) ---
 function findCandidates(userText, payer, limit = 12) {
-let items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
-// Setting-Filter (Ordination vs. Labor)
-const { inOrd, inLab } = detectSetting(norm(userText));
-if (inOrd && !inLab) {
-  items = items.filter((it) => !/\blabor\b/i.test(it.title));
-} else if (inLab && !inOrd) {
-  items = items.filter((it) => /\blabor\b/i.test(it.title));
-}
+  let items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
+
+  // Setting-Filter
+  const { inOrd, inLab } = detectSetting(norm(userText));
+  if (inOrd && !inLab) items = items.filter((it) => !/\blabor\b/i.test(it.title));
+  else if (inLab && !inOrd) items = items.filter((it) => /\blabor\b/i.test(it.title));
+
   // Psych-GUARD
   const nt = norm(userText);
   const looksPsych = /(psycho|depress|angst|krisenintervention|psychothera|psychiatr)/i.test(nt);
@@ -284,21 +272,16 @@ if (inOrd && !inLab) {
 
   const preferCodes = preferredByRules(userText, payer) || [];
 
-  // Intent Blutabnahme: liste eng einschränken (kein Imaging, keine EKGs etc.)
+  // Intent Blutabnahme
   const intentIsBlood = bloodIntent(nt);
   const vFlag = hasVenousFlag(nt);
   const kFlag = hasCapillaryFlag(nt);
   const mentionsInjection = /\binjek|spritze\b/.test(nt);
 
-  if (intentIsBlood) {
-    items = restrictToBloodDraw(items);
-    // falls dennoch nichts passendes im Titel „Kapillar“/„Vene“ steht, fuzzy bleibt aber auf Blut-Themen
-  }
-  if (intentIsBlood && !mentionsInjection) {
-    items = items.filter((it) => !/injektion/i.test(it.title));
-  }
+  if (intentIsBlood) items = restrictToBloodDraw(items);
+  if (intentIsBlood && !mentionsInjection) items = items.filter((it) => !/injektion/i.test(it.title));
 
-  // Deterministische „exact-first“
+  // Deterministisch „exact-first“
   if (intentIsBlood && vFlag) {
     const exactVene = items.find((it) => ntIncludes(it, "blutentnahme aus der vene"));
     if (exactVene) return [exactVene].slice(0, limit);
@@ -308,31 +291,26 @@ if (inOrd && !inLab) {
     if (exactKap) return [exactKap].slice(0, limit);
   }
 
-  // Synonym-Expansion für fuzzy Suche
+  // fuzzy
   const expandedQuery = expandQueryWithSynonyms(userText);
   const fuse = new Fuse(items, {
     includeScore: true,
-    threshold: 0.5,           // etwas strenger
+    threshold: 0.5,
     distance: 120,
     ignoreLocation: true,
     keys: ["title"],
   });
   let found = fuse.search(expandedQuery).map((r) => r.item);
 
-  // Notfall: einfacher Overlap
+  // Overlap-Fallback
   if (!found.length) {
     const toks = new Set(expandedQuery.split(" ").filter((t) => t.length > 2));
-    const scored = items
-      .map((it) => {
-        const nt2 = norm(it.title);
-        let overlap = 0;
-        for (const t of toks) if (nt2.includes(t)) overlap++;
-        return { it, overlap };
-      })
+    found = items
+      .map((it) => ({ it, nt2: norm(it.title) }))
+      .map(({ it, nt2 }) => ({ it, overlap: Array.from(toks).filter((t) => nt2.includes(t)).length }))
       .filter((x) => x.overlap > 0)
       .sort((a, b) => b.overlap - a.overlap)
       .map((x) => x.it);
-    found = scored;
   }
 
   if (preferCodes.length) {
@@ -341,25 +319,18 @@ if (inOrd && !inLab) {
     found = [...pref, ...rest];
   }
 
-  // **Letzter Schutz**: Wenn Blut-Intent erkannt wurde, entferne fachfremde Resttreffer.
-  if (intentIsBlood) {
-    found = restrictToBloodDraw(found);
-  }
+  if (intentIsBlood) found = restrictToBloodDraw(found);
 
   return found.slice(0, limit);
 }
 
-// --- AddOns: immer mitzudenkende Leistungen katalogsicher finden ---
+// --- AddOns ---
 function findByTitleContains(payer, patterns = []) {
   const pats = patterns.map((p) => norm(p));
-const items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
-  for (const it of items) {
-    const t = norm(it.title);
-    if (pats.some((p) => t.includes(p))) return it;
-  }
+  const items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
+  for (const it of items) if (pats.some((p) => norm(it.title).includes(p))) return it;
   return null;
 }
-
 function deriveAddOns(userText, payer) {
   const add = [];
   const t = norm(userText);
@@ -370,27 +341,23 @@ function deriveAddOns(userText, payer) {
     if (eo) add.push(eo);
     if (kz) add.push(kz);
   }
-
   if (/(befund|bericht|arztbrief)/.test(t)) {
     const bb = findByTitleContains(payer, ["befundbericht", "befund-bericht", "bericht"]);
     if (bb) add.push(bb);
   }
-
   if (/(ekg)/.test(t) && /(lang|streifen|verl|minute|min|24|holter)/.test(t)) {
     const ls = findByTitleContains(payer, ["langer ekg", "ekg lang", "langstreifen", "verlangerter ekg"]);
     if (ls) add.push(ls);
   }
-
   return add;
 }
-
 function mergeCandidates(candidates, addOns) {
   const seen = new Set(candidates.map((c) => String(c.pos)));
   for (const it of addOns) if (it && !seen.has(String(it.pos))) { candidates.push(it); seen.add(String(it.pos)); }
   return candidates;
 }
 
-// Früh-Rückfragen (nur wenn Infos fehlen)
+// Früh-Rückfragen
 function earlyQuestion(userText = "", payerDetected = null) {
   const n = norm(userText);
   const intent = bloodIntent(n);
@@ -401,7 +368,6 @@ function earlyQuestion(userText = "", payerDetected = null) {
   const questions = [];
   if (intent && !vFlag && !kFlag) questions.push("War es eine **venöse** oder **kapillare** Blutentnahme?");
   if (intent && missingPayer) questions.push("Bitte gib den **Versicherungsträger** an (z. B. ÖGK, BVAEB, SVS).");
-
   if (/\b(gespraech|angehoerig)\b/.test(n) && !/\b(min|minute|stunden?|std|ueber 20|bis 20)\b/.test(n)) {
     questions.push("Wie lange hat das Angehörigengespräch gedauert? (**bis 20 Minuten** / **über 20 Minuten**)");
   }
@@ -414,7 +380,7 @@ function earlyQuestion(userText = "", payerDetected = null) {
 
 // ------------------ Follow-up Kontext (5 Minuten) ------------------
 const FOLLOWUP_TTL_MS = 5 * 60 * 1000;
-const sessionStore = new Map(); // key -> { prompt, ts }
+const sessionStore = new Map();
 function sessionKey(req) { return req?.user?.id || req?.user?.email || req.ip; }
 function getPendingPrompt(req) {
   const k = sessionKey(req); const s = sessionStore.get(k);
@@ -423,7 +389,6 @@ function getPendingPrompt(req) {
 }
 function setPendingPrompt(req, prompt) { sessionStore.set(sessionKey(req), { prompt, ts: Date.now() }); }
 function clearPendingPrompt(req) { sessionStore.delete(sessionKey(req)); }
-// -------------------------------------------------------------------
 
 // === API ENDPOINT ===
 app.post("/api/abrechnen", requireAuth, async (req, res) => {
@@ -432,85 +397,75 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   if (!userInput) return res.status(400).json({ error: "Fehlendes Feld: prompt" });
   if (!OPENAI_API_KEY) return res.status(500).json({ error: "Serverfehler: OPENAI_API_KEY fehlt" });
 
-  // Follow-up: vorherige offene Frage + neue Kurzantwort mergen
+  // Follow-up mergen
   const pending = getPendingPrompt(req);
   if (pending) { userInput = `${pending} ${userInput}`.trim(); clearPendingPrompt(req); }
 
-  // 2) Guard: Nur „Dauer“-Angaben ohne Kontext -> Rückfrage (KEIN Modell-Call)
+  // 2) Guard: Nur „Dauer“ ohne Kontext
   if (isBareDurationQuery(userInput)) {
     setPendingPrompt(req, userInput);
     return res.json({ output: "Rückfrage: Worum geht es genau? (z. B. Angehörigengespräch, Blutabnahme, EKG, Injektion …) Bitte kurz präzisieren." });
   }
 
-  // 3) Payer aus Text herausziehen, falls nicht explizit angegeben
-let payer = req.body?.payer || null;
-if (!payer) payer = extractCanonicalPayer(userInput);
-else payer = mapToCanonicalPayer(payer);
-dbg("payer=", payer, "indexPayers=", Array.from(new Set(
-  catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))
-)));
-  // 3a) **Payer-only**: wenn Eingabe praktisch nur den Träger enthält → kurze Präzisierung, KEINE breite Kandidatenliste
+  // 3) Payer bestimmen (kanonisch)
+  let payer = req.body?.payer || null;
+  if (!payer) payer = extractCanonicalPayer(userInput);
+  else payer = mapToCanonicalPayer(payer);
+  dbg("payer=", payer, "indexPayers=", Array.from(new Set(
+    catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))
+  )));
+
+  // 3a) Nur-Payer-Eingaben
   if (payer && isPayerOnlyQuery(userInput)) {
-    setPendingPrompt(req, `(${payer})`); // Kontext merken
+    setPendingPrompt(req, `(${payer})`);
     return res.json({ output: `Rückfrage: Welche **Leistung** ist gemeint? (z. B. „Blutabnahme venös“ oder „Blutabnahme kapillar“) — Träger erkannt: **${payer}**.` });
   }
 
-  // 3b) Deterministisch: Blutabnahme (venös/kapillar) VOR jeder breiten Suche
+  // 3b) Deterministisch: Blutabnahme (venös/kapillar)
   {
-  const nt = norm(userInput);
-  const intent = bloodIntent(nt);
-  const vFlag = hasVenousFlag(nt);
-  const kFlag = hasCapillaryFlag(nt);
-  const { inOrd, inLab } = detectSetting(nt);
+    const nt = norm(userInput);
+    const intent = bloodIntent(nt);
+    const vFlag = hasVenousFlag(nt);
+    const kFlag = hasCapillaryFlag(nt);
+    const { inOrd, inLab } = detectSetting(nt);
 
-  if (intent && payer) {
-    let items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
+    if (intent && payer) {
+      let items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
+      if (inOrd && !inLab) items = items.filter((it) => !/\blabor\b/i.test(it.title));
+      else if (inLab && !inOrd) items = items.filter((it) => /\blabor\b/i.test(it.title));
 
-    // Ordination vs. Labor strikt trennen
-    if (inOrd && !inLab) {
-      items = items.filter((it) => !/\blabor\b/i.test(it.title));
-    } else if (inLab && !inOrd) {
-      items = items.filter((it) => /\blabor\b/i.test(it.title));
-    }
+      const matchVene = (t) => /(^|\b)blutentnahme aus der vene(\b|$)/i.test(t);
+      const matchKap  = (t) => /\b(kapillar|kapillarblut)\b/i.test(t);
 
-    // Exakt „Blutentnahme aus der Vene“ bzw. Kapillar bevorzugen
-    const matchVene = (t) => /(^|\b)blutentnahme aus der vene(\b|$)/i.test(t);
-    const matchKap  = (t) => /\b(kapillar|kapillarblut)\b/i.test(t);
+      const exactVene = vFlag ? items.find((it) => matchVene(it.title)) : null;
+      const exactKap  = kFlag ? items.find((it) => matchKap(it.title))  : null;
 
-    const exactVene = vFlag ? items.find((it) => matchVene(it.title)) : null;
-    const exactKap  = kFlag ? items.find((it) => matchKap(it.title))  : null;
+      let exact = exactVene || exactKap;
+      if (!exact && intent && inOrd && !inLab) exact = items.find((it) => matchVene(it.title));
 
-    // Fallback: Ordination + Blut → Vene bevorzugen
-    let exact = exactVene || exactKap;
-    if (!exact && intent && inOrd && !inLab) {
-      exact = items.find((it) => matchVene(it.title));
-    }
-
-    if (exact) {
-      const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
-      const out = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
+      if (exact) {
+        const rows = `${exact.pos} | ${exact.title} | ${exact.points || ""}${exact.notes ? " | " + exact.notes : ""}`;
+        const out = `Pos.-Nr | Leistungstext | Punkte/€ | Zusatzinfo
 ------- | ------------- | -------- | -----------
 ${rows}
 
 Copy-Paste-Liste: ${exact.pos}`;
-      return res.json({ output: out });
+        return res.json({ output: out });
+      }
     }
   }
-}
 
-
-  // 3c) Kandidaten für LLM/Validierung (stark eingegrenzt bei Blut-Intent)
+  // 3c) Kandidaten für LLM/Validierung
   let candidates = findCandidates(userInput, payer);
 
-  // 4) AddOns vorschlagen (nur wenn bereits thematisch passend)
+  // 4) AddOns (nur wenn nicht Blut-Intent)
   try {
     const addOns = deriveAddOns(userInput, payer);
-    // Blut-Intent: keine add-ons mischen, außer sie sind wirklich orthogonal
     const nt = norm(userInput);
     if (!bloodIntent(nt)) candidates = mergeCandidates(candidates, addOns);
   } catch {}
 
-  // 5) Rückfragen NUR wenn earlyQuestion etwas vermisst ODER gar keine Kandidaten
+  // 5) Rückfrage, wenn nötig
   let preQ = earlyQuestion(userInput, payer);
   if (!preQ && candidates.length === 0) {
     preQ = "Unklar. Bitte die gewünschte Leistung genauer beschreiben (z. B. Träger, Technik, Dauer, Art).";
@@ -520,16 +475,15 @@ Copy-Paste-Liste: ${exact.pos}`;
     return res.json({ output: preQ });
   }
 
-  // 6) Ohne Kandidaten -> freundlicher Fehler
- if (!candidates.length) {
-  setPendingPrompt(req, userInput);
-  return res.status(400).json({
-    error:
-      "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“).",
-  });
-}
+  // 6) Ohne Kandidaten -> 400 (kein LLM-Call!)
+  if (!candidates.length) {
+    setPendingPrompt(req, userInput);
+    return res.status(400).json({
+      error: "Keine passenden Katalogeinträge gefunden. Bitte präziser eingeben (z. B. „ÖGK, Blutentnahme aus der Vene“).",
+    });
+  }
 
-  // 7) Gating-Regeln für das Modell
+  // 7) Gating-Regeln
   const gatingRules = `
 DU DARFST AUSSCHLIESSLICH AUS DIESEN KANDIDATEN AUSWÄHLEN ODER ZUERST RÜCKFRAGEN STELLEN:
 ${candidates.map((c) => `- ${c.payer} | ${c.pos} | ${c.title} | ${c.points || ""}${c.notes ? " | " + c.notes : ""}`).join("\n")}
