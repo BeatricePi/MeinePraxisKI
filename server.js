@@ -201,13 +201,15 @@ function preferredByRules(userText, payer) {
 
 // --- Blutabnahme-Intent & Flags (arbeiten auf norm()-Text) ---
 function bloodIntent(n) {
+  // erkennt venöse/kapillare Begriffe, inkl. "venoese" (ö->oe)
   return (
     /\b(blutabnahme|blutentnahme|abnahme\s+.*\s+blut|venenpunktion|venepunktion|kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n) ||
-    /\b(venos|venose|vene)\b/.test(n)
+    /\b(venose|venoese|venos|vene)\b/.test(n)
   );
 }
 function hasVenousFlag(n) {
-  return /\b(venos|venose|vene|venenpunktion|venepunktion)\b/.test(n);
+  // akzeptiert "venös", "venoese", "venose", "venos", "Venenpunktion", "Vene"
+  return /\b(venose|venoese|venos|venenpunktion|venepunktion|vene)\b/.test(n);
 }
 function hasCapillaryFlag(n) {
   return /\b(kapillar|kapillarblut|fingerbeere|ohrlaeppchen)\b/.test(n);
