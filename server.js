@@ -39,6 +39,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // kleine Log-Hilfe
 const log = (...a) => console.log("[APP]", ...a);
+const DEBUG_INTENT = process.env.DEBUG_INTENT === "1";
+const dbg = (...a) => { if (DEBUG_INTENT) console.log("[INTENT]", ...a); };
 
 // Health-Checks
 app.get("/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
@@ -123,6 +125,22 @@ function detectSetting(n) {
   const inLab = /\b(labor|labordiagnostik|externes labor|im labor)\b/.test(n);
   return { inOrd, inLab };
 }
+function mapToCanonicalPayer(raw = "") {
+  const t = norm(raw);
+  if (/\boegk\b|\bgesundheitskasse\b|\boe gk\b|\boesterreichische gesundheitskasse\b/.test(t)) return "ÖGK";
+  if (/\bbvaeb\b|\bbva\b|\bbeamten\b|\beisenbahn\b|\bbergbau\b/.test(t)) return "BVAEB";
+  if (/\bsvs\b|\bselbststaendigen\b|\bbauern\b|\bgewerbe\b/.test(t)) return "SVS";
+  if (/\bkfa\b|\bkrankenfuer[s|o]rge\b|\bwiener kfa\b/.test(t)) return "KFA";
+  if (/\bkuf\b/.test(t)) return "KUF";
+  if (/\bmedrech\b/.test(t)) return "MEDRECH";
+  return raw || null; // wenn unbekannt, Original zurück
+}
+
+function samePayer(a, b) {
+  if (!a || !b) return false;
+  return mapToCanonicalPayer(a) === mapToCanonicalPayer(b);
+}
+
 const stripDiacritics = (s = "") => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
 function norm(s = "") {
   return String(s)
@@ -152,6 +170,11 @@ function extractPayerFromText(text = "") {
     }
   }
   return null;
+}
+
+function extractCanonicalPayer(text = "") {
+  const p = extractPayerFromText(text);
+  return p ? mapToCanonicalPayer(p) : null;
 }
 
 // Eingaben, die nur eine Dauer ohne Kontext enthalten (z.B. "über 20 Minuten")
@@ -238,7 +261,7 @@ function restrictToBloodDraw(items) {
 
 // --- Kandidaten finden (Fuse + Synonyme + Fallback) ---
 function findCandidates(userText, payer, limit = 12) {
-  let items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
+let items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
 // Setting-Filter (Ordination vs. Labor)
 const { inOrd, inLab } = detectSetting(norm(userText));
 if (inOrd && !inLab) {
@@ -321,7 +344,7 @@ if (inOrd && !inLab) {
 // --- AddOns: immer mitzudenkende Leistungen katalogsicher finden ---
 function findByTitleContains(payer, patterns = []) {
   const pats = patterns.map((p) => norm(p));
-  const items = catalogIndex.items.filter((x) => !payer || x.payer === payer);
+const items = catalogIndex.items.filter((x) => samePayer(x.payer, payer));
   for (const it of items) {
     const t = norm(it.title);
     if (pats.some((p) => t.includes(p))) return it;
@@ -412,8 +435,10 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   }
 
   // 3) Payer aus Text herausziehen, falls nicht explizit angegeben
-  let payer = req.body?.payer || null;
-  if (!payer) payer = extractPayerFromText(userInput);
+ let payer = req.body?.payer || null;
+if (!payer) payer = extractCanonicalPayer(userInput);
+else payer = mapToCanonicalPayer(payer);
+dbg("payer=", payer, "unique payers in index ~", Array.from(new Set(catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))).values()).slice(0,10));
 
   // 3a) **Payer-only**: wenn Eingabe praktisch nur den Träger enthält → kurze Präzisierung, KEINE breite Kandidatenliste
   if (payer && isPayerOnlyQuery(userInput)) {
