@@ -12,12 +12,17 @@ const OUT_FILE = path.join(CATALOG_DIR, "index.json");
 // --- Utils ---
 function guessPayer(filename) {
   const fn = filename.toLowerCase();
-  if (fn.includes("oegk") || fn.includes("ökg") || fn.includes("ö g k")) return "ÖGK";
-  if (fn.includes("bvaeb")) return "BVAEB";
-  if (fn.includes("svs")) return "SVS";
-  if (fn.includes("kuf")) return "KUF";
+  // ÖGK (auch Landes-Varianten)
+  if (/(oegk|ögk|oe-gk|ö\s*g\s*k|gesundheitskasse|gesamtvertrag|honorarkatalog)/i.test(fn)) return "ÖGK";
+  // BVAEB
+  if (/bvaeb/i.test(fn)) return "BVAEB";
+  // SVS
+  if (/\bsvs\b|sozialversicherungsanstalt/i.test(fn)) return "SVS";
+  // KUF Tirol/Kärnten usw.
+  if (/\bkuf\b|kaernten|kärnten|tirol/i.test(fn)) return "KUF";
   return "UNBEKANNT";
 }
+
 const SOFT_HYPHEN = /\u00AD/g;
 const WHITE = /\s+/g;
 
