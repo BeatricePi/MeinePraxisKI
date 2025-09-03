@@ -119,12 +119,6 @@ Copy-Paste-Liste: 1C; 1D; 300`},
 ];
 
 // === Helper: Normalisierung, Payer, Synonyme ===
-function detectSetting(n) {
-  // n = norm(userText)
-  const inOrd = /\b(ordination|praxis|ambulanz|im haus|in der ordination)\b/.test(n);
-  const inLab = /\b(labor|labordiagnostik|externes labor|im labor)\b/.test(n);
-  return { inOrd, inLab };
-}
 function mapToCanonicalPayer(raw = "") {
   const t = norm(raw);
   if (/\boegk\b|\bgesundheitskasse\b|\boe gk\b|\boesterreichische gesundheitskasse\b/.test(t)) return "ÖGK";
@@ -133,7 +127,7 @@ function mapToCanonicalPayer(raw = "") {
   if (/\bkfa\b|\bkrankenfuer[s|o]rge\b|\bwiener kfa\b/.test(t)) return "KFA";
   if (/\bkuf\b/.test(t)) return "KUF";
   if (/\bmedrech\b/.test(t)) return "MEDRECH";
-  return raw || null; // wenn unbekannt, Original zurück
+  return raw || null;
 }
 
 function samePayer(a, b) {
@@ -170,6 +164,11 @@ function extractPayerFromText(text = "") {
     }
   }
   return null;
+}
+
+function extractCanonicalPayer(text = "") {
+  const p = extractPayerFromText(text);
+  return p ? mapToCanonicalPayer(p) : null;
 }
 
 function extractCanonicalPayer(text = "") {
@@ -435,11 +434,12 @@ app.post("/api/abrechnen", requireAuth, async (req, res) => {
   }
 
   // 3) Payer aus Text herausziehen, falls nicht explizit angegeben
- let payer = req.body?.payer || null;
+let payer = req.body?.payer || null;
 if (!payer) payer = extractCanonicalPayer(userInput);
 else payer = mapToCanonicalPayer(payer);
-dbg("payer=", payer, "unique payers in index ~", Array.from(new Set(catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))).values()).slice(0,10));
-
+dbg("payer=", payer, "indexPayers=", Array.from(new Set(
+  catalogIndex.items.map(i => mapToCanonicalPayer(i.payer))
+)));
   // 3a) **Payer-only**: wenn Eingabe praktisch nur den Träger enthält → kurze Präzisierung, KEINE breite Kandidatenliste
   if (payer && isPayerOnlyQuery(userInput)) {
     setPendingPrompt(req, `(${payer})`); // Kontext merken
@@ -455,7 +455,7 @@ dbg("payer=", payer, "unique payers in index ~", Array.from(new Set(catalogIndex
   const { inOrd, inLab } = detectSetting(nt);
 
   if (intent && payer) {
-    let items = catalogIndex.items.filter((x) => x.payer === payer);
+    let items = catalogIndex.items.filter((x) => !payer || samePayer(x.payer, payer));
 
     // Ordination vs. Labor strikt trennen
     if (inOrd && !inLab) {
